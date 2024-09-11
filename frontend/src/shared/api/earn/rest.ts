@@ -1,18 +1,28 @@
-import { EarnApi } from './types'
-import {createRequest} from "@/shared/lib/api/createRequest";
+import { EarnApi } from './types';
+import { $sessionId } from "@/shared/model/session";
 
 export const earnApi: EarnApi = {
-  getData: async () =>
-    await createRequest({
-      endpoint: 'game/tasks',
+  getData: async () => {
+    const sessionId = $sessionId.getState();
+    const response = await fetch(`/game/tasks`, {
       method: 'GET',
-      // onError is omitted if not needed
-    }),
-  taskJoined: async (body) =>
-    await createRequest({
-      endpoint: 'game/completeTask',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionId}`,
+      },
+    });
+    return response.json();
+  },
+  taskJoined: async (body) => {
+    const sessionId = $sessionId.getState();
+    const response = await fetch(`/game/completeTask`, {
       method: 'POST',
-      body,
-      // onError is omitted if not needed
-    }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionId}`,
+      },
+      body: JSON.stringify(body),
+    });
+    return response.json();
+  },
 };
