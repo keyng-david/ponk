@@ -11,6 +11,7 @@ export const friendsApi: FriendsApi = {
         'Authorization': `Bearer ${sessionId}`,
       },
     });
-    return response.json();
+    const data = await response.json();
+    return data;
   },
 };
