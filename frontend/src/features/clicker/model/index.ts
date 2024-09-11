@@ -75,12 +75,19 @@ setInterval(() => {
 const useCanBeClicked = () => useUnit($canBeClicked);
 
 const useClicker = () => {
-    const { accumulatePoints, debounceSendPoints } = useSocket();
+    const { points, incrementPoints } = usePoints(); // Access points and incrementPoints from SocketProvider
 
     function onClick() {
-        updateOptimisticUI(CLICK_STEP);  // Trigger optimistic UI update
-        accumulatePoints(CLICK_STEP);
-        debounceSendPoints();  // Debounced sending of accumulated points
+        const newPoints = CLICK_STEP; // Points to increment
+        updateOptimisticUI(newPoints);  // Optimistic UI update
+
+        // Call incrementPoints to update points in the backend
+        incrementPoints(newPoints).then(() => {
+            // Success handling after backend update (if needed)
+        }).catch((error) => {
+            console.error('Failed to increment points:', error);
+            // Error handling (rollback or user feedback)
+        });
     }
 
     return {
@@ -90,7 +97,7 @@ const useClicker = () => {
         isMultiError: useUnit($isMultiAccount),
         onClick,
     };
-}
+};
 
 export const clickerModel = {
     valueInited,
