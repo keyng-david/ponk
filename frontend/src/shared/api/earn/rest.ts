@@ -4,7 +4,7 @@ import { $sessionId } from "@/shared/model/session";
 export const earnApi: EarnApi = {
   getData: async () => {
     const sessionId = $sessionId.getState();
-    const response = await fetch(`/game/tasks`, {
+    const response = await fetch(`/api/earn/tasks`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -15,7 +15,7 @@ export const earnApi: EarnApi = {
   },
   taskJoined: async (body) => {
     const sessionId = $sessionId.getState();
-    const response = await fetch(`/game/completeTask`, {
+    const response = await fetch(`/api/earn/completeTask`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
