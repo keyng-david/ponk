@@ -16,7 +16,7 @@ export type GetEarnDataResponseItem = {
 
 // Directly matches the backend response structure for tasks and user level
 export type GetEarnDataResponse = {
-  error: boolean; // Adjusted to fit the backend error response
+  error: boolean;
   payload: {
     tasks: GetEarnDataResponseItem[];
     user_level: number;
@@ -24,6 +24,6 @@ export type GetEarnDataResponse = {
 };
 
 export type EarnApi = {
-  getData: () => Promise<GetEarnDataResponse>; // Adjusted to match native fetch response
+  getData: () => Promise<GetEarnDataResponse>;
   taskJoined: (data: { id: number }) => Promise<{ error: boolean; message: string }>;
 };
