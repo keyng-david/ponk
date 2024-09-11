@@ -1,0 +1,97 @@
+.root {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+.step {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    transform: translateY(100%);
+
+    transition: 0.3s ease;
+    transition-property: transform;
+}
+
+.step-prev {
+    transform: translateY(100%);
+    z-index: 998;
+}
+
+.step-next {
+    transform: translateY(100%);
+    z-index: 999;
+}
+
+.step-active {
+    transform: translateY(0);
+    z-index: 999;
+}
+
+.invalid-platform {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(182deg, #3aacff 0%, #469fe0 100%);
+    z-index: 1001;
+    box-sizing: border-box;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        background-image: url("../../../shared/assets/images/auth/auth-background.png");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.5;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        line-height: 150%;
+        width: calc(100% - 40px);
+        text-align: center;
+        font-size: 40px;
+        background-image: url("../../../shared/assets/images/auth/auth-background.png");
+        background-repeat: repeat;
+        background-size: cover;
+        -webkit-background-clip: text;
+        text-align: center;
+        margin: 0;
+        z-index: 5;
+
+        &:nth-child(1) {
+            text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+        }
+
+        &:nth-child(2) {
+            -webkit-text-fill-color: transparent;
+        }
+    }
+}

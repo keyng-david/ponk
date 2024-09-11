@@ -1,0 +1,1 @@
+web: cd api/webSocket && npm install && npm run start

@@ -1,0 +1,425 @@
+@import "src/app/styles/index";
+
+$animationTime: 0.5s;
+
+@keyframes image-animation {
+    from {
+        transform: translateX(-150%) translateY(20%) scale(0.5) rotate(50deg);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0) scale(1) rotate(0);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-p-animation {
+    0% {
+        transform: translateX(-70%) translateY(40%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-o-animation {
+    0% {
+        transform: translateX(-120%) translateY(40%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-n-animation {
+    0% {
+        transform: translateX(0) translateY(100%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-k-animation {
+    0% {
+        transform: translateX(120%) translateY(50%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-e-animation {
+    0% {
+        transform: translateX(70%) translateY(40%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ponke-animation {
+    0% {
+        transform: scale(1) translateY(0);
+    }
+    50% {
+        transform: scale(1.1) translateY(2%);
+    }
+    100% {
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes letter-ton-t-animation {
+    0% {
+        transform: translateX(-70%) translateY(40%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-ton-o-animation {
+    0% {
+        transform: translateX(0) translateY(100%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes letter-ton-n-animation {
+    0% {
+        transform: translateX(70%) translateY(40%) scale(1.5);
+        opacity: 0;
+    }
+    70% {
+        transform: translateX(0) translateY(0) scale(0.95);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(0) translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.root {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background: linear-gradient(182deg, #3aacff 0%, #469fe0 100%);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        background-image: url("../../shared/assets/images/auth/auth-background.png");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.5;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+.container {
+    position: relative;
+    z-index: 4;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.ponke-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    animation: ponke-animation 1s;
+    animation-delay: $animationTime * 5;
+}
+
+.ponke_letter {
+    position: absolute;
+
+    &-p {
+        top: hp(172);
+        left: wp(18);
+        width: wp(105);
+
+        transform: translateX(-70%) translateY(40%) scale(1.2);
+        opacity: 0;
+
+        animation: letter-p-animation $animationTime forwards;
+    }
+
+    &-o {
+        top: hp(193);
+        left: wp(118);
+        width: wp(67);
+
+        transform: translateX(-120%) translateY(40%) scale(1.2);
+        opacity: 0;
+
+        animation: letter-o-animation $animationTime forwards;
+        animation-delay: $animationTime;
+    }
+
+    &-n {
+        top: hp(191);
+        left: wp(187);
+        width: wp(76);
+
+        transform: translateX(0) translateY(100%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-n-animation $animationTime forwards;
+        animation-delay: $animationTime * 2;
+    }
+
+    &-k {
+        top: hp(155);
+        left: wp(270);
+        width: wp(90);
+
+        transform: translateX(120%) translateY(50%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-k-animation $animationTime forwards;
+        animation-delay: $animationTime * 3;
+    }
+
+    &-e {
+        top: hp(189);
+        left: wp(346);
+        width: wp(66);
+
+        transform: translateX(70%) translateY(40%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-e-animation $animationTime forwards;
+        animation-delay: $animationTime * 4;
+    }
+}
+
+.ton_letter {
+    position: absolute;
+
+    &-t {
+        top: hp(269);
+        left: wp(144);
+        width: wp(48.79);
+
+        transform: translateX(-70%) translateY(40%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-ton-t-animation $animationTime forwards;
+        animation-delay: $animationTime * 4;
+    }
+
+    &-o {
+        top: hp(272.94);
+        left: wp(193);
+        width: wp(44.77);
+
+        transform: translateX(0) translateY(100%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-ton-o-animation $animationTime forwards;
+        animation-delay: $animationTime * 5;
+    }
+
+    &-n {
+        top: hp(269.36);
+        left: wp(242.64);
+        width: wp(42.36);
+
+        transform: translateX(70%) translateY(40%) scale(1.5);
+        opacity: 0;
+
+        animation: letter-ton-n-animation $animationTime forwards;
+        animation-delay: $animationTime * 6;
+    }
+}
+
+.ponke_img {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: hp(356);
+    width: wp(380);
+    aspect-ratio: 1;
+
+    animation-duration: $animationTime;
+    animation-name: image-animation;
+}
+
+.ton-connect {
+    position: absolute;
+    width: 100%!important;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: 100;
+}
+
+@media (max-height: 650px) {
+    .ponke_letter {
+        position: absolute;
+
+        &-p {
+            top: hpSmall(62);
+            left: wpSmall(25);
+            width: wpSmall(87);
+        }
+
+        &-o {
+            top: hpSmall(79);
+            left: wpSmall(109);
+            width: wpSmall(55);
+        }
+
+        &-n {
+            top: hpSmall(78);
+            left: wpSmall(166);
+            width: wpSmall(63);
+        }
+
+        &-k {
+            top: hpSmall(48);
+            left: wpSmall(235);
+            width: wpSmall(75);
+        }
+
+        &-e {
+            top: hpSmall(77);
+            left: wpSmall(298);
+            width: wpSmall(56);
+        }
+    }
+
+    .ton_letter {
+        position: absolute;
+
+        &-t {
+            top: hpSmall(143);
+            left: wpSmall(130);
+            width: wpSmall(40);
+        }
+
+        &-o {
+            top: hpSmall(146);
+            left: wpSmall(170);
+            width: wpSmall(38);
+        }
+
+        &-n {
+            top: hpSmall(143);
+            left: wpSmall(212);
+            width: wpSmall(36);
+        }
+    }
+
+    .ponke_img {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: hpSmall(215);
+        width: wpSmall(316);
+        aspect-ratio: 1;
+    }
+}
+
+.invalid-platform {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    z-index: 10;
+
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        line-height: 150%;
+        width: 100%;
+        text-align: center;
+        font-size: 40px;
+        background-image: url("../../shared/assets/images/auth/auth-background.png");
+        background-repeat: repeat;
+        background-size: cover;
+        -webkit-background-clip: text;
+        text-align: center;
+        margin: 0;
+
+        &:nth-child(1) {
+            text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+        }
+
+        &:nth-child(2) {
+            -webkit-text-fill-color: transparent;
+        }
+    }
+}

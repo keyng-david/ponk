@@ -1,0 +1,180 @@
+@import "src/app/styles/index";
+
+.root {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: transparent;
+}
+
+.title {
+    position: absolute;
+    bottom: hp(760);
+    line-height: 150%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    background-image: url("../../shared/assets/images/auth/auth-background.png");
+    background-repeat: repeat;
+    background-size: cover;
+    -webkit-background-clip: text;
+    text-align: center;
+    margin: 0;
+
+    &:nth-child(1) {
+        text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+    }
+
+    &:nth-child(2) {
+        -webkit-text-fill-color: transparent;
+    }
+}
+
+.main {
+    position: relative;
+    z-index: 10;
+}
+
+.background {
+    position: absolute;
+    height: hp(753);
+    width: 100%;
+    bottom: hp(0);
+    left: 0;
+}
+
+.first-position {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: hp(638);
+    height: hp(92.5);
+    width: wp(383);
+    z-index: 3;
+}
+
+.first-position-bg {
+    position: absolute;
+    width: 100%;
+    height: 75%;
+    left: 0;
+    bottom: 0;
+}
+
+.first-label {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 3px solid #060000;
+    background: #E5CC6D;
+    text-align: center;
+    font-size: 18px;
+    line-height: 35px;
+
+    color: #E5CC6D;
+    text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+}
+
+.first-amount {
+    position: absolute;
+    bottom: 15%;
+    right: 6.5%;
+    max-width: 43.5%;
+    text-overflow: ellipsis;
+    display: block;
+    font-size: 20px;
+    line-height: 150%;
+    color: #E5CC6D;
+    text-align: right;
+    text-wrap: nowrap;
+    margin: 0;
+
+    text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+}
+
+.first-title {
+    position: absolute;
+    bottom: 15%;
+    left: 6.5%;
+    max-width: 43.5%;
+    text-overflow: ellipsis;
+    display: block;
+    font-size: 20px;
+    line-height: 150%;
+    color: #E5CC6D;
+    text-wrap: nowrap;
+    margin: 0;
+
+    text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+}
+
+.list {
+    position: absolute;
+    bottom: 8%;
+    width: wp(383);
+    height: hp(600);
+    max-height: hp(588);
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: hp(92.5);
+    padding-bottom: 100px;
+    box-sizing: border-box;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.list-item {
+    display: flex;
+
+    width: 100%;
+    height: 48px;
+    width: 100%;
+
+    border-bottom: 2px solid #060000;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    & + & {
+        margin-top: 12px;
+    }
+
+    span,
+    p {
+        display: block;
+        font-size: 18px;
+        color: #3AACFF;
+        margin: 0;
+
+        text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
+    }
+
+    span {
+        margin-left: 1%;
+        margin-right: 2%;
+    }
+}
+
+.list-item-name {
+    max-width: 45%;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+}
+
+.list-item-score {
+    margin-left: auto!important;
+    padding-right: 2%;
+    max-width: 50%;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+    text-align: right;
+}

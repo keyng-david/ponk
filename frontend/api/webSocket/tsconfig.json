@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es2020",
+    "sourceMap": true,
+    "lib": ["es2020", "dom"],
+    "types": ["node"]
+  },
+  "include": ["./webSocketServer.ts", "./**/*.ts"],
+  "exclude": ["./dist"]
+}

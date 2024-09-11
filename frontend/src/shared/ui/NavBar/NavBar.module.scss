@@ -1,0 +1,89 @@
+@import "src/app/styles/index";
+
+@function lwp($size) {
+    $wpSize: $size / 422 * 100 * 1%;
+
+    @return $wpSize;
+}
+
+@function lhp($size) {
+    $wpSize: $size / 110 * 100 * 1%;
+
+    @return $wpSize;
+}
+
+@keyframes nav-bar-appear {
+    from {
+        transform: translateY(200%) translateX(-50%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) translateX(-50%);
+        opacity: 1;
+    }
+}
+
+.root {
+    position: fixed;
+    width: wp(422);
+    height: hp(120);
+    bottom: hp(50);
+    left: 50%;
+    transform: translateY(200%) translateX(-50%);
+    opacity: 0;
+    z-index: 1000;
+    background: url("../../assets/images/navbar/main.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    animation: nav-bar-appear 0.3s forwards linear;
+}
+
+.background {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    width: lwp(422);
+    height: lhp(110);
+    opacity: 1!important;
+    z-index: 1001;
+}
+
+.item {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(0.8);
+    opacity: 0;
+    height: lhp(127);
+
+    transition: 0.3s ease;
+    transition-property: transform, opacity;
+
+    &-1 {
+        left: lwp(5);
+        width: lwp(106);
+    }
+
+    &-2 {
+        width: lwp(106);
+        left: lwp(112);
+    }
+
+    &-3 {
+        width: lwp(110);
+        left: lwp(208);
+    }
+
+    &-4 {
+        width: lwp(110);
+        left: lwp(300);
+    }
+
+    &.is-active {
+        transform: translateY(-50%) scale(1);
+        opacity: 1;
+    }
+}
