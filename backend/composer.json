@@ -1,7 +1,7 @@
 {
   "require": {
     "php": ">=7.4",
-    "phpfastcache/phpfastcache": "^8.2.3",
+    "phpfastcache/phpfastcache": "^8.0",
     "irazasyed/telegram-bot-sdk": "^3.14.0"
   },
   "autoload": {
