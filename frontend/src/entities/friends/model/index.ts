@@ -1,52 +1,51 @@
 import { FriendsApi, friendsApi } from "@/shared/api/friends";
 import { createFetch } from "@/shared/lib/effector/createGateHook";
 import { createStore, sample } from "effector";
+import { FriendsData } from './types';
+import { ResponseDefault, GetFriendsResponse } from "@/shared/api/friends/types";
 
-import { FriendsData } from './types'
-import {ResponseDefault} from "@/shared/lib/api/createRequest";
-import {GetFriendsResponse} from "@/shared/api/friends/types";
-
-const [ FetchGate, fetchFx, useFetchGate ] = createFetch<FriendsApi['getFriends']>(friendsApi.getFriends)
+const [FetchGate, fetchFx, useFetchGate] = createFetch<FriendsApi['getFriends']>(friendsApi.getFriends);
 
 const $data = createStore<FriendsData>({
-    link: '',
-    points: 0,
-    friends: 0,
-    tg: 0,
-    premium: 0
-})
+  link: '',
+  points: 0,
+  friends: 0,
+  tg: 0,
+  premium: 0,
+});
 
 sample({
-    clock: FetchGate.open,
-    target: fetchFx,
-})
+  clock: FetchGate.open,
+  target: fetchFx,
+});
 
 sample({
   clock: fetchFx.doneData,
-  fn: toDomain as (data: GetFriendsResponse) => FriendsData,
+  fn: toDomain,
   target: $data,
 });
 
 export const friendsModel = {
-    $data,
-    useFetchGate,
-}
+  $data,
+  useFetchGate,
+};
 
-function toDomain(data: GetFriendsResponse): FriendsData {
-  return {
-    link: data.link,
-    points: data.score,
-    friends: data.friends,
-    tg: data.default_reward,
-    premium: data.premium_reward,
-  };
-}
-
+function toDomain(data: ResponseDefault<GetFriendsResponse>): FriendsData {
+  if (!data.error && data.payload) {
     return {
-        link: '',
-        points: 0,
-        friends: 0,
-        tg: 0,
-        premium: 0
-    }
+      link: data.payload.link,
+      points: data.payload.score,
+      friends: data.payload.friends,
+      tg: data.payload.default_reward,
+      premium: data.payload.premium_reward,
+    };
+  }
+
+  return {
+    link: '',
+    points: 0,
+    friends: 0,
+    tg: 0,
+    premium: 0,
+  };
 }
