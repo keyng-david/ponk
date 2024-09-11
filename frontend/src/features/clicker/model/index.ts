@@ -79,15 +79,9 @@ const useClicker = () => {
 
     function onClick() {
         const newPoints = CLICK_STEP; // Points to increment
-        updateOptimisticUI(newPoints);  // Optimistic UI update
+        updateOptimisticUI(newPoints);
 
-        // Call incrementPoints to update points in the backend
-        incrementPoints(newPoints).then(() => {
-            // Success handling after backend update (if needed)
-        }).catch((error) => {
-            console.error('Failed to increment points:', error);
-            // Error handling (rollback or user feedback)
-        });
+        incrementPoints(newPoints);
     }
 
     return {
