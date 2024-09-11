@@ -3,7 +3,7 @@ import {createRequest} from "@/shared/lib/api/createRequest";
 
 export const friendsApi: FriendsApi = {
     getFriends: async () => await createRequest({
-        endpoint: 'game/friends',
+        endpoint: '/api/friends',
         method: 'GET'
     })
 }
