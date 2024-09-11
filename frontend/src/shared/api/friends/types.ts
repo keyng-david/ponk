@@ -1,13 +1,14 @@
-import {ResponseDefault} from "@/shared/lib/api/createRequest";
-
 export type GetFriendsResponse = {
-    link: string
-    friends: number
-    score: number
-    default_reward: number
-    premium_reward: number
-}
+  error: boolean;
+  payload: {
+    link: string;
+    friends: number;
+    score: number;
+    default_reward: number;
+    premium_reward: number;
+  } | null;
+};
 
 export type FriendsApi = {
-    getFriends: () => Promise<ResponseDefault<GetFriendsResponse>>
-}
+  getFriends: () => Promise<GetFriendsResponse>; // Adjusted to match native fetch response
+};
