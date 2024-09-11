@@ -22,10 +22,10 @@ sample({
 })
 
 sample({
-    clock: fetchFx.doneData,
-    fn: toDomain,
-    target: $data,
-})
+  clock: fetchFx.doneData,
+  fn: toDomain as (data: GetFriendsResponse) => FriendsData,
+  target: $data,
+});
 
 export const friendsModel = {
     $data,
