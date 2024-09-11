@@ -1,8 +1,8 @@
-import { FriendsApi } from './types';
+import { FriendsApi, ResponseDefault, GetFriendsResponse } from './types';
 import { $sessionId } from "@/shared/model/session";
 
 export const friendsApi: FriendsApi = {
-  getFriends: async () => {
+  getFriends: async (): Promise<ResponseDefault<GetFriendsResponse>> => {
     const sessionId = $sessionId.getState();
     const response = await fetch(`/api/friends`, {
       method: 'GET',
@@ -11,7 +11,12 @@ export const friendsApi: FriendsApi = {
         'Authorization': `Bearer ${sessionId}`,
       },
     });
+
     const data = await response.json();
-    return data;
+
+    return {
+      error: data.error || !data.payload,
+      payload: data.payload || null,
+    };
   },
 };
