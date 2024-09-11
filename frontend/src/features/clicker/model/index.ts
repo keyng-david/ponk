@@ -1,6 +1,6 @@
 import { createEvent, createStore, sample } from "effector";
 import { useUnit } from "effector-react";
-import { useSocket } from "@/app/socketProvider";
+import { usePoints } from "@/app/socketProvider";
 
 export const MAX_AVAILABLE = 500;
 export const CLICK_STEP = 1;
