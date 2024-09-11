@@ -32,16 +32,15 @@ export const friendsModel = {
     useFetchGate,
 }
 
-function toDomain(data: ResponseDefault<GetFriendsResponse>): FriendsData {
-    if (!data.error) {
-        return {
-            link: data.payload.link,
-            points: data.payload.score,
-            friends: data.payload.friends,
-            tg: data.payload.default_reward,
-            premium: data.payload.premium_reward,
-        }
-    }
+function toDomain(data: GetFriendsResponse): FriendsData {
+  return {
+    link: data.link,
+    points: data.score,
+    friends: data.friends,
+    tg: data.default_reward,
+    premium: data.premium_reward,
+  };
+}
 
     return {
         link: '',
