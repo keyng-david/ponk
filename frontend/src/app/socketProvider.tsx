@@ -1,94 +1,66 @@
-import { CLICK_STEP, clickerModel } from "@/features/clicker/model";
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useStore } from "effector-react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { clickerModel } from "@/features/clicker/model";
+import { socketResponseToJSON } from "@/shared/lib/utils/socketResponseToJSON";
 import { $sessionId } from "@/shared/model/session";
+import { useUnit } from 'effector-react';
 
-export const SocketContext = createContext<{
-  accumulatePoints: (points: number) => void;
-  debounceSendPoints: () => void;
-}>({
-  accumulatePoints: () => {},
-  debounceSendPoints: () => {},
-});
+const PointContext = createContext<any>(null);
 
-export const useSocket = () => useContext(SocketContext);
+export const usePoints = () => useContext(PointContext);
 
-export const SocketProvider = React.memo<React.PropsWithChildren>(({ children }) => {
-  const sessionId = useStore($sessionId);
-  const [earnedPoint, setEarnedPoint] = useState(0);
-  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
+export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
+  const [points, setPoints] = useState<number>(0);
+  const sessionId = useUnit($sessionId); // Get session ID from the session store
 
   useEffect(() => {
-    // Establish SSE connection to listen for updates
-    const eventSource = new EventSource("/api/game/updatePoints");
+    const eventSource = new EventSource('sse.php'); // Listening to the SSE backend
 
-    eventSource.onmessage = (event) => {
+    eventSource.onmessage = function (event) {
       const data = JSON.parse(event.data);
-      if (data) {
-        // Trigger events to update state in Effector
-        clickerModel.valueInited(data.score);  // Use the valueInited event to update the score
-        clickerModel.availableInited(data.available_clicks);  // Use the availableInited event to update available clicks
-      }
+      setPoints(data.points);
+
+      // Update the model with new points data from the server
+      clickerModel.availableUpdated(data.available_clicks);
+      clickerModel.clicked({
+        score: data.score,
+        click_score: data.click_score,
+        available_clicks: data.available_clicks,
+      });
+    };
+
+    eventSource.onerror = function () {
+      console.error('SSE connection error.');
+      eventSource.close();
     };
 
     return () => {
-      eventSource.close(); // Clean up when component unmounts
+      eventSource.close();
     };
-  }, [sessionId]);
+  }, []);
 
-  // Function to accumulate points locally
-  const accumulatePoints = (points: number) => {
-    setEarnedPoint((prev) => prev + points + CLICK_STEP); // Ensure CLICK_STEP is always added
-  };
+  const incrementPoints = async (newPoints: number) => {
+    try {
+      // Ensure that the sessionId is included when making the request
+      const response = await fetch('/increment_points.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, points: newPoints }),
+      });
 
-  // Function to send points to the backend
-  const sendPointUpdate = async () => {
-    if (earnedPoint > 0) {
-      // Store the current earnedPoint value
-      const currentEarnedPoint = earnedPoint;
-
-      // Immediately clear earned points before sending the request
-      setEarnedPoint(0);
-
-      try {
-        const response = await fetch("/api/game/updatePoints", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            session_id: sessionId,
-            earnedPoint: currentEarnedPoint, // Use stored earnedPoint value
-          }),
-        });
-
-        const result = await response.json();
-        if (response.status === 200 && result.success) {
-          console.log("Points updated successfully.");
-          // Clear currentEarnedPoint after successful backend confirmation
-          setEarnedPoint(0); // This line is added for clarification, but it's redundant since we already cleared it before the request
-        } else {
-          console.error("Error updating points:", result.message || "Unknown error");
-          // Optionally, restore the points in case of failure
-          setEarnedPoint(currentEarnedPoint); // Restore points to retry later
-        }
-      } catch (error) {
-        console.error("Error updating points:", error);
-        // Restore points to retry later
-        setEarnedPoint(currentEarnedPoint);
+      const result = await response.json();
+      if (result.status === 'success') {
+        setPoints(result.points);
+      } else {
+        console.error('Error incrementing points:', result.message);
       }
+    } catch (error) {
+      console.error('Failed to increment points:', error);
     }
   };
 
-  const debounceSendPoints = () => {
-    if (debounceTimeout) clearTimeout(debounceTimeout);
-    const newTimeout = setTimeout(async () => {
-      await sendPointUpdate();
-    }, 500);
-    setDebounceTimeout(newTimeout);
-  };
-
   return (
-    <SocketContext.Provider value={{ accumulatePoints, debounceSendPoints }}>
+    <PointContext.Provider value={{ points, incrementPoints }}>
       {children}
-    </SocketContext.Provider>
+    </PointContext.Provider>
   );
-});
+};
