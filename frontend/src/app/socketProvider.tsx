@@ -13,7 +13,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const sessionId = useUnit($sessionId); // Get session ID from the session store
 
   useEffect(() => {
-    const eventSource = new EventSource('sse.php'); // Listening to the SSE backend
+    const eventSource = new EventSource('/api/game/sse.php'); // Listening to the SSE backend
 
     eventSource.onmessage = function (event) {
       const data = JSON.parse(event.data);
@@ -41,7 +41,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   const incrementPoints = async (newPoints: number) => {
     try {
       // Ensure that the sessionId is included when making the request
-      const response = await fetch('/increment_points.php', {
+      const response = await fetch('/api/game/increment_points.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: sessionId, points: newPoints }),
