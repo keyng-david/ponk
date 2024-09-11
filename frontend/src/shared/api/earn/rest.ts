@@ -23,6 +23,17 @@ export const earnApi: EarnApi = {
       },
       body: JSON.stringify(body),
     });
-    return response.json();
+    
+    const result = await response.json();
+    
+    // Ensure a message field is present in the response
+    if (!result.message) {
+      return {
+        error: result.error,
+        message: result.error ? 'Task completion failed' : 'Task completed successfully'
+      };
+    }
+    
+    return result;
   },
 };
