@@ -35,6 +35,10 @@ export const earnApi: EarnApi = {
         }
 
         const responseData = await response.json();
-        return { error: false, message: 'Task joined successfully', ...responseData };
+        return {
+    error: false,
+    message: 'Task joined successfully',
+    ...responseData
+        };
     }
 };
