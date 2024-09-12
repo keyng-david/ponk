@@ -44,8 +44,16 @@ async function apiRequest<T>(endpoint: string, method: 'GET' | 'POST', body?: an
 // Updated earnApi implementation
 export const earnApi: EarnApi = {
   getData: async () => {
-    return await apiRequest<GetEarnDataResponse>('api/earn/task', 'GET');
+    const response = await apiRequest<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('api/earn/task', 'GET');
+    
+    // Handle the response to match the exact type expected
+    if (response.error) {
+      throw new Error("Failed to fetch earn data");
+    }
+    
+    return response;  // Ensure the response matches the GetEarnDataResponse type
   },
+
   taskJoined: async (data) => {
     return await apiRequest<any>('api/earn/complete_task', 'POST', data);
   },
