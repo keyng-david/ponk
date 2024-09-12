@@ -1,11 +1,11 @@
 import { EarnApi } from './types';
 import { $sessionId } from "@/shared/model/session";
 
-const baseUrl = '/api'; // Assuming both frontend and backend are hosted under the same directory
+const baseUrl = '/api';
 
 export const earnApi: EarnApi = {
     getData: async () => {
-        const sessionId = $sessionId.getState(); // Assuming this gets the current sessionId
+        const sessionId = $sessionId.getState();
         const response = await fetch(`${baseUrl}/earn/tasks`, {
             method: 'GET',
             headers: {
@@ -31,16 +31,20 @@ export const earnApi: EarnApi = {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to join task');
+            return {
+                error: true,
+                message: 'Failed to join task',
+                payload: null
+            };
         }
 
         const responseData = await response.json();
-        
-        // Ensure the message field is included in the response
-        return { 
-            error: responseData.error ?? true, // Defaulting error to true if not present
-            message: responseData.message || 'Task joined successfully', // Default message if not present
-            ...responseData 
+
+        // Ensure both `error` and `message` fields are included
+        return {
+            error: responseData.error ?? false,
+            message: responseData.message || 'Task joined successfully',
+            payload: responseData.payload || null // Payload can be optional
         };
     }
 };
