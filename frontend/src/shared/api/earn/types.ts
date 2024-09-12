@@ -16,6 +16,7 @@ export type GetEarnDataResponseItem = {
 
 export type GetEarnDataResponse = {
     error: boolean;
+    message?: string;
     payload?: {
         tasks: GetEarnDataResponseItem[],
         user_level: number
