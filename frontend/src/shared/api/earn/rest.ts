@@ -35,10 +35,12 @@ export const earnApi: EarnApi = {
         }
 
         const responseData = await response.json();
-        return {
-    error: false,
-    message: 'Task joined successfully',
-    ...responseData
+        
+        // Ensure the message field is included in the response
+        return { 
+            error: responseData.error ?? true, // Defaulting error to true if not present
+            message: responseData.message || 'Task joined successfully', // Default message if not present
+            ...responseData 
         };
     }
 };
