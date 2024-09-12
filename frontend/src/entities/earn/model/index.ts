@@ -12,17 +12,18 @@ const secondLeftedFx = createEffect(async () => {
     return 60
 })
 
-const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
-    const tg = (window as unknown as TelegramWindow);
+const taskJoinedFx = createEffect(async (data: {
+    id: number,
+    link: string
+}) => {
+    const tg = (window as unknown as TelegramWindow)
 
-    const response = await earnApi.taskJoined({ id: data.id });
+    await earnApi.taskJoined({
+        id: data.id
+    })
 
-    if (!response.error) {
-        tg.Telegram.WebApp.openLink(data.link);
-    }
-
-    return response;
-});
+    tg.Telegram.WebApp.openLink(data.link)
+})
 
 const tasksRequested = createEvent()
 const taskSelected = createEvent<EarnItem>()
@@ -100,14 +101,16 @@ export const earnModel = {
 }
 
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
-    function getAmount(item: GetEarnDataResponseItem): string {
-        const level = data.payload!.user_level as 1 | 2 | 3;
-        const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
-        return `${sum} ${item.reward_symbol}`;
+    function getAmount(item: GetEarnDataResponseItem) {
+        const level = data.payload!.user_level as 1 | 2 | 3
+
+        const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward
+
+        return `${sum} ${item.reward_symbol}`
     }
 
     if (data.payload) {
-        return data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
+        return data.payload.tasks.map(item => ({
             id: item.id,
             avatar: item.image_link,
             name: item.name,
@@ -117,8 +120,8 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
             tasks: item.task_list,
             link: item.link,
             participants: item.total_clicks,
-        }));
+        }))
     }
 
-    return [];
+    return []
 }
