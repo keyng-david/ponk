@@ -1,0 +1,26 @@
+name: Upload to cPanel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install lftp
+        run: sudo apt-get install lftp -y
+
+      - name: Upload to cPanel
+        run: |
+          lftp -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }} <<EOF
+          cd public_html
+          mirror -R --delete --verbose ./frontend/build ./build/
+          mirror -R --delete --verbose ./backend ./backend/
+          bye
+          EOF
