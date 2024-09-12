@@ -34,6 +34,6 @@ export const earnApi: EarnApi = {
             throw new Error('Failed to join task');
         }
 
-        return response.json();
-    }
-};
+        const responseData = await response.json();
+    return { error: false, message: 'Task joined successfully', ...responseData };
+}
