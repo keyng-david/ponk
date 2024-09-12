@@ -18,7 +18,7 @@ jobs:
 
       - name: Upload to cPanel
         run: |
-          lftp -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} 159.100.6.5 <<EOF
+          lftp -u ${{ secrets.FTP_USER }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_HOST }} <<EOF
           cd public_html
           mirror -R --delete --verbose ./frontend/build ./build/
           mirror -R --delete --verbose ./backend ./backend/
