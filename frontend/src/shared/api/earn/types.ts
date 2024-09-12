@@ -25,5 +25,9 @@ export type GetEarnDataResponse = {
 
 export type EarnApi = {
     getData: () => Promise<GetEarnDataResponse>;
-    taskJoined: (data: { id: number }) => Promise<{ error: boolean, message: string }>;
+    taskJoined: (data: { id: number }) => Promise<{ 
+        error: boolean, 
+        message: string,
+        payload?: any // Adding payload as optional for flexibility
+    }>;
 };
