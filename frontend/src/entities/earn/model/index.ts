@@ -12,18 +12,17 @@ const secondLeftedFx = createEffect(async () => {
     return 60
 })
 
-const taskJoinedFx = createEffect(async (data: {
-    id: number,
-    link: string
-}) => {
-    const tg = (window as unknown as TelegramWindow)
+const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
+    const tg = (window as unknown as TelegramWindow);
 
-    await earnApi.taskJoined({
-        id: data.id
-    })
+    const response = await earnApi.taskJoined({ id: data.id });
 
-    tg.Telegram.WebApp.openLink(data.link)
-})
+    if (!response.error) {
+        tg.Telegram.WebApp.openLink(data.link);
+    }
+
+    return response;
+});
 
 const tasksRequested = createEvent()
 const taskSelected = createEvent<EarnItem>()
