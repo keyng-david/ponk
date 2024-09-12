@@ -1,27 +1,27 @@
-import { EarnApi } from './types';
+import { EarnApi, GetEarnDataResponse } from './types';
 import { $sessionId } from "@/shared/model/session";
 
-const baseUrl = '/api';
-
 export const earnApi: EarnApi = {
-    getData: async () => {
+    getData: async (): Promise<GetEarnDataResponse> => {
         const sessionId = $sessionId.getState();
-        const response = await fetch(`${baseUrl}/earn/tasks`, {
+        const response = await fetch('/api/earn/task', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${sessionId}`
             }
         });
-
+        
         if (!response.ok) {
-            throw new Error('Failed to fetch task data');
+            throw new Error(`Error fetching data: ${response.statusText}`);
         }
-
-        return response.json();
+        
+        const data = await response.json();
+        return data;
     },
-    taskJoined: async (data) => {
+
+    taskJoined: async (data: { id: number }) => {
         const sessionId = $sessionId.getState();
-        const response = await fetch(`${baseUrl}/earn/completeTask`, {
+        const response = await fetch('/api/earn/complete_task', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${sessionId}`,
@@ -31,20 +31,10 @@ export const earnApi: EarnApi = {
         });
 
         if (!response.ok) {
-            return {
-                error: true,
-                message: 'Failed to join task',
-                payload: null
-            };
+            throw new Error(`Error joining task: ${response.statusText}`);
         }
 
         const responseData = await response.json();
-
-        // Ensure both `error` and `message` fields are included
-        return {
-            error: responseData.error ?? false,
-            message: responseData.message || 'Task joined successfully',
-            payload: responseData.payload || null // Payload can be optional
-        };
+        return responseData;
     }
-};
+}
