@@ -11,9 +11,9 @@ use Telegram\Bot\Api;
 error_log("Telegram bot script initialized.");
 
 // Load environment variables
-$BOT_TOKEN = '6474304136:AAGmcXbqJR08PbTo8OcpyTuiIPhtOfgSPa8';
-$SERVER_URL = 'https://keyngcart.com/api';
-$FRONTEND_URL = 'https://keyngcart.com';
+$BOT_TOKEN = 'token';
+$SERVER_URL = 'url';
+$FRONTEND_URL = 'url';
 
 // Log the environment variables for debugging
 error_log("BOT_TOKEN: " . ($BOT_TOKEN ? 'Loaded' : 'Missing'));
