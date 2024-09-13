@@ -1,6 +1,6 @@
 <?php
-require 'vendor/autoload.php'; // Include Composer dependencies
-require 'db_connection.php';
+require __DIR__ . '/../../vendor/autoload.php'; // Include Composer dependencies
+require __DIR__ . '/../db_connection.php';
 
 use Phpfastcache\Helper\Psr16Adapter;
 
