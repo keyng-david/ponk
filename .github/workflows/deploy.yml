@@ -26,7 +26,7 @@ jobs:
           server: ftp://keyngcart.com  
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./deployment
+          local-dir: ./deployment/
           server-dir: /home/keyngca1/domains/keyngcart.com/public_html/keyng/
           exclude: |
             .git*
