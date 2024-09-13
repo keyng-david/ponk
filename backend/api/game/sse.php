@@ -1,7 +1,7 @@
 <?php
-require 'vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-require 'db_connection.php';
+require __DIR__ . '/../db_connection.php';
 
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
