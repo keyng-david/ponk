@@ -27,32 +27,13 @@ if (!$BOT_TOKEN || !$SERVER_URL || !$FRONTEND_URL) {
 $telegram = new Api($BOT_TOKEN);
 $mysqli = getDbConnection();
 
-// Log when connection to database is established
-if ($mysqli) {
-    error_log("Connected to database.");
-} else {
-    error_log("Failed to connect to the database.");
-}
-
-// Set webhook and add error handling
-$response = $telegram->setWebhook(['url' => $SERVER_URL . '/telegram.php']);
-
-// Handle webhook response
-if ($response === true) {
-    error_log("Webhook set successfully.");
-} elseif ($response === false) {
-    error_log("Webhook setup failed. Telegram API returned false.");
-} else {
-    error_log("Unexpected webhook response: " . json_encode($response));
-}
-
 // Handle /start command
 $telegram->commandsHandler(true); // Using true to process the commands via webhook
 
 function createNewSessionId($mysqli, $telegramId) {
     $sessionId = bin2hex(random_bytes(16));
     $stmt = $mysqli->prepare("UPDATE users SET session_id = ? WHERE telegram_id = ?");
-    
+
     if (!$stmt) {
         error_log("Failed to prepare statement for session ID: " . $mysqli->error);
         return false;
@@ -71,7 +52,7 @@ function createNewSessionId($mysqli, $telegramId) {
 
 function createUserIfNotExists($mysqli, $telegramId) {
     $stmt = $mysqli->prepare("SELECT * FROM users WHERE telegram_id = ?");
-    
+
     if (!$stmt) {
         error_log("Failed to prepare select statement: " . $mysqli->error);
         return false;
