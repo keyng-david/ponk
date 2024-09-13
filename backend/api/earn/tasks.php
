@@ -1,5 +1,5 @@
 <?php
-require 'db_connection.php';
+require __DIR__ . '/../db_connection.php';
 
 $mysqli = getDbConnection();
 $sessionId = $_SERVER['HTTP_AUTHORIZATION'] ?? ''; // Get sessionId from Authorization header
