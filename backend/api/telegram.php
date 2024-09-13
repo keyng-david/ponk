@@ -6,14 +6,15 @@ $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 use Telegram\Bot\Api;
+use Telegram\Bot\Commands\Command;
 
 // Debugging start
 error_log("Telegram bot script initialized.");
 
 // Load environment variables
-$BOT_TOKEN = 'token';
-$SERVER_URL = 'url';
-$FRONTEND_URL = 'url';
+$BOT_TOKEN = '6474304136:AAGmcXbqJR08PbTo8OcpyTuiIPhtOfgSPa8';
+$SERVER_URL = 'https://keyngcart.com/api';
+$FRONTEND_URL = 'https://keyngcart.com';
 
 // Log the environment variables for debugging
 error_log("BOT_TOKEN: " . ($BOT_TOKEN ? 'Loaded' : 'Missing'));
@@ -24,11 +25,75 @@ if (!$BOT_TOKEN || !$SERVER_URL || !$FRONTEND_URL) {
     die('BOT_TOKEN, SERVER_URL, and FRONTEND_URL must be set in the environment.');
 }
 
+// Instantiate the Telegram API
 $telegram = new Api($BOT_TOKEN);
 $mysqli = getDbConnection();
 
-// Handle /start command
-$telegram->commandsHandler(true); // Using true to process the commands via webhook
+// Define the StartCommand
+class StartCommand extends Command
+{
+    // Type hint for $name
+    protected string $name = 'start'; 
+    protected string $description = 'Start command to welcome the user';
+
+    public function handle()
+    {
+        global $telegram, $mysqli, $FRONTEND_URL; // Use global variables
+
+        $update = $this->getUpdate();
+
+        // Log the update for debugging
+        error_log("Received update: " . json_encode($update));
+
+        // Check if update has a message and user ID
+        if (isset($update['message']['from']['id'])) {
+            $userId = $update['message']['from']['id'];
+            error_log("User ID: " . $userId);
+        } else {
+            error_log("No user ID found in update.");
+            return;
+        }
+
+        // Log before checking the user in the database
+        error_log("Checking if user exists or creating new user...");
+
+        $user = createUserIfNotExists($mysqli, $userId);
+
+        if ($user) {
+            error_log("User found or created: " . json_encode($user));
+            $sessionId = $user['session_id'] ?: createNewSessionId($mysqli, $userId);
+            error_log("Session ID: " . $sessionId);
+
+            $frontendUrl = $FRONTEND_URL . '/?session_id=' . $sessionId;
+            $keyboard = [
+                'inline_keyboard' => [
+                    [['text' => '🎮 Play 🎮', 'url' => $frontendUrl]],
+                    [['text' => 'Join Community', 'url' => 'https://t.me/your_community_link']],
+                    [['text' => 'Follow X', 'url' => 'https://t.me/your_follow_link']],
+                    [['text' => 'Guide', 'url' => 'https://t.me/your_guide_link']]
+                ]
+            ];
+
+            // Log before sending message
+            error_log("Sending message to user with ID: " . $userId);
+
+            $telegram->sendMessage([
+                'chat_id' => $userId,
+                'text' => "🎉Hi, you are now an intern at Keyng Koin!\n💸As long as you work hard, you can earn a minimum salary of $2 daily.\n👨‍💼If you invite your friends, you can gain salary raises then. The more friends, the higher the raise!",
+                'reply_markup' => json_encode($keyboard)
+            ]);
+        } else {
+            error_log("User creation failed or something went wrong.");
+            $telegram->sendMessage(['chat_id' => $userId, 'text' => "Sorry, something went wrong. Please try again later."]);
+        }
+    }
+}
+
+// Register the StartCommand
+$telegram->addCommand(StartCommand::class);
+
+// Handle all incoming commands
+$telegram->commandsHandler(true); // Corrected to pass a boolean value
 
 function createNewSessionId($mysqli, $telegramId) {
     $sessionId = bin2hex(random_bytes(16));
