@@ -34,12 +34,20 @@ if ($mysqli) {
     error_log("Failed to connect to the database.");
 }
 
-// Log the webhook setup response
+// Set webhook and add error handling
 $response = $telegram->setWebhook(['url' => $SERVER_URL . '/telegram.php']);
-if ($response->isOk()) {
-    error_log("Webhook set successfully.");
+
+// Check if $response is false or not valid
+if ($response === false) {
+    error_log("Webhook setup failed. Telegram API returned false.");
+} elseif ($response && method_exists($response, 'isOk')) {
+    if ($response->isOk()) {
+        error_log("Webhook set successfully.");
+    } else {
+        error_log("Failed to set webhook: " . json_encode($response));
+    }
 } else {
-    error_log("Failed to set webhook: " . json_encode($response));
+    error_log("Webhook response is not valid or not an object: " . json_encode($response));
 }
 
 // Handle /start command
@@ -82,7 +90,7 @@ $telegram->commandsHandler([
 
             $telegram->sendMessage([
                 'chat_id' => $userId,
-                'text' => "🎉Hi, you are now an intern at Keyng Koin!\n💸As long as you work hard, you can earn a minimum salary of $2 daily.\n👬If you invite your friends, you can gain salary raises then. The more friends, the higher the raise!",
+                'text' => "🎉Hi, you are now an intern at Keyng Koin!\n💸As long as you work hard, you can earn a minimum salary of $2 daily.\n👨‍💼If you invite your friends, you can gain salary raises then. The more friends, the higher the raise!",
                 'reply_markup' => json_encode($keyboard)
             ]);
         } else {
@@ -170,4 +178,3 @@ function createUserIfNotExists($mysqli, $telegramId) {
 
     return $user;
 }
-?>
