@@ -1,7 +1,7 @@
 <?php
-require 'vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-require 'db_connection.php';
+require __DIR__ . '/../db_connection.php';
 
 use Phpfastcache\Helper\Psr16Adapter;
 
