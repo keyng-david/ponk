@@ -1,0 +1,34 @@
+name: FTP Deploy to DirectAdmin
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    name: Deploy to DirectAdmin via FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Prepare deployment folder
+        run: |
+          mkdir deployment
+          cp -r backend deployment/backend
+          cp -r frontend/build/* deployment/  # Copy the contents of build to the root of deployment
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ftp://keyngcart.com  
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deployment
+          server-dir: /home/keyngca1/domains/keyngcart.com/public_html/keyng/
+          exclude: |
+            .git*
+            node_modules/
+            .github/
