@@ -11,9 +11,9 @@ use Telegram\Bot\Api;
 error_log("Telegram bot script initialized.");
 
 // Load environment variables
-$BOT_TOKEN = getenv('BOT_TOKEN');
-$SERVER_URL = getenv('SERVER_URL');
-$FRONTEND_URL = getenv('FRONTEND_URL');
+$BOT_TOKEN = '6474304136:AAGmcXbqJR08PbTo8OcpyTuiIPhtOfgSPa8';
+$SERVER_URL = 'https://keyngcart.com/api';
+$FRONTEND_URL = 'https://keyngcart.com';
 
 // Log the environment variables for debugging
 error_log("BOT_TOKEN: " . ($BOT_TOKEN ? 'Loaded' : 'Missing'));
@@ -37,68 +37,17 @@ if ($mysqli) {
 // Set webhook and add error handling
 $response = $telegram->setWebhook(['url' => $SERVER_URL . '/telegram.php']);
 
-// Check if $response is false or not valid
-if ($response === false) {
+// Handle webhook response
+if ($response === true) {
+    error_log("Webhook set successfully.");
+} elseif ($response === false) {
     error_log("Webhook setup failed. Telegram API returned false.");
-} elseif ($response && method_exists($response, 'isOk')) {
-    if ($response->isOk()) {
-        error_log("Webhook set successfully.");
-    } else {
-        error_log("Failed to set webhook: " . json_encode($response));
-    }
 } else {
-    error_log("Webhook response is not valid or not an object: " . json_encode($response));
+    error_log("Unexpected webhook response: " . json_encode($response));
 }
 
 // Handle /start command
-$telegram->commandsHandler([
-    'start' => function ($telegram, $update) use ($mysqli, $FRONTEND_URL) {
-        // Log the update for debugging
-        error_log("Received update: " . json_encode($update));
-
-        // Check if update has a message and user ID
-        if (isset($update['message']['from']['id'])) {
-            $userId = $update['message']['from']['id'];
-            error_log("User ID: " . $userId);
-        } else {
-            error_log("No user ID found in update.");
-            return;
-        }
-
-        // Log before checking the user in the database
-        error_log("Checking if user exists or creating new user...");
-
-        $user = createUserIfNotExists($mysqli, $userId);
-        
-        if ($user) {
-            error_log("User found or created: " . json_encode($user));
-            $sessionId = $user['session_id'] ?: createNewSessionId($mysqli, $userId);
-            error_log("Session ID: " . $sessionId);
-
-            $frontendUrl = $FRONTEND_URL . '/?session_id=' . $sessionId;
-            $keyboard = [
-                'inline_keyboard' => [
-                    [['text' => '🎮 Play 🎮', 'url' => $frontendUrl]],
-                    [['text' => 'Join Community', 'url' => 'https://t.me/your_community_link']],
-                    [['text' => 'Follow X', 'url' => 'https://t.me/your_follow_link']],
-                    [['text' => 'Guide', 'url' => 'https://t.me/your_guide_link']]
-                ]
-            ];
-
-            // Log before sending message
-            error_log("Sending message to user with ID: " . $userId);
-
-            $telegram->sendMessage([
-                'chat_id' => $userId,
-                'text' => "🎉Hi, you are now an intern at Keyng Koin!\n💸As long as you work hard, you can earn a minimum salary of $2 daily.\n👨‍💼If you invite your friends, you can gain salary raises then. The more friends, the higher the raise!",
-                'reply_markup' => json_encode($keyboard)
-            ]);
-        } else {
-            error_log("User creation failed or something went wrong.");
-            $telegram->sendMessage(['chat_id' => $userId, 'text' => "Sorry, something went wrong. Please try again later."]);
-        }
-    }
-]);
+$telegram->commandsHandler(true); // Using true to process the commands via webhook
 
 function createNewSessionId($mysqli, $telegramId) {
     $sessionId = bin2hex(random_bytes(16));
