@@ -51,7 +51,7 @@ export const useAuth = () => {
       sessionIdStore.set(sessionIdFromUrl);
       setSessionId(sessionIdFromUrl);
 
-      const response = await fetch("/api/game/auth_handler.php", {
+      const response = await fetch("/api/auth_handler.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
