@@ -1,6 +1,5 @@
 <?php
 require __DIR__ . '/../../vendor/autoload.php';
-
 require __DIR__ . '/../db_connection.php';
 
 use Phpfastcache\Helper\Psr16Adapter;
@@ -9,11 +8,14 @@ use Phpfastcache\Helper\Psr16Adapter;
 $defaultDriver = 'Files';
 $cache = new Psr16Adapter($defaultDriver);
 
+// Ensure data is being correctly decoded from JSON
+$data = json_decode(file_get_contents('php://input'), true);
 
-$sessionId = $_POST['session_id'];
-$newPoints = $_POST['points'];
+// Validate the required keys exist
+if (isset($data['session_id'], $data['points'])) {
+    $sessionId = $data['session_id'];
+    $newPoints = $data['points'];
 
-if (isset($sessionId) && isset($newPoints)) {
     // Begin transaction to ensure atomic operation
     $cache->beginTransaction();
     try {
@@ -34,5 +36,6 @@ if (isset($sessionId) && isset($newPoints)) {
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid data provided.']);
+    exit;
 }
 ?>
