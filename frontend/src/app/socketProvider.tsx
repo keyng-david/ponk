@@ -39,24 +39,28 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const incrementPoints = async (newPoints: number) => {
-    try {
-      // Ensure that the sessionId is included when making the request
-      const response = await fetch('/api/game/increment_points.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ session_id: sessionId, points: newPoints }),
-      });
+  if (!sessionId || newPoints === undefined) {
+    console.error('Invalid session or points');
+    return;
+  }
 
-      const result = await response.json();
-      if (result.status === 'success') {
-        setPoints(result.points);
-      } else {
-        console.error('Error incrementing points:', result.message);
-      }
-    } catch (error) {
-      console.error('Failed to increment points:', error);
+  try {
+    const response = await fetch('/api/game/increment_points.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, points: newPoints }),
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+      setPoints(result.points);
+    } else {
+      console.error('Error incrementing points:', result.message);
     }
-  };
+  } catch (error) {
+    console.error('Failed to increment points:', error);
+  }
+};
 
   return (
     <PointContext.Provider value={{ points, incrementPoints }}>
