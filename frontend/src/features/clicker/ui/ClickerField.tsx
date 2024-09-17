@@ -17,7 +17,7 @@ let timeout2: NodeJS.Timeout
 export const ClickerField = () => {
     const { value, available, canBeClicked, onClick } = clickerModel.useClicker()
 
-    const { haptic } = useTelegram()
+    const { haptic, isHapticSupported } = useTelegram() // Updated hook with haptic support check
 
     const [isClickEnabled, setIsClickEnabled] = useState(true)
     const [leftClasses, setLeftClasses] = useState<string[]>([styles['hand-left']])
@@ -44,7 +44,12 @@ export const ClickerField = () => {
                     pointParent.className = styles.point
 
                     document.querySelector('#clicker')!.appendChild(pointParent)
-                    haptic()
+
+                    // Trigger haptic feedback only if supported
+                    if (isHapticSupported) {
+                        haptic()
+                    }
+
                     const timeout1 = setTimeout(() => {
                         document.querySelector('#clicker')!.removeChild(pointParent)
 
@@ -71,7 +76,7 @@ export const ClickerField = () => {
                 clearTimeout(timeout1)
             }, 150)
         }
-    }, [isClickEnabled ,canBeClicked, haptic, leftClasses.length, rightClasses.length])
+    }, [isClickEnabled ,canBeClicked, haptic, isHapticSupported, leftClasses.length, rightClasses.length])
 
     function handleTouchMove(event: TouchEvent<HTMLDivElement>) {
         event.preventDefault()
@@ -89,7 +94,6 @@ export const ClickerField = () => {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
         >
-            <p className={styles.value}>{valueString}</p>
             <p className={styles.value}>{valueString}</p>
             <ProgressBar value={available}/>
             <div className={styles.hands}>
