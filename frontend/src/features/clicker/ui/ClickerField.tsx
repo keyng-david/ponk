@@ -44,9 +44,7 @@ export const ClickerField = () => {
                     pointParent.className = styles.point
 
                     document.querySelector('#clicker')!.appendChild(pointParent)
-
-                    // Trigger haptic feedback only if supported
-                    if (isHapticSupported) {
+                    
                         haptic()
                     }
 
