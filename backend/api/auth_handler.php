@@ -1,12 +1,11 @@
 <?php
-require __DIR__ . '/db_connection.php';
-require_once __DIR__ . '/../vendor/autoload.php';
-
+require __DIR__ . '/../db_connection.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 $mysqli = getDbConnection();
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-// Ensure request is post
+// Ensure request is POST
 if ($requestMethod !== 'POST') {
     header('Content-Type: application/json');
     header('HTTP/1.0 405 Method Not Allowed');
@@ -14,15 +13,18 @@ if ($requestMethod !== 'POST') {
     exit();
 }
 
-// Check if 'session_id' is provided
-if (!isset($_POST['session_id'])) {
+// Decode JSON input
+$input = json_decode(file_get_contents('php://input'), true);
+
+// Check if 'session_id' is provided in the JSON input
+if (!isset($input['sessionId'])) {
     header('Content-Type: application/json');
     header('HTTP/1.0 401 Unauthorized');
     echo json_encode(['error' => true, 'message' => 'Unauthorized, session ID is required']);
     exit();
 }
 
-$sessionId = $_POST['session_id'];
+$sessionId = $input['sessionId'];
 
 // Prepare SQL statement and check for errors
 $stmt = $mysqli->prepare("SELECT score, available_clicks, wallet, level FROM users WHERE session_id = ?");
@@ -51,5 +53,4 @@ if ($result->num_rows === 0) {
 // Clean up resources
 $stmt->close();
 $mysqli->close();
-
 ?>
