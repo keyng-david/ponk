@@ -17,7 +17,7 @@ let timeout2: NodeJS.Timeout
 export const ClickerField = () => {
     const { value, available, canBeClicked, onClick } = clickerModel.useClicker()
 
-    const { haptic, isHapticSupported } = useTelegram() // Updated hook with haptic support check
+    const { haptic } = useTelegram() 
 
     const [isClickEnabled, setIsClickEnabled] = useState(true)
     const [leftClasses, setLeftClasses] = useState<string[]>([styles['hand-left']])
