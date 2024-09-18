@@ -27,6 +27,8 @@ export const ClickerField = () => {
 
     const onTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
     if (isClickEnabled) {
+        let pointParent: HTMLDivElement | null = null; // Declare pointParent outside the loop
+
         for (let i = 0; i < Math.min(e.touches.length, 3); i++) {
             const { clientX, clientY } = e.touches[i];
             if (canBeClicked) {
@@ -37,7 +39,7 @@ export const ClickerField = () => {
                 point.alt = 'point';
                 point.style.transform = `rotate(${getRandomInt(-25, 25)}deg) scale(${getRandomArbitrary(0.8, 1.2)})`;
 
-                const pointParent = document.createElement('div');
+                pointParent = document.createElement('div');
                 pointParent.appendChild(point);
                 pointParent.style.top = `${clientY}px`;
                 pointParent.style.left = `${clientX}px`;
@@ -49,7 +51,9 @@ export const ClickerField = () => {
             }
 
             const timeout1 = setTimeout(() => {
-                document.querySelector('#clicker')!.removeChild(pointParent);
+                if (pointParent && document.querySelector('#clicker')) {
+                    document.querySelector('#clicker')!.removeChild(pointParent);
+                }
 
                 clearTimeout(timeout1);
             }, 500);
@@ -73,7 +77,7 @@ export const ClickerField = () => {
             clearTimeout(timeout1);
         }, 150);
     }
-}, [isClickEnabled, canBeClicked, haptic, isHapticSupported, leftClasses.length, rightClasses.length]);
+}, [isClickEnabled, canBeClicked, haptic, leftClasses.length, rightClasses.length]);
 
     function handleTouchMove(event: TouchEvent<HTMLDivElement>) {
         event.preventDefault()
