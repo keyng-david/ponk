@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { clickerModel } from "@/features/clicker/model";
 import { useUnit } from 'effector-react';
+import { $sessionId } from "@/shared/model/session";
 
 const PointContext = createContext<any>(null);
 
