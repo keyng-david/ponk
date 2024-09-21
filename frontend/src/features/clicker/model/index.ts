@@ -81,7 +81,7 @@ const useClicker = () => {
         const newPoints = CLICK_STEP; // Points to increment
         updateOptimisticUI(newPoints);
 
-        incrementPoints(newPoints);
+        incrementPoints(newPoints); // This now triggers the debounce
     }
 
     return {
