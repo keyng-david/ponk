@@ -72,7 +72,7 @@ async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> 
 // Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
   getData: async () => {
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task');
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
 
     if (response.error) {
       throw new Error("Failed to fetch earn data");
@@ -82,6 +82,6 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    return await postData<any>('/api/earn/complete_task', data);
+    return await postData<any>('/api/earn/complete_task.php', data);
   },
 };
