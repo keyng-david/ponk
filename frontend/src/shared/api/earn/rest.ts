@@ -1,15 +1,16 @@
-import { EarnApi, GetEarnDataResponse, ResponseDefault, GetEarnDataResponseItem } from './types';
+import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
 import { $sessionId } from "@/shared/model/session";
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
   if (!response.ok) {
-    const errorText = await response.text();
+    const errorText = await response.text(); // Capture the error response
+    console.error("API Error:", errorText);
     return { error: true, payload: null };
   }
 
   try {
-    const data = await response.json();
+    const data: T = await response.json();
     return { error: false, payload: data };
   } catch (error) {
     console.error("Failed to parse JSON response:", error);
@@ -17,44 +18,70 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
-// Helper function to make API requests with session ID for authorization
-async function apiRequest<T>(endpoint: string, method: 'GET' | 'POST', body?: any): Promise<ResponseDefault<T>> {
-  const sessionId = $sessionId; // Retrieve session ID from shared model
+// Traditional fetch function for GET requests
+async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
+  const sessionId = $sessionId; // Get the session ID
+
   if (!sessionId) {
-    console.error("Session ID is not available.");
+    console.error("Session ID is missing.");
     return { error: true, payload: null };
   }
 
   try {
-    const response = await fetch(endpoint, {
-      method,
+    const response = await fetch(url, {
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Session ${sessionId}`, // Include session ID in the Authorization header
+        Authorization: `Session ${sessionId}`, // Use session ID for Authorization
       },
-      body: body ? JSON.stringify(body) : null,
     });
-    return await handleResponse<T>(response);
+
+    return await handleResponse<T>(response); // Handle and return the response
   } catch (error) {
-    console.error("API request failed:", error);
+    console.error("Fetch request failed:", error);
     return { error: true, payload: null };
   }
 }
 
-// Updated earnApi implementation
+// Traditional fetch function for POST requests
+async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
+  const sessionId = $sessionId;
+
+  if (!sessionId) {
+    console.error("Session ID is missing.");
+    return { error: true, payload: null };
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Session ${sessionId}`, // Use session ID for Authorization
+      },
+      body: JSON.stringify(body),
+    });
+
+    return await handleResponse<T>(response); // Handle and return the response
+  } catch (error) {
+    console.error("Fetch request failed:", error);
+    return { error: true, payload: null };
+  }
+}
+
+// Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
   getData: async () => {
-    const response = await apiRequest<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', 'GET');
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task');
 
-    // Handle the response to match the exact type expected
     if (response.error) {
       throw new Error("Failed to fetch earn data");
     }
 
-    return response;  // Ensure the response matches the GetEarnDataResponse type
+    return response as GetEarnDataResponse; // Ensure the correct return type
   },
 
   taskJoined: async (data) => {
-    return await apiRequest<any>('/api/earn/complete_task.php', 'POST', data);
+    return await postData<any>('/api/earn/complete_task', data);
   },
 };
