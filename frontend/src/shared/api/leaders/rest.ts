@@ -4,7 +4,7 @@ import { $sessionId } from "@/shared/model/session";
 export const leadersApi: LeadersApi = {
   getList: async () => {
     const sessionId = $sessionId.getState();
-    const response = await fetch(`/game/leaders`, {
+    const response = await fetch(`/api/leaders`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
