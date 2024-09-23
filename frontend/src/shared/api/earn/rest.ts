@@ -44,7 +44,7 @@ async function apiRequest<T>(endpoint: string, method: 'GET' | 'POST', body?: an
 // Updated earnApi implementation
 export const earnApi: EarnApi = {
   getData: async () => {
-    const response = await apiRequest<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task', 'GET');
+    const response = await apiRequest<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', 'GET');
 
     // Handle the response to match the exact type expected
     if (response.error) {
@@ -55,6 +55,6 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    return await apiRequest<any>('/api/earn/complete_task', 'POST', data);
+    return await apiRequest<any>('/api/earn/complete_task.php', 'POST', data);
   },
 };
