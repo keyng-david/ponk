@@ -1,5 +1,5 @@
 <?php
-require '/../db_connection.php';
+require __DIR__ . '/../db_connection.php';
 
 $mysqli = getDbConnection();
 $sessionId = $_SERVER['HTTP_AUTHORIZATION'] ?? ''; // Get sessionId from Authorization header
@@ -12,7 +12,7 @@ if (!$sessionId) {
 }
 
 // Fetch user data based on the session ID
-$stmtUser = $mysqli->prepare("SELECT id, user_level FROM users WHERE session_id = ?");
+$stmtUser = $mysqli->prepare("SELECT id, level FROM users WHERE session_id = ?");
 $stmtUser->bind_param("s", $sessionId);
 $stmtUser->execute();
 $resultUser = $stmtUser->get_result();
