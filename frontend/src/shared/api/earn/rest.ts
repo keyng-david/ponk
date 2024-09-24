@@ -20,10 +20,10 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
 
 // Traditional fetch function for GET requests
 async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
-  const sessionId = $sessionId; // Get the session ID
+  const sessionId = typeof $sessionId === 'string' ? $sessionId : String($sessionId?.session_id); // Ensure session ID is a string
 
-  if (!sessionId) {
-    console.error("Session ID is missing.");
+  if (!sessionId || sessionId === 'undefined') {
+    console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
 
@@ -45,10 +45,10 @@ async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
 
 // Traditional fetch function for POST requests
 async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
-  const sessionId = $sessionId;
+  const sessionId = typeof $sessionId === 'string' ? $sessionId : String($sessionId?.session_id); // Ensure session ID is a string
 
-  if (!sessionId) {
-    console.error("Session ID is missing.");
+  if (!sessionId || sessionId === 'undefined') {
+    console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
 
