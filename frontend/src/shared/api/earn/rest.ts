@@ -87,8 +87,23 @@ export const earnApi: EarnApi = {
 export function useEarnApi() {
   const sessionId = useUnit($sessionId);
 
+  if (!sessionId) {
+    console.error('Session ID is missing or invalid.');
+    return null;
+  }
+
   return {
-    getData: async () => await earnApi.getData(sessionId),
-    taskJoined: async (data: any) => await earnApi.taskJoined(data, sessionId),
+    getData: async () => {
+      if (sessionId) {
+        return await earnApi.getData(sessionId);
+      }
+      throw new Error('Session ID is required to fetch data.');
+    },
+    taskJoined: async (data: any) => {
+      if (sessionId) {
+        return await earnApi.taskJoined(data, sessionId);
+      }
+      throw new Error('Session ID is required to join tasks.');
+    },
   };
 }
