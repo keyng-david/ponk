@@ -75,7 +75,7 @@ export const earnApi: EarnApi = {
       throw new Error("Failed to fetch earn data");
     }
 
-    return response as GetEarnDataResponse; // Ensure the correct return type
+    return response.payload as GetEarnDataResponse; // Ensure the correct return type
   },
 
   taskJoined: async (data, sessionId: string) => { // Accept sessionId as a parameter
@@ -85,10 +85,20 @@ export const earnApi: EarnApi = {
 
 // Custom hook to get session ID
 export function useEarnApi() {
-  const sessionId = useUnit($sessionId);
+  const sessionId = useUnit($sessionId); // Get session ID from store
 
   return {
-    getData: async () => await earnApi.getData(sessionId),
-    taskJoined: async (data: any) => await earnApi.taskJoined(data, sessionId),
+    getData: async () => {
+      if (!sessionId) {
+        throw new Error("Session ID is missing or invalid.");
+      }
+      return await earnApi.getData(sessionId); // Pass sessionId when calling getData
+    },
+    taskJoined: async (data: any) => {
+      if (!sessionId) {
+        throw new Error("Session ID is missing or invalid.");
+      }
+      return await earnApi.taskJoined(data, sessionId); // Pass sessionId when calling taskJoined
+    },
   };
 }
