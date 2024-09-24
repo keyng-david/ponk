@@ -66,12 +66,10 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// EarnApi implementation
+// Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
   getData: async () => {
-    // Use a hook like useUnit in a React context, or pass sessionId as a function argument
-    const sessionId = useUnit($sessionId); // Must be called in a React context
-
+    const sessionId = useUnit($sessionId); // Now use the hook in the proper place
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
     if (response.error) {
@@ -82,7 +80,7 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    const sessionId = useUnit($sessionId); // Correctly using the hook in a React context
+    const sessionId = useUnit($sessionId); // Use hook in this async function as well
     return await postData<any>('/api/earn/complete_task.php', data, sessionId);
   },
 };
