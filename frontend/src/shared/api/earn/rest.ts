@@ -68,37 +68,27 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
 
 // Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
-  getData: async (sessionId: string) => { // Accept sessionId as a parameter
+  getData: async (sessionId: string) => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
     if (response.error) {
       throw new Error("Failed to fetch earn data");
     }
 
-    return response.payload as GetEarnDataResponse; // Ensure the correct return type
+    return response as GetEarnDataResponse; // Ensure the correct return type
   },
 
-  taskJoined: async (data, sessionId: string) => { // Accept sessionId as a parameter
+  taskJoined: async (data, sessionId: string) => {
     return await postData<any>('/api/earn/complete_task.php', data, sessionId);
   },
 };
 
-// Custom hook to get session ID
+// Custom hook to get session ID and use API
 export function useEarnApi() {
-  const sessionId = useUnit($sessionId); // Get session ID from store
+  const sessionId = useUnit($sessionId);
 
   return {
-    getData: async () => {
-      if (!sessionId) {
-        throw new Error("Session ID is missing or invalid.");
-      }
-      return await earnApi.getData(sessionId); // Pass sessionId when calling getData
-    },
-    taskJoined: async (data: any) => {
-      if (!sessionId) {
-        throw new Error("Session ID is missing or invalid.");
-      }
-      return await earnApi.taskJoined(data, sessionId); // Pass sessionId when calling taskJoined
-    },
+    getData: async () => await earnApi.getData(sessionId),
+    taskJoined: async (data: any) => await earnApi.taskJoined(data, sessionId),
   };
 }
