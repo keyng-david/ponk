@@ -69,15 +69,18 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
 // Updated earnApi using fetchData and postData, sessionId passed dynamically
 export const earnApi: EarnApi = {
   getData: async (sessionId: string): Promise<GetEarnDataResponse> => {
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
-    
-    if (response.error) {
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>(
+      '/api/earn/task.php', 
+      sessionId
+    );
+
+    if (response.error || !response.payload) {
       throw new Error('Failed to fetch earn data');
     }
-    
+
     return {
-      tasks: response.payload?.tasks || [],
-      user_level: response.payload?.user_level || 0,
+      tasks: response.payload.tasks,
+      user_level: response.payload.user_level,
     };
   },
 
@@ -90,17 +93,16 @@ export const earnApi: EarnApi = {
 export function useEarnApi() {
   const sessionId = useUnit($sessionId); // Retrieves sessionId dynamically within the hook
 
+  // Ensure sessionId is available before making requests
+  if (!sessionId) {
+    throw new Error('Session ID is missing');
+  }
+
   return {
     getData: async () => {
-      if (!sessionId) {
-        throw new Error('Session ID is missing');
-      }
       return await earnApi.getData(sessionId);
     },
     taskJoined: async (data: any) => {
-      if (!sessionId) {
-        throw new Error('Session ID is missing');
-      }
       return await earnApi.taskJoined(data, sessionId);
     },
   };
