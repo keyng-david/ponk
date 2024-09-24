@@ -66,15 +66,9 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// Custom hook to use session ID
-function useSessionId() {
-  return useUnit($sessionId);
-}
-
 // Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
-  getData: async () => {
-    const sessionId = useSessionId(); // Call the custom hook to get sessionId
+  getData: async (sessionId: string) => { // Accept sessionId as a parameter
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
     if (response.error) {
@@ -84,8 +78,17 @@ export const earnApi: EarnApi = {
     return response as GetEarnDataResponse; // Ensure the correct return type
   },
 
-  taskJoined: async (data) => {
-    const sessionId = useSessionId(); // Call the custom hook to get sessionId
+  taskJoined: async (data, sessionId: string) => { // Accept sessionId as a parameter
     return await postData<any>('/api/earn/complete_task.php', data, sessionId);
   },
 };
+
+// Custom hook to get session ID
+export function useEarnApi() {
+  const sessionId = useUnit($sessionId);
+
+  return {
+    getData: async () => await earnApi.getData(sessionId),
+    taskJoined: async (data: any) => await earnApi.taskJoined(data, sessionId),
+  };
+}
