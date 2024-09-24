@@ -19,7 +19,7 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
-// fetchData with sessionId as a dynamic argument
+// fetchData using sessionId dynamically within a component or hook
 async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
   if (!sessionId) {
     console.error('Session ID is missing or invalid.');
@@ -42,7 +42,7 @@ async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDef
   }
 }
 
-// postData with sessionId as a dynamic argument
+// postData using sessionId dynamically within a component or hook
 async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
   if (!sessionId) {
     console.error('Session ID is missing or invalid.');
@@ -66,7 +66,7 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// Updated earnApi to include sessionId as a dynamic argument
+// Updated earnApi using fetchData and postData, sessionId passed dynamically
 export const earnApi: EarnApi = {
   getData: async (sessionId: string) => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
@@ -81,9 +81,9 @@ export const earnApi: EarnApi = {
   },
 };
 
-// Custom hook to use earnApi, dynamically fetching sessionId
+// Custom hook to use earnApi with sessionId dynamically
 export function useEarnApi() {
-  const sessionId = useUnit($sessionId); // Get sessionId using Effector
+  const sessionId = useUnit($sessionId); // Retrieves sessionId dynamically within the hook
 
   return {
     getData: async () => {
