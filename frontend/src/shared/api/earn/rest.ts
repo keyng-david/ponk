@@ -1,4 +1,5 @@
 import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
+import { useUnit } from 'effector-react';
 import { $sessionId } from "@/shared/model/session";
 
 // Helper function to handle API responses
@@ -20,7 +21,7 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
 
 // Traditional fetch function for GET requests
 async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
-  const sessionId = $sessionId; // Get session ID directly
+  const sessionId = useUnit($sessionId);
 
   if (typeof sessionId !== 'string' || !sessionId) {
     console.error("Session ID is missing or invalid.");
