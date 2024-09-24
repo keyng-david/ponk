@@ -63,7 +63,7 @@ export function useEarnApi() {
   }
 
   // earnApi using fetchData and postData
-  const earnApi: EarnApi = {
+ export const earnApi: EarnApi = {
     getData: async () => {
       const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
       if (response.error) {
