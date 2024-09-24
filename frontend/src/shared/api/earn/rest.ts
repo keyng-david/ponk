@@ -68,15 +68,20 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
 
 // Updated earnApi using fetchData and postData, sessionId passed dynamically
 export const earnApi: EarnApi = {
-  getData: async (sessionId: string) => {
+  getData: async (sessionId: string): Promise<GetEarnDataResponse> => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
+    
     if (response.error) {
       throw new Error('Failed to fetch earn data');
     }
-    return response as GetEarnDataResponse;
+    
+    return {
+      tasks: response.payload?.tasks || [],
+      user_level: response.payload?.user_level || 0,
+    };
   },
 
-  taskJoined: async (data: any, sessionId: string) => {
+  taskJoined: async (data: any, sessionId: string): Promise<any> => {
     return await postData<any>('/api/earn/complete_task.php', data, sessionId);
   },
 };
