@@ -21,7 +21,7 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
 
 // Traditional fetch function for GET requests
 async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
-  if (!sessionId) {
+  if (typeof sessionId !== 'string' || !sessionId) {
     console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
@@ -44,7 +44,7 @@ async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDef
 
 // Traditional fetch function for POST requests
 async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
-  if (!sessionId) {
+  if (typeof sessionId !== 'string' || !sessionId) {
     console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
@@ -66,23 +66,23 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// Custom hook to provide session ID and call the API
-export function useEarnApi(): EarnApi {
-  const sessionId = useUnit($sessionId); // Correctly using the hook within a custom hook
+// EarnApi implementation
+export const earnApi: EarnApi = {
+  getData: async () => {
+    // Use a hook like useUnit in a React context, or pass sessionId as a function argument
+    const sessionId = useUnit($sessionId); // Must be called in a React context
 
-  return {
-    getData: async () => {
-      const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
-      if (response.error) {
-        throw new Error("Failed to fetch earn data");
-      }
+    if (response.error) {
+      throw new Error("Failed to fetch earn data");
+    }
 
-      return response as GetEarnDataResponse; // Ensure the correct return type
-    },
+    return response as GetEarnDataResponse; // Ensure the correct return type
+  },
 
-    taskJoined: async (data) => {
-      return await postData<any>('/api/earn/complete_task.php', data, sessionId);
-    },
-  };
-}
+  taskJoined: async (data) => {
+    const sessionId = useUnit($sessionId); // Correctly using the hook in a React context
+    return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+  },
+};
