@@ -19,8 +19,10 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
-// fetchData using sessionId dynamically within a component or hook
-async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
+// fetchData using sessionId from Effector state
+async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
+  const sessionId = useUnit($sessionId); // Dynamically retrieve sessionId here
+
   if (!sessionId) {
     console.error('Session ID is missing or invalid.');
     return { error: true, payload: null };
@@ -42,8 +44,10 @@ async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDef
   }
 }
 
-// postData using sessionId dynamically within a component or hook
-async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
+// postData using sessionId from Effector state
+async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
+  const sessionId = useUnit($sessionId); // Dynamically retrieve sessionId here
+
   if (!sessionId) {
     console.error('Session ID is missing or invalid.');
     return { error: true, payload: null };
@@ -66,12 +70,11 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// Updated earnApi using fetchData and postData, sessionId passed dynamically
+// Updated earnApi without passing sessionId explicitly
 export const earnApi: EarnApi = {
-  getData: async (sessionId: string): Promise<GetEarnDataResponse> => {
+  getData: async (): Promise<GetEarnDataResponse> => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>(
       '/api/earn/task.php',
-      sessionId
     );
     
     if (response.error) {
@@ -84,27 +87,19 @@ export const earnApi: EarnApi = {
     };
   },
 
-  taskJoined: async (data: any, sessionId: string): Promise<any> => {
-    return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+  taskJoined: async (data: any): Promise<any> => {
+    return await postData<any>('/api/earn/complete_task.php', data);
   },
 };
 
-// Custom hook to use earnApi with sessionId dynamically
+// Custom hook to use earnApi
 export function useEarnApi() {
-  const sessionId = useUnit($sessionId); // Retrieves sessionId dynamically within the hook
-
   return {
     getData: async () => {
-      if (!sessionId) {
-        throw new Error('Session ID is missing');
-      }
-      return await earnApi.getData(sessionId);
+      return await earnApi.getData();
     },
     taskJoined: async (data: any) => {
-      if (!sessionId) {
-        throw new Error('Session ID is missing');
-      }
-      return await earnApi.taskJoined(data, sessionId);
+      return await earnApi.taskJoined(data);
     },
   };
 }
