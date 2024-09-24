@@ -1,25 +1,11 @@
-import { useUnit } from 'effector-react';
-import { $sessionId } from '@/shared/model/session';
 import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
-import React from 'react';
-
-// Custom hook to retrieve sessionId from Effector
-export function useSessionId() {
-  const sessionId = useUnit($sessionId);
-
-  if (!sessionId) {
-    console.error('Session ID is missing or invalid.');
-    return null;
-  }
-
-  return sessionId;
-}
+import { useSessionId } from "@/shared/model/session"; // Updated import
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
   if (!response.ok) {
-    const errorText = await response.text();
-    console.error('API Error:', errorText);
+    const errorText = await response.text(); // Capture the error response
+    console.error("API Error:", errorText);
     return { error: true, payload: null };
   }
 
@@ -27,76 +13,75 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
     const data: T = await response.json();
     return { error: false, payload: data };
   } catch (error) {
-    console.error('Failed to parse JSON response:', error);
+    console.error("Failed to parse JSON response:", error);
     return { error: true, payload: null };
   }
 }
 
-// fetchData using sessionId from custom hook
-export async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
+// Traditional fetch function for GET requests
+async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
+  const { sessionId } = useSessionId(); // Use session ID from global session state
+
+  if (!sessionId) {
+    console.error("Session ID is missing.");
+    return { error: true, payload: null };
+  }
+
   try {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Session ${sessionId}`, // Use session ID in Authorization header
+        Authorization: `Session ${sessionId}`, // Use session ID for Authorization
       },
     });
 
-    return await handleResponse<T>(response);
+    return await handleResponse<T>(response); // Handle and return the response
   } catch (error) {
-    console.error('Fetch request failed:', error);
+    console.error("Fetch request failed:", error);
     return { error: true, payload: null };
   }
 }
 
-// postData using sessionId from custom hook
-export async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
+// Traditional fetch function for POST requests
+async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
+  const { sessionId } = useSessionId(); // Use session ID from global session state
+
+  if (!sessionId) {
+    console.error("Session ID is missing.");
+    return { error: true, payload: null };
+  }
+
   try {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Session ${sessionId}`, // Use session ID in Authorization header
+        Authorization: `Session ${sessionId}`, // Use session ID for Authorization
       },
       body: JSON.stringify(body),
     });
 
-    return await handleResponse<T>(response);
+    return await handleResponse<T>(response); // Handle and return the response
   } catch (error) {
-    console.error('Fetch request failed:', error);
+    console.error("Fetch request failed:", error);
     return { error: true, payload: null };
   }
 }
 
-// earnApi object using fetchData and postData
+// Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
-  getData: async (): Promise<GetEarnDataResponse> => {
-    const sessionId = useUnit($sessionId);
-    if (!sessionId) {
-      throw new Error('Session ID is missing');
-    }
-    
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>(
-      '/api/earn/task.php',
-      sessionId
-    );
+  getData: async () => {
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
 
     if (response.error) {
-      throw new Error('Failed to fetch earn data');
+      throw new Error("Failed to fetch earn data");
     }
 
-    return {
-      tasks: response.payload?.tasks || [],
-      user_level: response.payload?.user_level || 0,
-    };
+    return response as GetEarnDataResponse; // Ensure the correct return type
   },
 
-  taskJoined: async (data: any): Promise<any> => {
-    const sessionId = useUnit($sessionId);
-    if (!sessionId) {
-      throw new Error('Session ID is missing');
-    }
-    return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+  taskJoined: async (data) => {
+    return await postData<any>('/api/earn/complete_task.php', data);
   },
 };
