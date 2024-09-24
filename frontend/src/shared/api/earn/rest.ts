@@ -1,6 +1,19 @@
 import { useUnit } from 'effector-react';
 import { $sessionId } from '@/shared/model/session';
 import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
+import React from 'react';
+
+// Custom hook to retrieve sessionId from Effector
+export function useSessionId() {
+  const sessionId = useUnit($sessionId);
+
+  if (!sessionId) {
+    console.error('Session ID is missing or invalid.');
+    return null;
+  }
+
+  return sessionId;
+}
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
@@ -19,15 +32,8 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
-// fetchData using sessionId from Effector state
-async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
-  const sessionId = useUnit($sessionId); // Dynamically retrieve sessionId here
-
-  if (!sessionId) {
-    console.error('Session ID is missing or invalid.');
-    return { error: true, payload: null };
-  }
-
+// fetchData using sessionId from custom hook
+export async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
   try {
     const response = await fetch(url, {
       method: 'GET',
@@ -44,15 +50,8 @@ async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
   }
 }
 
-// postData using sessionId from Effector state
-async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
-  const sessionId = useUnit($sessionId); // Dynamically retrieve sessionId here
-
-  if (!sessionId) {
-    console.error('Session ID is missing or invalid.');
-    return { error: true, payload: null };
-  }
-
+// postData using sessionId from custom hook
+export async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -68,38 +67,4 @@ async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> 
     console.error('Fetch request failed:', error);
     return { error: true, payload: null };
   }
-}
-
-// Updated earnApi without passing sessionId explicitly
-export const earnApi: EarnApi = {
-  getData: async (): Promise<GetEarnDataResponse> => {
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>(
-      '/api/earn/task.php',
-    );
-    
-    if (response.error) {
-      throw new Error('Failed to fetch earn data');
-    }
-    
-    return {
-      tasks: response.payload?.tasks || [],
-      user_level: response.payload?.user_level || 0,
-    };
-  },
-
-  taskJoined: async (data: any): Promise<any> => {
-    return await postData<any>('/api/earn/complete_task.php', data);
-  },
-};
-
-// Custom hook to use earnApi
-export function useEarnApi() {
-  return {
-    getData: async () => {
-      return await earnApi.getData();
-    },
-    taskJoined: async (data: any) => {
-      return await earnApi.taskJoined(data);
-    },
-  };
 }
