@@ -20,10 +20,8 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
 }
 
 // Traditional fetch function for GET requests
-async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
-  const sessionId = useUnit($sessionId);
-
-  if (typeof sessionId !== 'string' || !sessionId) {
+async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
+  if (!sessionId) {
     console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
@@ -45,10 +43,8 @@ async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
 }
 
 // Traditional fetch function for POST requests
-async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
-  const sessionId = $sessionId;
-
-  if (typeof sessionId !== 'string' || !sessionId) {
+async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
+  if (!sessionId) {
     console.error("Session ID is missing or invalid.");
     return { error: true, payload: null };
   }
@@ -70,19 +66,23 @@ async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> 
   }
 }
 
-// Updated earnApi implementation using fetchData and postData
-export const earnApi: EarnApi = {
-  getData: async () => {
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
+// Custom hook to provide session ID and call the API
+export function useEarnApi(): EarnApi {
+  const sessionId = useUnit($sessionId); // Correctly using the hook within a custom hook
 
-    if (response.error) {
-      throw new Error("Failed to fetch earn data");
-    }
+  return {
+    getData: async () => {
+      const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
-    return response as GetEarnDataResponse; // Ensure the correct return type
-  },
+      if (response.error) {
+        throw new Error("Failed to fetch earn data");
+      }
 
-  taskJoined: async (data) => {
-    return await postData<any>('/api/earn/complete_task.php', data);
-  },
-};
+      return response as GetEarnDataResponse; // Ensure the correct return type
+    },
+
+    taskJoined: async (data) => {
+      return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+    },
+  };
+}
