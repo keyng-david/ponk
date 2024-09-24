@@ -19,6 +19,21 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
+// earnApi using fetchData and postData
+export const earnApi: EarnApi = {
+  getData: async () => {
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
+    if (response.error) {
+      throw new Error('Failed to fetch earn data');
+    }
+    return response as GetEarnDataResponse;
+  },
+
+  taskJoined: async (data: { id: number }) => {
+    return await postData<any>('/api/earn/complete_task.php', data);
+  },
+};
+
 // Custom hook to fetch sessionId and pass it to the API methods
 export function useEarnApi() {
   const sessionId = useUnit($sessionId);
@@ -61,21 +76,6 @@ export function useEarnApi() {
       return { error: true, payload: null };
     }
   }
-
-  // earnApi using fetchData and postData
- export const earnApi: EarnApi = {
-    getData: async () => {
-      const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
-      if (response.error) {
-        throw new Error('Failed to fetch earn data');
-      }
-      return response as GetEarnDataResponse;
-    },
-
-    taskJoined: async (data: { id: number }) => {
-      return await postData<any>('/api/earn/complete_task.php', data);
-    },
-  };
 
   return {
     getData: earnApi.getData,
