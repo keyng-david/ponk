@@ -68,3 +68,35 @@ export async function postData<T>(url: string, body: any, sessionId: string): Pr
     return { error: true, payload: null };
   }
 }
+
+// earnApi object using fetchData and postData
+export const earnApi: EarnApi = {
+  getData: async (): Promise<GetEarnDataResponse> => {
+    const sessionId = useUnit($sessionId);
+    if (!sessionId) {
+      throw new Error('Session ID is missing');
+    }
+    
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>(
+      '/api/earn/task.php',
+      sessionId
+    );
+
+    if (response.error) {
+      throw new Error('Failed to fetch earn data');
+    }
+
+    return {
+      tasks: response.payload?.tasks || [],
+      user_level: response.payload?.user_level || 0,
+    };
+  },
+
+  taskJoined: async (data: any): Promise<any> => {
+    const sessionId = useUnit($sessionId);
+    if (!sessionId) {
+      throw new Error('Session ID is missing');
+    }
+    return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+  },
+};
