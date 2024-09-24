@@ -66,10 +66,15 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
+// Custom hook to use session ID
+function useSessionId() {
+  return useUnit($sessionId);
+}
+
 // Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
   getData: async () => {
-    const sessionId = useUnit($sessionId); // Now use the hook in the proper place
+    const sessionId = useSessionId(); // Call the custom hook to get sessionId
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
 
     if (response.error) {
@@ -80,7 +85,7 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    const sessionId = useUnit($sessionId); // Use hook in this async function as well
+    const sessionId = useSessionId(); // Call the custom hook to get sessionId
     return await postData<any>('/api/earn/complete_task.php', data, sessionId);
   },
 };
