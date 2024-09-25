@@ -101,27 +101,26 @@ export const earnModel = {
 }
 
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
-    function getAmount(item: GetEarnDataResponseItem) {
-        const level = data.payload!.user_level as 1 | 2 | 3
+  function getAmount(item: GetEarnDataResponseItem) {
+    const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
+    const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
+    return `${sum} ${item.reward_symbol}`;
+  }
 
-        const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward
-
-        return `${sum} ${item.reward_symbol}`
-    }
-
-    if (data.payload) {
-        return data.payload.tasks.map(item => ({
-            id: item.id,
-            avatar: item.image_link,
-            name: item.name,
-            amount: getAmount(item),
-            description: item.description,
-            time: item.end_time,
-            tasks: item.task_list,
-            link: item.link,
-            participants: item.total_clicks,
-        }))
-    }
-
-    return []
+  if (data.payload && Array.isArray(data.payload.tasks)) {
+    return data.payload.tasks.map(item => ({
+      id: item.id,
+      avatar: item.image_link,
+      name: item.name,
+      amount: getAmount(item),
+      description: item.description,
+      time: item.end_time,
+      tasks: item.task_list,
+      link: item.link,
+      participants: item.total_clicks,
+    }));
+  } else {
+    console.error("Invalid payload or tasks data:", data.payload);
+    return [];
+  }
 }
