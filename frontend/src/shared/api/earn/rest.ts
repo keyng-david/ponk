@@ -1,6 +1,5 @@
 import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
 import { $sessionId } from "@/shared/model/session";  // Import the session store
-import { getSnapshot } from 'effector';  // Helper to retrieve current session ID snapshot
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
@@ -21,7 +20,7 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
 
 // Helper to retrieve the current session ID from Effector store
 function getSessionId(): string | null {
-  return getSnapshot($sessionId); // Get the current value from the store
+  return $sessionId.getState();  // Use getState() to retrieve the current value
 }
 
 // Traditional fetch function for GET requests
