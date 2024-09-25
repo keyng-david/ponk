@@ -90,7 +90,7 @@ try {
     // Debug log for total tasks fetched
     error_log("Debug: Total tasks fetched: " . count($tasks));
 
-    // Respond with the tasks and user level
+    // Respond with the tasks and user level in the correct structure
     echo json_encode([
         'error' => false,
         'payload' => [
@@ -99,17 +99,18 @@ try {
         ]
     ]);
 
+    // Close statements and database connection
     $stmtUser->close();
     $stmtTasks->close();
     $mysqli->close();
 } catch (Exception $e) {
     // Log the caught error
     error_log('Exception caught in task.php: ' . $e->getMessage());
-    
+
     // Respond with a generic error message to the client
     header('HTTP/1.0 500 Internal Server Error');
     echo json_encode(['error' => true, 'message' => 'An unexpected error occurred.']);
-    
+
     // Close any open connections
     if (isset($stmtUser)) {
         $stmtUser->close();
