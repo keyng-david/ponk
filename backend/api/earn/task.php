@@ -72,12 +72,15 @@ try {
         // Debug log for each task
         error_log("Debug: Processing task ID: " . $task['id'] . " with reward: " . $task['reward']);
 
-        // Add each task to the tasks array
+        // Add each task to the tasks array, including reward1, reward2, reward3
         $tasks[] = [
             'id' => $task['id'],
             'name' => $task['name'],
             'description' => $task['description'],
             'reward' => $task['reward'],
+            'reward1' => $task['reward1'],
+            'reward2' => $task['reward2'],
+            'reward3' => $task['reward3'],
             'reward_symbol' => $task['reward_symbol'],
             'end_time' => strtotime($task['end_time']), // Convert to timestamp
             'total_clicks' => $task['total_clicks'],
@@ -90,14 +93,23 @@ try {
     // Debug log for total tasks fetched
     error_log("Debug: Total tasks fetched: " . count($tasks));
 
-    // Respond with the tasks and user level in the correct structure
-    echo json_encode([
+    // Prepare the response array
+    $responseArray = [
         'error' => false,
         'payload' => [
             'tasks' => $tasks,
             'user_level' => $userLevel
         ]
-    ]);
+    ];
+
+    // Convert the response array to JSON
+    $responseJson = json_encode($responseArray);
+
+    // Log the response being sent
+    error_log("Debug: Response sent to frontend: " . $responseJson);
+
+    // Send the response
+    echo $responseJson;
 
     // Close statements and database connection
     $stmtUser->close();
