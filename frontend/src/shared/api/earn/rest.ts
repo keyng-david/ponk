@@ -1,5 +1,6 @@
 import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
-import { useSessionId } from "@/shared/model/session"; // Keep this import
+import { $sessionId } from "@/shared/model/session";  // Import the session store
+import { getSnapshot } from 'effector';  // Helper to retrieve current session ID snapshot
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
@@ -18,8 +19,15 @@ async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>
   }
 }
 
-// Updated fetch function for GET requests with sessionId parameter
-async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDefault<T>> {
+// Helper to retrieve the current session ID from Effector store
+function getSessionId(): string | null {
+  return getSnapshot($sessionId); // Get the current value from the store
+}
+
+// Traditional fetch function for GET requests
+async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
+  const sessionId = getSessionId();  // Get session ID globally
+
   if (!sessionId) {
     console.error("Session ID is missing.");
     return { error: true, payload: null };
@@ -41,8 +49,10 @@ async function fetchData<T>(url: string, sessionId: string): Promise<ResponseDef
   }
 }
 
-// Updated fetch function for POST requests with sessionId parameter
-async function postData<T>(url: string, body: any, sessionId: string): Promise<ResponseDefault<T>> {
+// Traditional fetch function for POST requests
+async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
+  const sessionId = getSessionId();  // Get session ID globally
+
   if (!sessionId) {
     console.error("Session ID is missing.");
     return { error: true, payload: null };
@@ -65,16 +75,10 @@ async function postData<T>(url: string, body: any, sessionId: string): Promise<R
   }
 }
 
-// Updated earnApi implementation, passing sessionId from useSessionId
+// Updated earnApi implementation using fetchData and postData
 export const earnApi: EarnApi = {
   getData: async () => {
-    const { sessionId } = useSessionId(); // Fetch session ID
-
-    if (!sessionId) {
-      throw new Error("Session ID is missing");
-    }
-
-    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php', sessionId);
+    const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
 
     if (response.error) {
       throw new Error("Failed to fetch earn data");
@@ -84,12 +88,6 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    const { sessionId } = useSessionId(); // Fetch session ID
-
-    if (!sessionId) {
-      throw new Error("Session ID is missing");
-    }
-
-    return await postData<any>('/api/earn/complete_task.php', data, sessionId);
+    return await postData<any>('/api/earn/complete_task.php', data);
   },
 };
