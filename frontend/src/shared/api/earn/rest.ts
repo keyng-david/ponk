@@ -78,9 +78,12 @@ async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> 
 export const earnApi: EarnApi = {
   getData: async () => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
+    
+    console.log('API Response:', response);  // Debug the API response
 
-    if (response.error) {
-      throw new Error("Failed to fetch earn data");
+    if (response.error || !response.payload || !Array.isArray(response.payload.tasks)) {
+      console.error("Failed to fetch earn data or tasks are missing");
+      throw new Error("Failed to fetch earn data or no tasks available");
     }
 
     return response as GetEarnDataResponse; // Ensure the correct return type
