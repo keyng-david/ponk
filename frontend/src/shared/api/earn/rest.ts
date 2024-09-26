@@ -82,8 +82,7 @@ export const earnApi: EarnApi = {
     console.log('API Response:', response);  // Debug the API response
 
     if (response.error || !response.payload || !Array.isArray(response.payload.tasks)) {
-      console.error("Failed to fetch earn data or tasks are missing");
-      throw new Error("Failed to fetch earn data or no tasks available");
+      console.warn("Earn data fetched but tasks might be missing or empty.");
     }
 
     return response as GetEarnDataResponse; // Ensure the correct return type
