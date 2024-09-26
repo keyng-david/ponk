@@ -78,7 +78,7 @@ async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> 
 export const earnApi: EarnApi = {
   getData: async () => {
     const response = await fetchData<{ tasks: GetEarnDataResponseItem[]; user_level: number }>('/api/earn/task.php');
-    
+
     console.log('API Response:', response);  // Debug the API response
 
     if (response.error || !response.payload || !Array.isArray(response.payload.tasks)) {
@@ -90,6 +90,14 @@ export const earnApi: EarnApi = {
   },
 
   taskJoined: async (data) => {
-    return await postData<any>('/api/earn/complete_task.php', data);
+    console.log("Sending request to complete_task.php with data:", data);  // Log the outgoing request
+    const response = await postData<any>('/api/earn/complete_task.php', data);
+
+    console.log("Response from complete_task.php:", response);  // Log the response from the backend
+    if (response.error) {
+      console.error("Error from complete_task.php:", response);
+    }
+
+    return response;
   },
 };
