@@ -136,48 +136,53 @@ export const earnModel = {
 // Converting raw data into domain-specific format
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
-    
-    if (!data || !data.payload) {
-        console.error("Data or payload is missing:", data);
-        return [];
-    }
+    console.log("Raw data received:", data);
 
     function getAmount(item: GetEarnDataResponseItem) {
+        console.log("Calculating amount for task item:", item);
         const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
-        const rewardKey = `reward${level}`;
-        const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward;
+        console.log("User level:", level);
         
-        console.log(`Item ID: ${item.id}, Reward Key: ${rewardKey}, Reward Value: ${sum}, Reward Symbol: ${item.reward_symbol}`);
+        const rewardKey = `reward${level}`;
+        const sum = level && item[rewardKey] ? item[rewardKey] : item.reward;
+        
+        console.log("Reward key used:", rewardKey);
+        console.log("Calculated sum:", sum);
+        
         return `${sum} ${item.reward_symbol}`;
     }
 
-    if (Array.isArray(data.payload.tasks)) {
-        console.log("Payload contains valid tasks array with length:", data.payload.tasks.length);
+    if (data.payload && Array.isArray(data.payload.tasks)) {
+        console.log("Payload contains valid tasks array:", data.payload.tasks);
 
         const tasks = data.payload.tasks.map((item, index) => {
-            console.log(`Mapping task ${index + 1}/${data.payload.tasks.length}:`, item);
+            try {
+                console.log(`Mapping task ${index + 1} of ${data.payload.tasks.length}:`, item);
 
-            const task = {
-                id: item.id,
-                avatar: item.image_link,
-                name: item.name,
-                amount: getAmount(item),
-                description: item.description,
-                time: item.end_time,
-                tasks: item.task_list,
-                link: item.link,
-                participants: item.total_clicks,
-            };
+                const mappedTask = {
+                    id: item.id,
+                    avatar: item.image_link,
+                    name: item.name,
+                    amount: getAmount(item),
+                    description: item.description,
+                    time: item.end_time,
+                    tasks: item.task_list,
+                    link: item.link,
+                    participants: item.total_clicks,
+                };
 
-            // Log the created task object for further inspection
-            console.log(`Mapped task object:`, task);
-            return task;
-        });
+                console.log(`Task ${index + 1} mapped successfully:`, mappedTask);
+                return mappedTask;
+            } catch (error) {
+                console.error(`Error mapping task ${index + 1}:`, item, error);
+                return null; // Handle mapping failure by returning null
+            }
+        }).filter(task => task !== null); // Filter out any failed tasks
 
-        console.log(`Successfully mapped ${tasks.length} tasks.`);
+        console.log(`Mapped ${tasks.length} valid tasks successfully.`);
         return tasks;
     } else {
-        console.error("Invalid payload or tasks data:", data.payload);
+        console.error("Invalid payload or tasks data. Data payload:", data.payload);
         return [];
     }
 }
