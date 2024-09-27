@@ -50,7 +50,7 @@ try {
     // Fetch tasks data
     $stmtTasks = $mysqli->prepare("
         SELECT 
-            id, name, description, reward, reward1, reward2, reward3, reward_symbol, UNIX_TIMESTAMP(end_time) AS end_time, total_clicks, link, image_link, task_list 
+            id, name, description, reward, reward1, reward2, reward3, reward_symbol, end_time, total_clicks, link, image_link, task_list 
         FROM tasks
     ");
     if (!$stmtTasks) {
