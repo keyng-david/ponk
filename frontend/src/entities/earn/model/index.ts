@@ -1,122 +1,150 @@
-import { EarnItem } from './types';
-import { earnApi } from '@/shared/api/earn';
-import { createEvent, createStore, sample, createEffect } from 'effector';
-import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/types';
-import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
+import { EarnItem } from './types'
+import { earnApi } from '@/shared/api/earn'
+import { createEvent, createStore, sample, createEffect } from 'effector'
+import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/types'
+import { TelegramWindow } from "@/shared/lib/hooks/useTelegram"
 
-// Effect to fetch task data
-const fetchFx = createEffect(earnApi.getData);
-
-// Effect to handle task join event
-const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
-    const tg = (window as unknown as TelegramWindow);
-
-    try {
-        console.log(`Task with ID ${data.id} is being joined...`);
-        const response = await earnApi.taskJoined({ id: data.id });
-        console.log("Task joined response:", response);
-
-        if (!response.error) {
-            tg.Telegram.WebApp.openLink(data.link);
-        } else {
-            console.error("Error in taskJoined:", response);
-        }
-    } catch (error) {
-        console.error("Error during taskJoinedFx:", error);
-    }
+// Creating the fetch effect with logging
+const fetchFx = createEffect(async () => {
+    console.log("Fetching earn data...");
+    const data = await earnApi.getData();
+    console.log("Fetch successful, data received:", data);
+    return data;
+}).catch(error => {
+    console.error("Error while fetching data:", error);
 });
 
-// Event triggers
+// Second left effect with logging
+const secondLeftedFx = createEffect(async () => {
+    console.log("Starting countdown...");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    console.log("Countdown finished.");
+    return 60;
+}).catch(error => {
+    console.error("Error in countdown effect:", error);
+});
+
+// Task joined effect with logging
+const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
+    console.log(`Joining task with ID: ${data.id}, link: ${data.link}`);
+    const tg = (window as unknown as TelegramWindow);
+
+    await earnApi.taskJoined({
+        id: data.id
+    }).then(() => {
+        console.log(`Task with ID: ${data.id} marked as joined.`);
+    }).catch(error => {
+        console.error(`Error joining task with ID: ${data.id}`, error);
+    });
+
+    tg.Telegram.WebApp.openLink(data.link);
+});
+
+// Creating events
 const tasksRequested = createEvent();
 const taskSelected = createEvent<EarnItem>();
 const taskClosed = createEvent();
+const timeUpdated = createEvent<EarnItem>();
 
-// Effect to simulate countdown or timeout for tasks
-const secondLeftedFx = createEffect(async () => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    return 60; // Simulating seconds countdown, update as needed
-});
-
-// Store for active task
+// Creating stores
 const $activeTask = createStore<EarnItem | null>(null);
-
-// Store for the task list
-const $list = createStore<EarnItem[]>([])
-    .on(fetchFx.doneData, (_, payload) => toDomain(payload))
-    .on(fetchFx.failData, (state, error) => {
-        console.error("Failed to fetch tasks:", error);
-        return state;
-    });
-
-// Loading state store
+const $list = createStore<EarnItem[]>([]);
+const $collabs = $list.map(item => item.length);
 const $isLoading = fetchFx.pending;
 
-// Track task selection and close events
-sample({
-    clock: taskSelected,
-    target: $activeTask,
-});
+// Starting countdown on initialization
+secondLeftedFx().then();
 
-sample({
-    clock: taskClosed,
-    fn: () => null,
-    target: $activeTask
-});
-
-// Effect to manage time updates
+// Updating active task every second
 sample({
     source: $activeTask,
     clock: secondLeftedFx.doneData,
-    filter: activeTask => !!activeTask,
+    filter: activeItem => !!activeItem,
     fn: activeTask => ({
         ...activeTask!,
-        time: activeTask!.time - 1000, // Reduce time by 1 second
+        time: activeTask!.time - 1000,
     }),
-    target: $activeTask,
+    target: [$activeTask, timeUpdated, secondLeftedFx],
+    greedy: true,
+    priority: 'high',
 });
 
-// Trigger next second countdown
-secondLeftedFx().then(() => {
-    sample({
-        source: $activeTask,
-        clock: secondLeftedFx.doneData,
-        filter: activeItem => !activeItem,
-        target: secondLeftedFx,
-    });
+// Restarting countdown if there's no active task
+sample({
+    source: $activeTask,
+    clock: secondLeftedFx.doneData,
+    filter: activeItem => !activeItem,
+    target: secondLeftedFx,
 });
 
-// Trigger task fetching
+// Updating task list when time is updated
+sample({
+    source: $list,
+    clock: timeUpdated,
+    fn: (list, updated) => list.map(item => item.id === updated.id ? updated : item),
+    target: $list,
+});
+
+// Fetching tasks when requested
 sample({
     clock: tasksRequested,
     target: fetchFx,
 });
 
-// Debugging: Fetch task data logs
-fetchFx.done.watch(({ result }) => {
-    console.log("Fetch effect completed. Result:", result);
-    if (result.payload && Array.isArray(result.payload.tasks)) {
-        console.log("Fetched tasks count:", result.payload.tasks.length);
-    } else {
-        console.error("Invalid tasks payload received:", result.payload);
-    }
+// Processing the fetch result and updating the list
+sample({
+    clock: fetchFx.doneData,
+    fn: (data) => {
+        console.log("Processing fetched data:", data);
+        const tasks = toDomain(data);
+        if (tasks.length === 0) {
+            console.warn("No tasks were created from the fetched data.");
+        } else {
+            console.log(`Successfully mapped ${tasks.length} tasks.`);
+        }
+        return tasks;
+    },
+    target: $list,
 });
 
-fetchFx.fail.watch(({ error }) => {
-    console.error("Fetch effect failed. Error:", error);
+// Handling task selection
+sample({
+    clock: taskSelected,
+    target: $activeTask,
 });
 
-// Function to map API response to the domain-specific format
+// Handling task closing
+sample({
+    clock: taskClosed,
+    fn: () => null,
+    target: $activeTask,
+});
+
+export const earnModel = {
+    $list,
+    $activeTask,
+    $collabs,
+    $isLoading,
+    tasksRequested,
+    taskSelected,
+    taskClosed,
+    taskJoinedFx,
+}
+
+// Converting raw data into domain-specific format
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
+    console.log("Mapping payload to EarnItem[] format...");
+    
     function getAmount(item: GetEarnDataResponseItem) {
-        const level = data.payload!.user_level as 0 | 1 | 2 | 3;
+        const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
         const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
         return `${sum} ${item.reward_symbol}`;
     }
 
-    console.log("Mapping data to domain format. Payload:", data.payload);
-
     if (data.payload && Array.isArray(data.payload.tasks)) {
-        return data.payload.tasks.map(item => ({
+        console.log("Payload contains valid tasks array:", data.payload.tasks);
+
+        const tasks = data.payload.tasks.map(item => ({
             id: item.id,
             avatar: item.image_link,
             name: item.name,
@@ -127,19 +155,11 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
             link: item.link,
             participants: item.total_clicks,
         }));
+
+        console.log(`Mapped ${tasks.length} tasks successfully.`);
+        return tasks;
     } else {
-        console.error("Invalid or missing tasks in payload:", data.payload);
+        console.error("Invalid payload or tasks data:", data.payload);
         return [];
     }
 }
-
-// Exports
-export const earnModel = {
-    $list,
-    $activeTask,
-    $isLoading,
-    tasksRequested,
-    taskSelected,
-    taskClosed,
-    taskJoinedFx,
-};
