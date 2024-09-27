@@ -87,3 +87,4 @@ try {
     header('HTTP/1.0 500 Internal Server Error');
     echo json_encode(['error' => true, 'message' => 'An unexpected error occurred.']);
 }
+?>
