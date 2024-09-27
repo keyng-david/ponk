@@ -10,8 +10,6 @@ const fetchFx = createEffect(async () => {
     const data = await earnApi.getData();
     console.log("Fetch successful, data received:", data);
     return data;
-}).catch(error => {
-    console.error("Error while fetching data:", error);
 });
 
 // Second left effect with logging
@@ -20,8 +18,6 @@ const secondLeftedFx = createEffect(async () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log("Countdown finished.");
     return 60;
-}).catch(error => {
-    console.error("Error in countdown effect:", error);
 });
 
 // Task joined effect with logging
@@ -29,15 +25,15 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
     console.log(`Joining task with ID: ${data.id}, link: ${data.link}`);
     const tg = (window as unknown as TelegramWindow);
 
-    await earnApi.taskJoined({
-        id: data.id
-    }).then(() => {
+    try {
+        await earnApi.taskJoined({
+            id: data.id
+        });
         console.log(`Task with ID: ${data.id} marked as joined.`);
-    }).catch(error => {
+        tg.Telegram.WebApp.openLink(data.link);
+    } catch (error) {
         console.error(`Error joining task with ID: ${data.id}`, error);
-    });
-
-    tg.Telegram.WebApp.openLink(data.link);
+    }
 });
 
 // Creating events
@@ -51,6 +47,14 @@ const $activeTask = createStore<EarnItem | null>(null);
 const $list = createStore<EarnItem[]>([]);
 const $collabs = $list.map(item => item.length);
 const $isLoading = fetchFx.pending;
+
+// Handling success and failure for fetch effect
+fetchFx.doneData.watch((data) => {
+    console.log("Fetch succeeded:", data);
+});
+fetchFx.failData.watch((error) => {
+    console.error("Fetch failed:", error);
+});
 
 // Starting countdown on initialization
 secondLeftedFx().then();
@@ -134,7 +138,7 @@ export const earnModel = {
 // Converting raw data into domain-specific format
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
-    
+
     function getAmount(item: GetEarnDataResponseItem) {
         const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
         const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
