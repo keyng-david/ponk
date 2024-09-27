@@ -69,8 +69,6 @@ sample({
         time: activeTask!.time - 1000,
     }),
     target: [$activeTask, timeUpdated, secondLeftedFx],
-    greedy: true,
-    priority: 'high',
 });
 
 // Restarting countdown if there's no active task
