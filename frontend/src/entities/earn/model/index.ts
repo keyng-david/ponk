@@ -136,29 +136,45 @@ export const earnModel = {
 // Converting raw data into domain-specific format
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
+    
+    if (!data || !data.payload) {
+        console.error("Data or payload is missing:", data);
+        return [];
+    }
 
     function getAmount(item: GetEarnDataResponseItem) {
         const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
-        const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
+        const rewardKey = `reward${level}`;
+        const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward;
+        
+        console.log(`Item ID: ${item.id}, Reward Key: ${rewardKey}, Reward Value: ${sum}, Reward Symbol: ${item.reward_symbol}`);
         return `${sum} ${item.reward_symbol}`;
     }
 
-    if (data.payload && Array.isArray(data.payload.tasks)) {
-        console.log("Payload contains valid tasks array:", data.payload.tasks);
+    if (Array.isArray(data.payload.tasks)) {
+        console.log("Payload contains valid tasks array with length:", data.payload.tasks.length);
 
-        const tasks = data.payload.tasks.map(item => ({
-            id: item.id,
-            avatar: item.image_link,
-            name: item.name,
-            amount: getAmount(item),
-            description: item.description,
-            time: item.end_time,
-            tasks: item.task_list,
-            link: item.link,
-            participants: item.total_clicks,
-        }));
+        const tasks = data.payload.tasks.map((item, index) => {
+            console.log(`Mapping task ${index + 1}/${data.payload.tasks.length}:`, item);
 
-        console.log(`Mapped ${tasks.length} tasks successfully.`);
+            const task = {
+                id: item.id,
+                avatar: item.image_link,
+                name: item.name,
+                amount: getAmount(item),
+                description: item.description,
+                time: item.end_time,
+                tasks: item.task_list,
+                link: item.link,
+                participants: item.total_clicks,
+            };
+
+            // Log the created task object for further inspection
+            console.log(`Mapped task object:`, task);
+            return task;
+        });
+
+        console.log(`Successfully mapped ${tasks.length} tasks.`);
         return tasks;
     } else {
         console.error("Invalid payload or tasks data:", data.payload);
