@@ -137,10 +137,22 @@ export const earnModel = {
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
 
+    // Ensure payload exists and has tasks array
+    if (!data.payload) {
+        console.error("Payload is undefined or null.");
+        return [];
+    }
+
+    if (!Array.isArray(data.payload.tasks)) {
+        console.error("Payload tasks are not an array or are missing.");
+        return [];
+    }
+
+    // Helper function to get reward amount based on the user's level
     function getAmount(item: GetEarnDataResponseItem) {
-        const level = data.payload!.user_level as 1 | 2 | 3; // Include 0 in the type
+        const level = data.payload!.user_level as 1 | 2 | 3;
         console.log(`Calculating amount for task ${item.id} with level: ${level}`);
-        
+
         // Check if the reward key exists
         if (item[`reward${level}`] !== undefined) {
             console.log(`Reward found for level ${level}: ${item[`reward${level}`]}`);
@@ -152,46 +164,34 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
         return `${sum} ${item.reward_symbol}`;
     }
 
-    if (data.payload && Array.isArray(data.payload.tasks)) {
-        console.log("Payload contains valid tasks array:", data.payload.tasks);
+    // Map tasks if payload is valid and contains a tasks array
+    const tasks = data.payload.tasks.map((item, index) => {
+        console.log(`Mapping task ${index + 1} / ${data.payload.tasks.length}:`, item);
 
-        const tasks = data.payload.tasks.map((item, index) => {
-            console.log(`Mapping task ${index + 1} / ${data.payload.tasks.length}:`, item);
+        // Log details of each task
+        console.log(`Task ID: ${item.id}`);
+        console.log(`Task Name: ${item.name}`);
+        console.log(`Task Avatar: ${item.image_link}`);
+        console.log(`Task Description: ${item.description}`);
+        console.log(`Task End Time: ${item.end_time}`);
+        console.log(`Task Total Clicks: ${item.total_clicks}`);
+        console.log(`Task Reward Amount: ${getAmount(item)}`);
+        console.log(`Task Link: ${item.link}`);
+        console.log(`Task Subtasks:`, item.task_list);
 
-            // Additional detailed logging for each property
-            console.log(`Task ID: ${item.id}`);
-            console.log(`Task Name: ${item.name}`);
-            console.log(`Task Avatar: ${item.image_link}`);
-            console.log(`Task Description: ${item.description}`);
-            console.log(`Task End Time: ${item.end_time}`);
-            console.log(`Task Total Clicks: ${item.total_clicks}`);
-            console.log(`Task Reward Amount: ${getAmount(item)}`);
-            console.log(`Task Link: ${item.link}`);
-            console.log(`Task Subtasks:`, item.task_list);
+        return {
+            id: item.id,
+            avatar: item.image_link,
+            name: item.name,
+            amount: getAmount(item),
+            description: item.description,
+            time: item.end_time,
+            tasks: item.task_list,
+            link: item.link,
+            participants: item.total_clicks,
+        };
+    });
 
-            return {
-                id: item.id,
-                avatar: item.image_link,
-                name: item.name,
-                amount: getAmount(item),
-                description: item.description,
-                time: item.end_time,
-                tasks: item.task_list,
-                link: item.link,
-                participants: item.total_clicks,
-            };
-        });
-
-        console.log(`Mapped ${tasks.length} tasks successfully.`);
-        return tasks;
-    } else {
-        console.error("Invalid payload or tasks data:", data.payload);
-        if (!data.payload) {
-            console.error("Payload is undefined or null.");
-        }
-        if (!Array.isArray(data.payload.tasks)) {
-            console.error("Payload tasks are not an array or are missing.");
-        }
-        return [];
-    }
+    console.log(`Mapped ${tasks.length} tasks successfully.`);
+    return tasks;
 }
