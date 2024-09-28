@@ -143,7 +143,7 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
         const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
         console.log("User level:", level);
         
-        const rewardKey = `reward${level}`;
+        const rewardKey = `reward${level}` as keyof GetEarnDataResponseItem;
         const sum = level && item[rewardKey] ? item[rewardKey] : item.reward;
         
         console.log("Reward key used:", rewardKey);
