@@ -136,19 +136,19 @@ export const earnModel = {
 // Converting raw data into domain-specific format
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
-    console.log("Raw data received:", data);
 
     function getAmount(item: GetEarnDataResponseItem) {
-        console.log("Calculating amount for task item:", item);
         const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
-        console.log("User level:", level);
+        console.log(`Calculating amount for task ${item.id} with level: ${level}`);
         
-        const rewardKey = `reward${level}` as keyof GetEarnDataResponseItem;
-        const sum = level && item[rewardKey] ? item[rewardKey] : item.reward;
-        
-        console.log("Reward key used:", rewardKey);
-        console.log("Calculated sum:", sum);
-        
+        // Check if the reward key exists
+        if (item[`reward${level}`] !== undefined) {
+            console.log(`Reward found for level ${level}: ${item[`reward${level}`]}`);
+        } else {
+            console.warn(`No specific reward found for level ${level}, using default reward: ${item.reward}`);
+        }
+
+        const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
         return `${sum} ${item.reward_symbol}`;
     }
 
@@ -156,33 +156,42 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
         console.log("Payload contains valid tasks array:", data.payload.tasks);
 
         const tasks = data.payload.tasks.map((item, index) => {
-            try {
-                console.log(`Mapping task ${index + 1} of ${data.payload.tasks.length}:`, item);
+            console.log(`Mapping task ${index + 1} / ${data.payload.tasks.length}:`, item);
 
-                const mappedTask = {
-                    id: item.id,
-                    avatar: item.image_link,
-                    name: item.name,
-                    amount: getAmount(item),
-                    description: item.description,
-                    time: item.end_time,
-                    tasks: item.task_list,
-                    link: item.link,
-                    participants: item.total_clicks,
-                };
+            // Additional detailed logging for each property
+            console.log(`Task ID: ${item.id}`);
+            console.log(`Task Name: ${item.name}`);
+            console.log(`Task Avatar: ${item.image_link}`);
+            console.log(`Task Description: ${item.description}`);
+            console.log(`Task End Time: ${item.end_time}`);
+            console.log(`Task Total Clicks: ${item.total_clicks}`);
+            console.log(`Task Reward Amount: ${getAmount(item)}`);
+            console.log(`Task Link: ${item.link}`);
+            console.log(`Task Subtasks:`, item.task_list);
 
-                console.log(`Task ${index + 1} mapped successfully:`, mappedTask);
-                return mappedTask;
-            } catch (error) {
-                console.error(`Error mapping task ${index + 1}:`, item, error);
-                return null; // Handle mapping failure by returning null
-            }
-        }).filter(task => task !== null); // Filter out any failed tasks
+            return {
+                id: item.id,
+                avatar: item.image_link,
+                name: item.name,
+                amount: getAmount(item),
+                description: item.description,
+                time: item.end_time,
+                tasks: item.task_list,
+                link: item.link,
+                participants: item.total_clicks,
+            };
+        });
 
-        console.log(`Mapped ${tasks.length} valid tasks successfully.`);
+        console.log(`Mapped ${tasks.length} tasks successfully.`);
         return tasks;
     } else {
-        console.error("Invalid payload or tasks data. Data payload:", data.payload);
+        console.error("Invalid payload or tasks data:", data.payload);
+        if (!data.payload) {
+            console.error("Payload is undefined or null.");
+        }
+        if (!Array.isArray(data.payload.tasks)) {
+            console.error("Payload tasks are not an array or are missing.");
+        }
         return [];
     }
 }
