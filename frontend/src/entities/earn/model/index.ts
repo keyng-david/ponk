@@ -138,7 +138,7 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
     console.log("Mapping payload to EarnItem[] format...");
 
     function getAmount(item: GetEarnDataResponseItem) {
-        const level = data.payload!.user_level as 0 | 1 | 2 | 3; // Include 0 in the type
+        const level = data.payload!.user_level as 1 | 2 | 3; // Include 0 in the type
         console.log(`Calculating amount for task ${item.id} with level: ${level}`);
         
         // Check if the reward key exists
