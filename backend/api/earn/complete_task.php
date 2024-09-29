@@ -16,7 +16,7 @@ try {
     if ($requestMethod !== 'POST' || !$sessionId) {
         header('HTTP/1.0 405 Method Not Allowed');
         error_log("Error: Invalid request method or missing session ID.");
-        echo json_encode(['error' => true, 'message' => 'Method Not Allowed or Unauthorized']);
+        echo json_encode(['message' => 'Method Not Allowed or Unauthorized']);
         exit();
     }
 
@@ -28,7 +28,7 @@ try {
     if (!isset($input['id'])) {
         header('HTTP/1.0 400 Bad Request');
         error_log("Error: Task ID missing in request.");
-        echo json_encode(['error' => true, 'message' => 'Task ID is required']);
+        echo json_encode(['message' => 'Task ID is required']);
         exit();
     }
 
@@ -47,7 +47,7 @@ try {
     if ($resultUser->num_rows === 0) {
         header('HTTP/1.0 404 Not Found');
         error_log("Error: User not found for session ID: " . $sessionId);
-        echo json_encode(['error' => true, 'message' => 'User not found']);
+        echo json_encode(['message' => 'User not found']);
         exit();
     }
 
@@ -74,11 +74,11 @@ try {
 
     // Check if the task was successfully marked as completed
     if ($stmtCompleteTask->affected_rows > 0) {
-        echo json_encode(['error' => false, 'message' => 'Task completed successfully']);
-        // Log task completion success
+        // Success response, similar to task.php structure
+        echo json_encode(['message' => 'Task completed successfully']);
         error_log("Debug: Task completed successfully for User ID: $userId and Task ID: $taskId");
     } else {
-        echo json_encode(['error' => true, 'message' => 'Failed to complete the task']);
+        echo json_encode(['message' => 'Failed to complete the task']);
         error_log("Error: Failed to complete task for User ID: $userId and Task ID: $taskId");
     }
 
@@ -90,6 +90,5 @@ try {
     // Log exceptions
     error_log("Exception in complete_task.php: " . $e->getMessage());
     header('HTTP/1.0 500 Internal Server Error');
-    echo json_encode(['error' => true, 'message' => 'An unexpected error occurred.']);
+    echo json_encode(['message' => 'An unexpected error occurred.']);
 }
-?>
