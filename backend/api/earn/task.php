@@ -93,17 +93,16 @@ try {
     // Debug log for total tasks fetched
     error_log("Debug: Total tasks fetched: " . count($tasks));
 
-    // Prepare the response array
-    $responseArray = [
-        'error' => false,
+    // Prepare the response payload
+    $responsePayload = [
         'payload' => [
             'tasks' => $tasks,
             'user_level' => $userLevel
         ]
     ];
 
-    // Convert the response array to JSON
-    $responseJson = json_encode($responseArray);
+    // Convert the response payload to JSON
+    $responseJson = json_encode($responsePayload);
 
     // Log the response being sent
     error_log("Debug: Response sent to frontend: " . $responseJson);
