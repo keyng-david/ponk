@@ -61,7 +61,7 @@ try {
     $taskId = $input['id'];
     error_log("Debug: Completing task with ID: $taskId");
 
-    // Example query to mark the task as complete
+    // Update the task as completed for the specific user and task ID
     $stmtCompleteTask = $mysqli->prepare("UPDATE user_tasks SET status = 'completed' WHERE user_id = ? AND task_id = ?");
     if (!$stmtCompleteTask) {
         throw new Exception('MySQL prepare failed for task completion query - ' . $mysqli->error);
@@ -72,10 +72,15 @@ try {
         throw new Exception('MySQL execute failed for task completion - ' . $stmtCompleteTask->error);
     }
 
-    // Log task completion success
-    error_log("Debug: Task completed successfully for User ID: $userId and Task ID: $taskId");
-
-    echo json_encode(['error' => false, 'message' => 'Task completed successfully']);
+    // Check if the task was successfully marked as completed
+    if ($stmtCompleteTask->affected_rows > 0) {
+        echo json_encode(['error' => false, 'message' => 'Task completed successfully']);
+        // Log task completion success
+        error_log("Debug: Task completed successfully for User ID: $userId and Task ID: $taskId");
+    } else {
+        echo json_encode(['error' => true, 'message' => 'Failed to complete the task']);
+        error_log("Error: Failed to complete task for User ID: $userId and Task ID: $taskId");
+    }
 
     // Close statements
     $stmtUser->close();
