@@ -82,7 +82,7 @@ try {
             'reward2' => $task['reward2'],
             'reward3' => $task['reward3'],
             'reward_symbol' => $task['reward_symbol'],
-            'end_time' => strtotime($task['end_time']) * 1000, // Convert to milliseconds
+            'end_time' => strtotime($task['end_time']), // Convert to milliseconds
             'total_clicks' => $task['total_clicks'],
             'link' => $task['link'],
             'image_link' => $task['image_link'],
