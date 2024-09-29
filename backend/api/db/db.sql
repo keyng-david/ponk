@@ -1,6 +1,7 @@
 CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   telegram_id BIGINT UNIQUE NOT NULL,
+  username VARCHAR(255),
   session_id VARCHAR(32) UNIQUE,
   score INT DEFAULT 0,
   level INT DEFAULT 0,
