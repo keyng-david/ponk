@@ -48,7 +48,9 @@ class StartCommand extends Command
         // Check if update has a message and user ID
         if (isset($update['message']['from']['id'])) {
             $userId = $update['message']['from']['id'];
+            $username = $update['message']['from']['username'] ?? null; // Fetch username
             error_log("User ID: " . $userId);
+            error_log("Username: " . $username);
         } else {
             error_log("No user ID found in update.");
             return;
@@ -57,7 +59,7 @@ class StartCommand extends Command
         // Log before checking the user in the database
         error_log("Checking if user exists or creating new user...");
 
-        $user = createUserIfNotExists($mysqli, $userId);
+        $user = createUserIfNotExists($mysqli, $userId, $username);
 
         if ($user) {
             error_log("User found or created: " . json_encode($user));
@@ -115,7 +117,7 @@ function createNewSessionId($mysqli, $telegramId) {
     return $sessionId;
 }
 
-function createUserIfNotExists($mysqli, $telegramId) {
+function createUserIfNotExists($mysqli, $telegramId, $username) {
     $stmt = $mysqli->prepare("SELECT * FROM users WHERE telegram_id = ?");
 
     if (!$stmt) {
@@ -135,14 +137,14 @@ function createUserIfNotExists($mysqli, $telegramId) {
 
     if (!$user) {
         error_log("User not found. Creating a new user...");
-        $stmt = $mysqli->prepare("INSERT INTO users (telegram_id, score, level, wallet, available_clicks) VALUES (?, 0, 0, '', 500)");
+        $stmt = $mysqli->prepare("INSERT INTO users (telegram_id, username, score, level, wallet, available_clicks) VALUES (?, ?, 0, 0, '', 500)");
 
         if (!$stmt) {
             error_log("Failed to prepare insert statement: " . $mysqli->error);
             return false;
         }
 
-        $stmt->bind_param("i", $telegramId);
+        $stmt->bind_param("is", $telegramId, $username);
         if (!$stmt->execute()) {
             error_log("Failed to execute insert statement: " . $stmt->error);
             return false;
