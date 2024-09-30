@@ -28,33 +28,33 @@ const secondLeftedFx = createEffect(async () => {
     return 60
 })
 
-const taskJoinedFx = createEffect(async (data: {
-  id: number,
-  link: string,
-}) => {
+const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
 
-  // Get the current task reward based on user level using toDomain
+  // Fetch earnData, check for errors, and ensure payload exists
   const earnData = await earnApi.getData();
-  const task = earnData.tasks.find((t) => t.id === data.id);
+  if (earnData.error || !earnData.payload) throw new Error('Failed to fetch earn data');
+
+  const task = earnData.payload.tasks.find((t) => t.id === data.id);
   if (!task) throw new Error('Task not found');
 
-  const reward = toDomain({ payload: earnData }).find((t) => t.id === data.id)?.amount || '0';
-  
-  // Optimistic UI update
-  const updatedTasks = earnModel.$list.getState().map((t) => 
+  // Calculate the reward based on user level using toDomain
+  const reward = toDomain(earnData).find((t) => t.id === data.id)?.reward || '0';
+
+  // Optimistically update task completion status
+  const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
   );
-  earnModel.$list.setState(updatedTasks);  // Update the task list optimistically
+  earnModel.$list.setState(updatedTasks);
 
-  // Send task completion request to the backend
+  // Send task completion request to the backend with the correct reward
   await earnApi.taskJoined({ id: data.id, reward });
 
   // Optionally update the score
-  const newScore = calculateNewScore();  // Function to calculate the new score based on task reward
+  const newScore = calculateNewScore(); // Implement your score calculation logic
   earnModel.$points.setState(newScore);
 
-  // Open the task link
+  // Open the task link in Telegram
   tg.Telegram.WebApp.openLink(data.link);
 });
 
