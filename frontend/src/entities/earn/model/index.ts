@@ -23,20 +23,30 @@ const secondLeftedFx = createEffect(async () => {
     return 60
 })
 
-const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
-    const tg = (window as unknown as TelegramWindow);
+const taskJoinedFx = createEffect(async (data: {
+  id: number,
+  link: string,
+}) => {
+  const tg = (window as unknown as TelegramWindow);
+  
+  // Reward the user and update the task as completed
+  const reward = calculateReward(data.id);  // Assuming a function to calculate the reward
+  const sessionId = getSessionId();  // Retrieve session ID from store
 
-    // Make API request to mark the task as completed
-    const response = await earnApi.taskJoined({ id: data.id });
+  // Optimistic UI update
+  const updatedTasks = earnModel.$list.getState().map((task) => 
+    task.id === data.id ? { ...task, completed: true } : task
+  );
+  earnModel.$list.setState(updatedTasks);  // Update the task list optimistically
 
-    if (!response.error) {
-        // Open the task link if the API request was successful
-        tg.Telegram.WebApp.openLink(data.link);
-    } else {
-        // Handle error, prevent the link from opening
-        console.error("Failed to mark task as completed:", response);
-        alert("Failed to complete the task. Please try again.");
-    }
+  await earnApi.taskJoined({
+    id: data.id,
+    reward,  // Send the reward to the backend
+    sessionId,
+  });
+
+  // Open the link after joining the task
+  tg.Telegram.WebApp.openLink(data.link);
 });
 
 const tasksRequested = createEvent()
