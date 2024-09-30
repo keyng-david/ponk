@@ -154,7 +154,7 @@ sample({
 
 sample({
   clock: fetchFx.doneData,
-  fn: (data) => toDomain(earnData,userTasks, getAmount),
+  fn: (data) => toDomain(data, userTasks, getAmount),
   target: $list,
 });
 
