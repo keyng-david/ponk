@@ -33,7 +33,6 @@ const taskJoinedFx = createEffect(async (data: {
   link: string,
 }) => {
   const tg = (window as unknown as TelegramWindow);
-  const sessionId = getSessionId();  // Retrieve session ID from store
 
   // Get the current task reward based on user level using toDomain
   const earnData = await earnApi.getData();
