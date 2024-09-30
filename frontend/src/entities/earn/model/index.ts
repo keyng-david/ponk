@@ -28,6 +28,14 @@ const secondLeftedFx = createEffect(async () => {
     return 60
 })
 
+// Define an event to update the task list
+const tasksUpdated = createEvent<EarnItem[]>();
+
+// Define store for the list of tasks
+const $list = createStore<EarnItem[]>([])
+  .on(tasksUpdated, (_, updatedTasks) => updatedTasks);
+
+// Task completion logic
 const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
 
@@ -45,7 +53,9 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
   );
-  earnModel.$list.setState(updatedTasks);
+
+  // Trigger event to update the task list
+  tasksUpdated(updatedTasks);
 
   // Send task completion request to the backend with the correct reward
   await earnApi.taskJoined({ id: data.id, reward });
