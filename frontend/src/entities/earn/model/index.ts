@@ -39,11 +39,11 @@ const taskJoinedFx = createEffect(async (data: {
   );
   earnModel.$list.setState(updatedTasks);  // Update the task list optimistically
 
-  await earnApi.taskJoined({
-    id: data.id,
-    reward,  // Send the reward to the backend
-    sessionId,
-  });
+  await earnApi.taskJoined({ id: data.id, reward: calculateReward(data.id) });
+
+  // Optionally update the score
+  const newScore = calculateNewScore();  // Function to calculate the new score based on task reward
+  earnModel.$points.setState(newScore);
 
   // Open the link after joining the task
   tg.Telegram.WebApp.openLink(data.link);
