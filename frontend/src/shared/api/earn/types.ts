@@ -34,5 +34,5 @@ export type GetEarnDataResponse = ResponseDefault<{
 export type EarnApi = {
   getData: () => Promise<GetEarnDataResponse>;
   getUserTasks: () => Promise<{ task_id: number; status: string }[]>;  // Already added this line
-  taskJoined: (data: { id: number; reward: number }) => Promise<ResponseDefault<any>>;  // Include reward
+  taskJoined: (data: { id: number; reward: string }) => Promise<ResponseDefault<any>>;  // Include reward
 };
