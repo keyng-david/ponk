@@ -7,7 +7,9 @@ import { clickerModel } from "@/features/clicker/model";
 
 // Move getAmount outside to make it globally accessible
 function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
-  const sum = item[`reward${userLevel}`] ? item[`reward${userLevel}`] : item.reward;
+  // Explicitly assert that item has dynamic keys of type `string`
+  const rewardKey = `reward${userLevel}` as keyof GetEarnDataResponseItem;
+  const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward; // Check for existence
   return `${sum} ${item.reward_symbol}`;
 }
 
