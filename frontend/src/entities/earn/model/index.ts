@@ -88,6 +88,8 @@ function calculateNewScore(reward: string): number {
 const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
   const earnData = await earnApi.getData();
+  const userTasks = await earnApi.getUserTasks();
+
   if (earnData.error || !earnData.payload) throw new Error('Failed to fetch earn data');
 
   const task = earnData.payload.tasks.find((t) => t.id === data.id);
@@ -152,7 +154,7 @@ sample({
 
 sample({
   clock: fetchFx.doneData,
-  fn: (data) => toDomain(data, getAmount), // Use the modified toDomain function
+  fn: (data) => toDomain(data, userTasks, getAmount), // Use the modified toDomain function
   target: $list,
 });
 
