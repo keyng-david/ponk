@@ -93,7 +93,7 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   const task = earnData.payload.tasks.find((t) => t.id === data.id);
   if (!task) throw new Error('Task not found');
 
-  const reward = toDomain(earnData, getAmount).find((t) => t.id === data.id)?.amount || '0';
+  const reward = toDomain(earnData, userTasks, getAmount).find((t) => t.id === data.id)?.amount || '0';
 
   const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
