@@ -38,8 +38,8 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   const task = earnData.payload.tasks.find((t) => t.id === data.id);
   if (!task) throw new Error('Task not found');
 
-  // Calculate the reward based on user level using toDomain
-  const reward = toDomain(earnData).find((t) => t.id === data.id)?.reward || '0';
+  // Use getAmount function to calculate the reward based on user level
+  const reward = toDomain(earnData).find((t) => t.id === data.id)?.amount || '0';
 
   // Optimistically update task completion status
   const updatedTasks = earnModel.$list.getState().map((t) =>
