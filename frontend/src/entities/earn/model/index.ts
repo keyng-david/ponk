@@ -15,20 +15,20 @@ function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
 
 // Modify toDomain to accept getAmount as an argument
 function toDomain(data: GetEarnDataResponse, getAmountFn: (item: GetEarnDataResponseItem, level: number) => string): EarnItem[] {
-  const userLevel = data.payload?.user_level as 1 | 2 | 3; // Get user level here
-  
-  if (data.payload) {
+  const userLevel = data.payload?.user_level as 1 | 2 | 3;
+
+  if (data.payload && Array.isArray(data.payload.tasks)) {
     return data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
       id: item.id,
       avatar: item.image_link,
       name: item.name,
-      amount: getAmountFn(item, userLevel), // Use the passed getAmount function
+      amount: getAmountFn(item, userLevel),
       description: item.description,
       time: item.end_time,
       tasks: item.task_list,
       link: item.link,
       participants: item.total_clicks,
-      completed: false, // Initial value; will be updated in fetchFx
+      completed: false,
     }));
   }
 
