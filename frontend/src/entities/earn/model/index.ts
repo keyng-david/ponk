@@ -4,7 +4,18 @@ import { createEvent, createStore, sample, createEffect } from 'effector'
 import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/types'
 import {TelegramWindow} from "@/shared/lib/hooks/useTelegram";
 
-const fetchFx = createEffect(earnApi.getData)
+const fetchFx = createEffect(async () => {
+  const earnData = await earnApi.getData();
+  const userTasks = await earnApi.getUserTasks(); // Fetch user's task status from user_tasks
+
+  // Map task completion status
+  const tasksWithCompletion = earnData.tasks.map((task) => ({
+    ...task,
+    completed: userTasks.some((userTask) => userTask.task_id === task.id && userTask.status === 'completed'),
+  }));
+
+  return { ...earnData, tasks: tasksWithCompletion };
+});
 
 const secondLeftedFx = createEffect(async () => {
     await new Promise(resolve => setTimeout(resolve, 1000))
