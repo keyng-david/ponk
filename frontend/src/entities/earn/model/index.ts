@@ -35,6 +35,12 @@ const tasksUpdated = createEvent<EarnItem[]>();
 const $list = createStore<EarnItem[]>([])
   .on(tasksUpdated, (_, updatedTasks) => updatedTasks);
 
+function calculateNewScore(reward: string): number {
+  const currentScore = earnModel.$points.getState(); // Get the current score from the store
+  const numericReward = Number(reward); // Convert reward from string to number
+  return currentScore + numericReward; // Add the numeric reward to the current score
+}
+
 // Task completion logic
 const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
@@ -61,7 +67,7 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   await earnApi.taskJoined({ id: data.id, reward });
 
   // Optionally update the score
-  const newScore = calculateNewScore(); // Implement your score calculation logic
+  const newScore = calculateNewScore(reward); // Implement your score calculation logic
   earnModel.$points.setState(newScore);
 
   // Open the task link in Telegram
