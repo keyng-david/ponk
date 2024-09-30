@@ -3,6 +3,7 @@ import { earnApi } from '@/shared/api/earn'
 import { createEvent, createStore, sample, createEffect } from 'effector'
 import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/types'
 import {TelegramWindow} from "@/shared/lib/hooks/useTelegram";
+import { clickerModel } from "@/features/clicker/model";
 
 const fetchFx = createEffect(async () => {
   const earnData = await earnApi.getData();
@@ -59,16 +60,28 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
   );
-
+  
   // Trigger event to update the task list
   tasksUpdated(updatedTasks);
 
+  // Convert reward from string to number
+  const numericReward = Number(reward);
+
+  // Get the current score from clickerModel's $value store
+  const currentScore = clickerModel.$value.getState();
+
+  // Calculate the new score
+  const newScore = currentScore + numericReward;
+
+  // Optimistically update the UI with the new score using the clickerModel's clicked event
+  clickerModel.clicked({
+    score: newScore,
+    click_score: numericReward,
+    available_clicks: clickerModel.$available.getState() - numericReward,
+  });
+
   // Send task completion request to the backend with the correct reward
   await earnApi.taskJoined({ id: data.id, reward });
-
-  // Optionally update the score
-  const newScore = calculateNewScore(reward); // Implement your score calculation logic
-  earnModel.$points.setState(newScore);
 
   // Open the task link in Telegram
   tg.Telegram.WebApp.openLink(data.link);
