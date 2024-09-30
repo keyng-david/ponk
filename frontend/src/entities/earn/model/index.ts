@@ -116,10 +116,13 @@ sample({
 })
 
 sample({
-    clock: fetchFx.doneData,
-    fn: toDomain,
-    target: $list,
-})
+  clock: fetchFx.doneData,
+  fn: (data) => ({ 
+    tasks: toDomain(data), 
+    user_level: data.payload!.user_level 
+  }),
+  target: $list,
+});
 
 sample({
     clock: taskSelected,
