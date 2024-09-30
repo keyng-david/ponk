@@ -28,24 +28,29 @@ const taskJoinedFx = createEffect(async (data: {
   link: string,
 }) => {
   const tg = (window as unknown as TelegramWindow);
-  
-  // Reward the user and update the task as completed
-  const reward = calculateReward(data.id);  // Assuming a function to calculate the reward
   const sessionId = getSessionId();  // Retrieve session ID from store
 
+  // Get the current task reward based on user level using toDomain
+  const earnData = await earnApi.getData();
+  const task = earnData.tasks.find((t) => t.id === data.id);
+  if (!task) throw new Error('Task not found');
+
+  const reward = toDomain({ payload: earnData }).find((t) => t.id === data.id)?.amount || '0';
+  
   // Optimistic UI update
-  const updatedTasks = earnModel.$list.getState().map((task) => 
-    task.id === data.id ? { ...task, completed: true } : task
+  const updatedTasks = earnModel.$list.getState().map((t) => 
+    t.id === data.id ? { ...t, completed: true } : t
   );
   earnModel.$list.setState(updatedTasks);  // Update the task list optimistically
 
-  await earnApi.taskJoined({ id: data.id, reward: calculateReward(data.id) });
+  // Send task completion request to the backend
+  await earnApi.taskJoined({ id: data.id, reward });
 
   // Optionally update the score
   const newScore = calculateNewScore();  // Function to calculate the new score based on task reward
   earnModel.$points.setState(newScore);
 
-  // Open the link after joining the task
+  // Open the task link
   tg.Telegram.WebApp.openLink(data.link);
 });
 
