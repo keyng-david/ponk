@@ -14,26 +14,36 @@ function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
 }
 
 // Modify toDomain to accept getAmount as an argument
-function toDomain(data: GetEarnDataResponse, getAmountFn: (item: GetEarnDataResponseItem, level: number) => string): EarnItem[] {
+
+function toDomain(
+  data: GetEarnDataResponse,
+  userTasks: { task_id: number, status: string }[],
+  getAmountFn: (item: GetEarnDataResponseItem, level: number) => string
+): EarnItem[] {
   const userLevel = data.payload?.user_level as 1 | 2 | 3;
 
   if (data.payload && Array.isArray(data.payload.tasks)) {
-    return data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
-      id: item.id,
-      avatar: item.image_link,
-      name: item.name,
-      amount: getAmountFn(item, userLevel),
-      description: item.description,
-      time: item.end_time,
-      tasks: item.task_list,
-      link: item.link,
-      participants: item.total_clicks,
-      completed: false,
-    }));
+    return data.payload.tasks.map((item: GetEarnDataResponseItem) => {
+      // Check if this task is marked as completed in userTasks
+      const isCompleted = userTasks.some(userTask => userTask.task_id === item.id && userTask.status === 'completed');
+      return {
+        id: item.id,
+        avatar: item.image_link,
+        name: item.name,
+        amount: getAmountFn(item, userLevel),
+        description: item.description,
+        time: item.end_time,
+        tasks: item.task_list,
+        link: item.link,
+        participants: item.total_clicks,
+        completed: isCompleted // Assign completion status
+      };
+    });
   }
 
   return [];
 }
+
 
 const fetchFx = createEffect(async () => {
   const earnData = await earnApi.getData();
@@ -45,7 +55,7 @@ const fetchFx = createEffect(async () => {
   }
 
   // Pass getAmount function to toDomain
-  const tasksWithCompletion = toDomain(earnData, getAmount); // Pass the getAmount function
+  const tasksWithCompletion = toDomain(earnData, userTasks, getAmount); // Pass the getAmount function
 
   // Map task completion status, ensuring completed property is included
   const tasksWithCompletionAndStatus = tasksWithCompletion.map((task) => ({
