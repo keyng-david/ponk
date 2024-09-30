@@ -75,7 +75,6 @@ const taskClosed = createEvent()
 const timeUpdated = createEvent<EarnItem>()
 
 const $activeTask = createStore<EarnItem | null>(null)
-const $list = createStore<EarnItem[]>([])
 const $collabs = $list.map(item => item.length)
 
 const $isLoading = fetchFx.pending
