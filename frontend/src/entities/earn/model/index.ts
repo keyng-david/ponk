@@ -68,8 +68,6 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   // Use the clicked event from clickerModel to update the score optimistically
   clickerModel.clicked({ score: newScore, click_score: Number(reward), available_clicks: clickerModel.$available.getState() - Number(reward) });
 
-  // Optionally, update the score directly in the state (if needed)
-  clickerModel.$value.setState(newScore);
 
   tg.Telegram.WebApp.openLink(data.link);
 });
