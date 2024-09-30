@@ -6,15 +6,20 @@ import {TelegramWindow} from "@/shared/lib/hooks/useTelegram";
 
 const fetchFx = createEffect(async () => {
   const earnData = await earnApi.getData();
-  const userTasks = await earnApi.getUserTasks(); // Fetch user's task status from user_tasks
+  const userTasks = await earnApi.getUserTasks();
+
+  // Check if earnData is a success response and contains tasks
+  if (earnData.error || !earnData.payload || !Array.isArray(earnData.payload.tasks)) {
+    throw new Error("Failed to fetch tasks or tasks are not available");
+  }
 
   // Map task completion status
-  const tasksWithCompletion = earnData.tasks.map((task) => ({
+  const tasksWithCompletion = earnData.payload.tasks.map((task) => ({
     ...task,
     completed: userTasks.some((userTask) => userTask.task_id === task.id && userTask.status === 'completed'),
   }));
 
-  return { ...earnData, tasks: tasksWithCompletion };
+  return { ...earnData.payload, tasks: tasksWithCompletion };
 });
 
 const secondLeftedFx = createEffect(async () => {
