@@ -25,15 +25,18 @@ try {
     // Log input data
     error_log("Debug: Input data: " . json_encode($input));
 
-    if (!isset($input['id'])) {
+    if (!isset($input['id']) || !isset($input['reward'])) {
         header('HTTP/1.0 400 Bad Request');
-        error_log("Error: Task ID missing in request.");
-        echo json_encode(['message' => 'Task ID is required']);
+        error_log("Error: Task ID or reward missing in request.");
+        echo json_encode(['message' => 'Task ID and reward are required']);
         exit();
     }
 
+    $taskId = $input['id'];
+    $reward = (int)$input['reward'];
+
     // Fetch the user associated with the session ID
-    $stmtUser = $mysqli->prepare("SELECT id FROM users WHERE session_id = ?");
+    $stmtUser = $mysqli->prepare("SELECT id, score FROM users WHERE session_id = ?");
     if (!$stmtUser) {
         throw new Exception('MySQL prepare failed for user query - ' . $mysqli->error);
     }
@@ -53,42 +56,54 @@ try {
 
     $userData = $resultUser->fetch_assoc();
     $userId = $userData['id'];
+    $currentScore = $userData['score'];
 
     // Log user information
-    error_log("Debug: User ID: $userId");
+    error_log("Debug: User ID: $userId, Current Score: $currentScore");
 
-    // Complete the task
-    $taskId = $input['id'];
-    error_log("Debug: Completing task with ID: $taskId");
-
-    // Update the task as completed for the specific user and task ID
-    $stmtCompleteTask = $mysqli->prepare("UPDATE user_tasks SET status = 'completed' WHERE user_id = ? AND task_id = ?");
-    if (!$stmtCompleteTask) {
-        throw new Exception('MySQL prepare failed for task completion query - ' . $mysqli->error);
+    // Update the user's score by adding the reward
+    $newScore = $currentScore + $reward;
+    $stmtUpdate = $mysqli->prepare("UPDATE users SET score = ? WHERE id = ?");
+    if (!$stmtUpdate) {
+        throw new Exception('MySQL prepare failed for score update - ' . $mysqli->error);
     }
 
-    $stmtCompleteTask->bind_param("ii", $userId, $taskId);
-    if (!$stmtCompleteTask->execute()) {
-        throw new Exception('MySQL execute failed for task completion - ' . $stmtCompleteTask->error);
+    $stmtUpdate->bind_param("ii", $newScore, $userId);
+    if (!$stmtUpdate->execute()) {
+        throw new Exception('MySQL execute failed for score update - ' . $stmtUpdate->error);
     }
 
-    // Check if the task was successfully marked as completed
-    if ($stmtCompleteTask->affected_rows > 0) {
-        // Success response, similar to task.php structure
-        echo json_encode(['message' => 'Task completed successfully']);
-        error_log("Debug: Task completed successfully for User ID: $userId and Task ID: $taskId");
-    } else {
-        echo json_encode(['message' => 'Failed to complete the task']);
-        error_log("Error: Failed to complete task for User ID: $userId and Task ID: $taskId");
+    // Insert task completion in the user_tasks table
+    $stmtTask = $mysqli->prepare("INSERT INTO user_tasks (user_id, task_id, status) VALUES (?, ?, 'completed')");
+    if (!$stmtTask) {
+        throw new Exception('MySQL prepare failed for task insert - ' . $mysqli->error);
     }
 
-    // Close statements
-    $stmtUser->close();
-    $stmtCompleteTask->close();
-    $mysqli->close();
+    $stmtTask->bind_param("ii", $userId, $taskId);
+    if (!$stmtTask->execute()) {
+        throw new Exception('MySQL execute failed for task insert - ' . $stmtTask->error);
+    }
+
+    // Send response back to the client
+    echo json_encode([
+        'message' => 'Task completed successfully',
+        'new_score' => $newScore
+    ]);
+
 } catch (Exception $e) {
-    // Log exceptions
-    error_log("Exception in complete_task.php: " . $e->getMessage());
+    error_log("Error: " . $e->getMessage());
     header('HTTP/1.0 500 Internal Server Error');
-    echo json_encode(['message' => 'An unexpected error occurred.']);
+    echo json_encode(['message' => 'An error occurred while processing the request']);
+} finally {
+    if (isset($stmtUser)) {
+        $stmtUser->close();
+    }
+    if (isset($stmtUpdate)) {
+        $stmtUpdate->close();
+    }
+    if (isset($stmtTask)) {
+        $stmtTask->close();
+    }
+    $mysqli->close();
 }
+?>
