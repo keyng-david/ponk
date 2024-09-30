@@ -37,53 +37,40 @@ const $list = createStore<EarnItem[]>([])
   .on(tasksUpdated, (_, updatedTasks) => updatedTasks);
 
 function calculateNewScore(reward: string): number {
-  const currentScore = earnModel.$points.getState(); // Get the current score from the store
+  // Use the $value from clickerModel to get the current score
+  const currentScore = clickerModel.$value.getState(); 
   const numericReward = Number(reward); // Convert reward from string to number
-  return currentScore + numericReward; // Add the numeric reward to the current score
+  return currentScore + numericReward;  // Add the numeric reward to the current score
 }
 
-// Task completion logic
+
 const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
 
-  // Fetch earnData, check for errors, and ensure payload exists
   const earnData = await earnApi.getData();
   if (earnData.error || !earnData.payload) throw new Error('Failed to fetch earn data');
 
   const task = earnData.payload.tasks.find((t) => t.id === data.id);
   if (!task) throw new Error('Task not found');
 
-  // Use getAmount function to calculate the reward based on user level
   const reward = toDomain(earnData).find((t) => t.id === data.id)?.amount || '0';
 
-  // Optimistically update task completion status
   const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
   );
-  
-  // Trigger event to update the task list
   tasksUpdated(updatedTasks);
 
-  // Convert reward from string to number
-  const numericReward = Number(reward);
-
-  // Get the current score from clickerModel's $value store
-  const currentScore = clickerModel.$value.getState();
-
-  // Calculate the new score
-  const newScore = currentScore + numericReward;
-
-  // Optimistically update the UI with the new score using the clickerModel's clicked event
-  clickerModel.clicked({
-    score: newScore,
-    click_score: numericReward,
-    available_clicks: clickerModel.$available.getState() - numericReward,
-  });
-
-  // Send task completion request to the backend with the correct reward
   await earnApi.taskJoined({ id: data.id, reward });
 
-  // Open the task link in Telegram
+  // Calculate and update the score optimistically
+  const newScore = calculateNewScore(reward);
+  
+  // Use the clicked event from clickerModel to update the score optimistically
+  clickerModel.clicked({ score: newScore, click_score: Number(reward), available_clicks: clickerModel.$available.getState() - Number(reward) });
+
+  // Optionally, update the score directly in the state (if needed)
+  clickerModel.$value.setState(newScore);
+
   tg.Telegram.WebApp.openLink(data.link);
 });
 
@@ -184,3 +171,4 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
 
     return [];
 }
+
