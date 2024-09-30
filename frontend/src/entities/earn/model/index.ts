@@ -5,6 +5,34 @@ import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
 
+// Move getAmount outside to make it globally accessible
+function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
+  const sum = item[`reward${userLevel}`] ? item[`reward${userLevel}`] : item.reward;
+  return `${sum} ${item.reward_symbol}`;
+}
+
+// Modify toDomain to accept getAmount as an argument
+function toDomain(data: GetEarnDataResponse, getAmountFn: (item: GetEarnDataResponseItem, level: number) => string): EarnItem[] {
+  const userLevel = data.payload?.user_level as 1 | 2 | 3; // Get user level here
+  
+  if (data.payload) {
+    return data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
+      id: item.id,
+      avatar: item.image_link,
+      name: item.name,
+      amount: getAmountFn(item, userLevel), // Use the passed getAmount function
+      description: item.description,
+      time: item.end_time,
+      tasks: item.task_list,
+      link: item.link,
+      participants: item.total_clicks,
+      completed: false, // Initial value; will be updated in fetchFx
+    }));
+  }
+
+  return [];
+}
+
 const fetchFx = createEffect(async () => {
   const earnData = await earnApi.getData();
   const userTasks = await earnApi.getUserTasks();
@@ -14,21 +42,16 @@ const fetchFx = createEffect(async () => {
     throw new Error("Failed to fetch tasks or tasks are not available");
   }
 
+  // Pass getAmount function to toDomain
+  const tasksWithCompletion = toDomain(earnData, getAmount); // Pass the getAmount function
+
   // Map task completion status, ensuring completed property is included
-  const tasksWithCompletion = earnData.payload.tasks.map((task) => ({
-    id: task.id,
-    avatar: task.image_link,
-    name: task.name,
-    amount: getAmount(task), // Assuming getAmount is a function defined in your context
-    description: task.description,
-    time: task.end_time,
-    tasks: task.task_list,
-    link: task.link,
-    participants: task.total_clicks,
+  const tasksWithCompletionAndStatus = tasksWithCompletion.map((task) => ({
+    ...task,
     completed: userTasks.some((userTask) => userTask.task_id === task.id && userTask.status === 'completed'),
   }));
 
-  return { ...earnData.payload, tasks: tasksWithCompletion };
+  return { ...earnData.payload, tasks: tasksWithCompletionAndStatus };
 });
 
 const secondLeftedFx = createEffect(async () => {
@@ -58,7 +81,7 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => 
   const task = earnData.payload.tasks.find((t) => t.id === data.id);
   if (!task) throw new Error('Task not found');
 
-  const reward = toDomain(earnData).find((t) => t.id === data.id)?.amount || '0';
+  const reward = toDomain(earnData, getAmount).find((t) => t.id === data.id)?.amount || '0';
 
   const updatedTasks = earnModel.$list.getState().map((t) =>
     t.id === data.id ? { ...t, completed: true } : t
@@ -117,7 +140,7 @@ sample({
 
 sample({
   clock: fetchFx.doneData,
-  fn: toDomain,
+  fn: (data) => toDomain(data, getAmount), // Use the modified toDomain function
   target: $list,
 });
 
@@ -142,28 +165,3 @@ export const earnModel = {
   taskClosed,
   taskJoinedFx,
 };
-
-function toDomain(data: GetEarnDataResponse): EarnItem[] {
-  function getAmount(item: GetEarnDataResponseItem): string {
-    const level = data.payload!.user_level as 1 | 2 | 3;
-    const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
-    return `${sum} ${item.reward_symbol}`;
-  }
-
-  if (data.payload) {
-    return data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
-      id: item.id,
-      avatar: item.image_link,
-      name: item.name,
-      amount: getAmount(item),
-      description: item.description,
-      time: item.end_time,
-      tasks: item.task_list,
-      link: item.link,
-      participants: item.total_clicks,
-      completed: false, // Initial value; will be updated in fetchFx
-    }));
-  }
-
-  return [];
-}
