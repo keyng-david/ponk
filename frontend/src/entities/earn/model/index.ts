@@ -141,7 +141,7 @@ sample({
 // Sample logic for task selection and task closing
 sample({
   clock: fetchFx.doneData,
-  fn: toDomain,
+  fn: (data: GetEarnDataResponse) => toDomain(data),
   target: $list,
 });
 
