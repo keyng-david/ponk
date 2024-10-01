@@ -1,5 +1,5 @@
-import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
-import { $sessionId } from "@/shared/model/session";  // Import the session store
+import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, taskStatus, ResponseDefault } from './types';
+import { $sessionId } from "@/shared/model/session";
 
 // Helper function to handle API responses
 async function handleResponse<T>(response: Response): Promise<ResponseDefault<T>> {
