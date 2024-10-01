@@ -113,6 +113,11 @@ const $list = createStore<EarnItem[]>([])
 // Event to request tasks
 const tasksRequested = createEvent();
 
+// Define stores and events for the model
+const $activeTask = createStore<EarnItem | null>(null);
+const $collabs = $list.map(item => item.length);
+const $isLoading = fetchFx.pending;
+
 // Define an effect to fetch data when tasks are requested
 sample({
   clock: tasksRequested,
@@ -149,10 +154,6 @@ sample({
   target: $activeTask,
 });
 
-// Define stores and events for the model
-const $activeTask = createStore<EarnItem | null>(null);
-const $collabs = $list.map(item => item.length);
-const $isLoading = fetchFx.pending;
 
 // Trigger secondLeftedFx at the start
 secondLeftedFx().then();
