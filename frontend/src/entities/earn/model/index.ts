@@ -133,7 +133,7 @@ sample({
     ...activeTask!,
     time: activeTask!.time - 1000,
   }),
-  target: [$activeTask, timeUpdated, secondLeftedFx],
+  target: [$activeTask, ontimeupdate, secondLeftedFx],
 });
 
 // Sample logic for task selection and task closing
