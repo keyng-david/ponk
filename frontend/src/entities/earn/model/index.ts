@@ -110,6 +110,8 @@ const tasksUpdated = createEvent<EarnItem[]>();
 const $list = createStore<EarnItem[]>([])
   .on(tasksUpdated, (_, updatedTasks) => updatedTasks);
 
+const timeUpdated = createEvent<EarnItem>()
+
 // Event to request tasks
 const tasksRequested = createEvent();
 
@@ -133,7 +135,7 @@ sample({
     ...activeTask!,
     time: activeTask!.time - 1000,
   }),
-  target: [$activeTask, ontimeupdate, secondLeftedFx],
+  target: [$activeTask, timeUpdated, secondLeftedFx],
 });
 
 // Sample logic for task selection and task closing
