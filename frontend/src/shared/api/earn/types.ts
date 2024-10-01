@@ -26,9 +26,17 @@ export type GetEarnDataResponseItem = {
   task_list: string[];
 };
 
+
+export type taskStatus = {
+  task_id: number;
+  status: string;
+};
+
+
 export type GetEarnDataResponse = ResponseDefault<{
   tasks: GetEarnDataResponseItem[];
   user_level: number;
+  getUserTasks: taskStatus[];
 }>;
 
 export type EarnApi = {
