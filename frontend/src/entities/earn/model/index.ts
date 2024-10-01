@@ -57,7 +57,7 @@ function handleTaskCompletion(taskId: number, reward: string) {
   });
 
   // Confirm task completion via backend
-  return earnApi.taskJoined({ id: taskId, reward });
+  return earnApi.taskJoined({ id: taskId, reward }); // Ensure reward is passed here
 }
 
 // Helper to calculate the new score
@@ -70,12 +70,17 @@ function calculateNewScore(reward: string): number {
 // Effect to join a task and handle task completion
 const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
   const tg = (window as unknown as TelegramWindow);
-  await earnApi.taskJoined({ id: data.id });
 
-  // Optimistically mark the task as completed and update score
+  // Fetch the task from the list to get its reward
   const task = $list.getState().find(t => t.id === data.id);
   if (!task) throw new Error('Task not found');
-  await handleTaskCompletion(task.id, task.amount);
+  const reward = task.amount; // Extract reward for the task
+
+  // Optimistically mark the task as completed and update score
+  await handleTaskCompletion(task.id, reward); // Pass reward to handleTaskCompletion
+
+  // Confirm task completion via API
+  await earnApi.taskJoined({ id: data.id, reward }); // Pass both id and reward here
 
   // Open the task link
   tg.Telegram.WebApp.openLink(data.link);
