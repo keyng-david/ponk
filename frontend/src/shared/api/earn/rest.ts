@@ -88,10 +88,10 @@ export const earnApi: EarnApi = {
     return response as GetEarnDataResponse; // Ensure the correct return type
   },
   
-  getUserTasks: async () => {
+  getUserTasks: async (): Promise<taskStatus[]> => {
     const response = await fetchData<{ task_id: number, status: string }[]>('/api/earn/complete_task.php');
     return response.payload || [];
-  },
+}
 
   taskJoined: async (data) => {
     console.log("Sending request to complete_task.php with data:", data);  // Log the outgoing request
