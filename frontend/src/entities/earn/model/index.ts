@@ -1,7 +1,7 @@
 import { EarnItem } from './types';
 import { earnApi } from '@/shared/api/earn';
 import { createEvent, createStore, sample, createEffect } from 'effector';
-import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/types';
+import { GetEarnDataResponse, GetEarnDataResponseItem, taskStatus } from '@/shared/api/earn/types';
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
 
