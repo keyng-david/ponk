@@ -82,11 +82,13 @@ const fetchFx = createEffect(async (): Promise<GetEarnDataResponse> => {
   return earnData;
 });
 
-const statusFx = createEffect(async (): Promise<taskStatus> => {
+const statusFx = createEffect(async (): Promise<taskStatus[]> => {
   const statusData = await earnApi.getUserTasks();
-  if (statusData.error || !statusData.payload) {
-    throw new Error("Failed to fetch taskStatus or taskStatus are not available");
+  
+  if (!Array.isArray(statusData) || statusData.length === 0) {
+    throw new Error("Failed to fetch taskStatus or no task statuses available");
   }
+  
   return statusData;
 });
 
