@@ -12,26 +12,29 @@ function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
   return `${sum} ${item.reward_symbol}`;
 }
 
-// Function to map tasks into the correct format and mark them as completed if necessary
-function toDomain(data: GetEarnDataResponse): EarnItem[] {
+
+function toDomain(data: GetEarnDataResponse, taskStatuses: taskStatus[]): EarnItem[] {
   const getAmountFn = (item: GetEarnDataResponseItem): string => {
     const level = data.payload!.user_level as 1 | 2 | 3;
     const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
     return `${sum} ${item.reward_symbol}`;
   };
 
-  return data.payload ? data.payload.tasks.map((item: GetEarnDataResponseItem) => ({
-    id: item.id,
-    avatar: item.image_link,
-    name: item.name,
-    amount: getAmountFn(item),
-    description: item.description,
-    time: item.end_time,
-    tasks: item.task_list,
-    link: item.link,
-    participants: item.total_clicks,
-    completed: false  // Add 'completed' state to tasks
-  })) : [];
+  return data.payload ? data.payload.tasks.map((item: GetEarnDataResponseItem) => {
+ const taskStatus = taskStatuses.find(status => status.task_id === item.id);
+        return {
+            id: item.id,
+            avatar: item.image_link,
+            name: item.name,
+            amount: getAmountFn(item),
+            description: item.description,
+            time: item.end_time,
+            tasks: item.task_list,
+            link: item.link,
+            participants: item.total_clicks,
+            completed: taskStatus ? taskStatus.status === 'completed' : false
+        };
+    }) : [];
 }
 
 // Optimistic task completion handler
@@ -115,11 +118,11 @@ sample({
   target: [fetchFx, statusFx],
 });
 
-// Sample logic for updating the task list with fetched data
 sample({
-  clock: fetchFx.doneData,
-  fn: toDomain,
-  target: $list,
+    clock: fetchFx.doneData,
+    source: statusFx.doneData,
+    fn: (earnData, taskStatuses) => toDomain(earnData, taskStatuses),
+    target: $list,
 });
 
 // Sample logic for task selection and task closing
