@@ -5,16 +5,14 @@ import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
 
-// Move getAmount outside to make it globally accessible
+// Globally accessible function to calculate the reward based on user level
 function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
-  // Explicitly assert that item has dynamic keys of type `string`
   const rewardKey = `reward${userLevel}` as keyof GetEarnDataResponseItem;
-  const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward; // Check for existence
+  const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward;
   return `${sum} ${item.reward_symbol}`;
 }
 
-// Modify toDomain to accept getAmount as an argument
-
+// Function to map tasks into the correct format and mark them as completed if necessary
 function toDomain(
   data: GetEarnDataResponse,
   userTasks: { task_id: number, status: string }[],
@@ -22,29 +20,71 @@ function toDomain(
 ): EarnItem[] {
   const userLevel = data.payload?.user_level as 1 | 2 | 3;
 
-  if (data.payload && Array.isArray(data.payload.tasks)) {
-    return data.payload.tasks.map((item: GetEarnDataResponseItem) => {
-      // Check if this task is marked as completed in userTasks
-      const isCompleted = userTasks.some(userTask => userTask.task_id === item.id && userTask.status === 'completed');
-      return {
-        id: item.id,
-        avatar: item.image_link,
-        name: item.name,
-        amount: getAmountFn(item, userLevel),
-        description: item.description,
-        time: item.end_time,
-        tasks: item.task_list,
-        link: item.link,
-        participants: item.total_clicks,
-        completed: isCompleted // Assign completion status
-      };
-    });
-  }
-
-  return [];
+  return data.payload?.tasks.map((item: GetEarnDataResponseItem) => {
+    const isCompleted = userTasks.some(task => task.task_id === item.id && task.status === 'completed');
+    return {
+      id: item.id,
+      avatar: item.image_link,
+      name: item.name,
+      amount: getAmountFn(item, userLevel),
+      description: item.description,
+      time: item.end_time,
+      tasks: item.task_list,
+      link: item.link,
+      participants: item.total_clicks,
+      completed: isCompleted  // Assign completion status
+    };
+  }) || [];
 }
 
+// Optimistic task completion handler
+function handleTaskCompletion(taskId: number, reward: string) {
+  // Update the UI optimistically
+  const updatedTasks = $list.getState().map(task => 
+    task.id === taskId ? { ...task, completed: true } : task
+  );
+  tasksUpdated(updatedTasks);
 
+  // Calculate and update score
+  const newScore = calculateNewScore(reward);
+  clickerModel.clicked({
+    score: newScore,
+    click_score: Number(reward),
+    available_clicks: clickerModel.$available.getState() - Number(reward),
+  });
+
+  // Confirm task completion via backend
+  return earnApi.taskJoined({ id: taskId, reward });
+}
+
+// Helper to calculate the new score
+function calculateNewScore(reward: string): number {
+  const currentScore = clickerModel.$value.getState();
+  const numericReward = Number(reward);
+  return currentScore + numericReward;
+}
+
+// Effect to join a task and handle task completion
+const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
+  const tg = (window as unknown as TelegramWindow);
+  const earnData = await earnApi.getData();
+  const userTasks = await earnApi.getUserTasks();
+
+  if (earnData.error || !earnData.payload) throw new Error('Failed to fetch earn data');
+
+  const task = earnData.payload.tasks.find(t => t.id === data.id);
+  if (!task) throw new Error('Task not found');
+
+  const reward = toDomain(earnData, userTasks, getAmount).find(t => t.id === data.id)?.amount || '0';
+
+  // Handle task completion
+  await handleTaskCompletion(task.id, reward);
+
+  // Open the task link
+  tg.Telegram.WebApp.openLink(data.link);
+});
+
+// Define an effect to fetch data and user tasks
 const fetchFx = createEffect(async () => {
   const earnData = await earnApi.getData();
   const userTasks = await earnApi.getUserTasks();
@@ -54,13 +94,11 @@ const fetchFx = createEffect(async () => {
     throw new Error("Failed to fetch tasks or tasks are not available");
   }
 
-  // Pass getAmount function to toDomain
-  const tasksWithCompletion = toDomain(earnData, userTasks, getAmount); // Pass the getAmount function
-
-  // Map task completion status, ensuring completed property is included
-  const tasksWithCompletionAndStatus = tasksWithCompletion.map((task) => ({
+  // Map the tasks with their completion status
+  const tasksWithCompletion = toDomain(earnData, userTasks, getAmount);
+  const tasksWithCompletionAndStatus = tasksWithCompletion.map(task => ({
     ...task,
-    completed: userTasks.some((userTask) => userTask.task_id === task.id && userTask.status === 'completed'),
+    completed: userTasks.some(userTask => userTask.task_id === task.id && userTask.status === 'completed'),
   }));
 
   return { ...earnData.payload, tasks: tasksWithCompletionAndStatus };
@@ -78,50 +116,13 @@ const tasksUpdated = createEvent<EarnItem[]>();
 const $list = createStore<EarnItem[]>([])
   .on(tasksUpdated, (_, updatedTasks) => updatedTasks);
 
-// Function to calculate the new score
-function calculateNewScore(reward: string): number {
-  const currentScore = clickerModel.$value.getState();
-  const numericReward = Number(reward);
-  return currentScore + numericReward;
-}
-
-const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
-  const tg = (window as unknown as TelegramWindow);
-  const earnData = await earnApi.getData();
-  const userTasks = await earnApi.getUserTasks();
-
-  if (earnData.error || !earnData.payload) throw new Error('Failed to fetch earn data');
-
-  const task = earnData.payload.tasks.find((t) => t.id === data.id);
-  if (!task) throw new Error('Task not found');
-
-  const reward = toDomain(earnData, userTasks, getAmount).find((t) => t.id === data.id)?.amount || '0';
-
-  const updatedTasks = earnModel.$list.getState().map((t) =>
-    t.id === data.id ? { ...t, completed: true } : t
-  );
-  tasksUpdated(updatedTasks);
-
-  await earnApi.taskJoined({ id: data.id, reward });
-
-  // Calculate and update the score optimistically
-  const newScore = calculateNewScore(reward);
-  clickerModel.clicked({ score: newScore, click_score: Number(reward), available_clicks: clickerModel.$available.getState() - Number(reward) });
-
-  tg.Telegram.WebApp.openLink(data.link);
+// Effect to handle task joining and task completion
+sample({
+  clock: tasksRequested,
+  target: fetchFx,
 });
 
-const tasksRequested = createEvent();
-const taskSelected = createEvent<EarnItem>();
-const taskClosed = createEvent();
-const timeUpdated = createEvent<EarnItem>();
-
-const $activeTask = createStore<EarnItem | null>(null);
-const $collabs = $list.map(item => item.length);
-const $isLoading = fetchFx.pending;
-
-secondLeftedFx().then();
-
+// Set the time update logic
 sample({
   source: $activeTask,
   clock: secondLeftedFx.doneData,
@@ -133,30 +134,12 @@ sample({
   target: [$activeTask, timeUpdated, secondLeftedFx],
 });
 
+// Sample logic for task selection and completion
 sample({
-  source: $activeTask,
-  clock: secondLeftedFx.doneData,
-  filter: activeItem => !activeItem,
-  target: secondLeftedFx,
-});
-
-sample({
-  source: $list,
-  clock: timeUpdated,
-  fn: (list, updated) => list.map(item => item.id === updated.id ? updated : item),
+  clock: fetchFx.doneData,
+  fn: toDomain,
   target: $list,
 });
-
-sample({
-  clock: tasksRequested,
-  target: fetchFx,
-});
-
-sample({
-    clock: fetchFx.doneData,
-    fn: toDomain,
-    target: $list,
-})
 
 sample({
   clock: taskSelected,
@@ -168,6 +151,14 @@ sample({
   fn: () => null,
   target: $activeTask,
 });
+
+// Define stores and events for the model
+const $activeTask = createStore<EarnItem | null>(null);
+const $collabs = $list.map(item => item.length);
+const $isLoading = fetchFx.pending;
+
+// Other necessary parts of the code remain unchanged
+secondLeftedFx().then();
 
 export const earnModel = {
   $list,
