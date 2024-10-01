@@ -79,6 +79,14 @@ const fetchFx = createEffect(async (): Promise<GetEarnDataResponse> => {
   return earnData;
 });
 
+const statusFx = createEffect(async (): Promise<taskStatus> => {
+  const statusData = await earnApi.getUserTasks();
+  if (statusData.error || !statusData.payload) {
+    throw new Error("Failed to fetch taskStatus or taskStatus are not available");
+  }
+  return statusData;
+});
+
 // Effect to handle timing for tasks
 const secondLeftedFx = createEffect(async () => {
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -104,7 +112,7 @@ const tasksRequested = createEvent();
 // Sample for fetching data when tasks are requested
 sample({
   clock: tasksRequested,
-  target: fetchFx,
+  target: [fetchFx, statusFx],
 });
 
 // Sample logic for updating the task list with fetched data
