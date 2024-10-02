@@ -31,7 +31,7 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
       tasks: item.task_list,
       link: item.link,
       participants: item.total_clicks,
-      completed: item.completed
+      isDone: item.isDone
     };
   }) : [];
 }
