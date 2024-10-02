@@ -4,6 +4,7 @@ import { createEvent, createStore, sample, createEffect } from 'effector';
 import { GetEarnDataResponse, GetEarnDataResponseItem, taskStatus } from '@/shared/api/earn/types';
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
+import { getUserTasks } from './rest';
 
 // Globally accessible function to calculate the reward based on user level
 function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
@@ -86,7 +87,7 @@ const fetchFx = createEffect(async (): Promise<GetEarnDataResponse> => {
 });
 
 const statusFx = createEffect(async (): Promise<taskStatus[]> => {
-  const statusData = await earnApi.getUserTasks();
+  const statusData = await getUserTasks();  
 
   if (!Array.isArray(statusData) || statusData.length === 0) {
     console.warn("No task statuses available, defaulting to empty array");
