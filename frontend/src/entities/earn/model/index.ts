@@ -4,7 +4,7 @@ import { createEvent, createStore, sample, createEffect } from 'effector';
 import { GetEarnDataResponse, GetEarnDataResponseItem, taskStatus } from '@/shared/api/earn/types';
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
-import { getUserTasks } from './rest';
+import { getUserTasks } from '@/shared/api/earn/rest';
 
 // Globally accessible function to calculate the reward based on user level
 function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
