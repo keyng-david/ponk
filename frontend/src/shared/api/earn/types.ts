@@ -24,6 +24,7 @@ export type GetEarnDataResponseItem = {
   link: string;
   image_link: string;
   task_list: string[];
+  completed?: boolean;
 };
 
 
