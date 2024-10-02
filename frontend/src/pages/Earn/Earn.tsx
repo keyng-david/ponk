@@ -80,7 +80,7 @@ const ListReflect = reflect({
     }
 })
 
-const Task = React.memo<EarnItem & { onClick: (item: EarnItem) => void }>(({ onClick, completed, ...item }) => (
+const Task = React.memo<EarnItem & { onClick: (item: EarnItem) => void }>(({ onClick, isDone, ...item }) => (
     <div
   className={`${styles.task} ${isDone === 'done' ? styles.completed : ''}`}
   onClick={() => isDone !== 'done' && onClick(item)}
