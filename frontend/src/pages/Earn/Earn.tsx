@@ -20,7 +20,7 @@ export const Earn = () => {
     );
 };
 
-const Main = React.memo(({ isLoading }) => (
+const Main = React.memo<{ isLoading: boolean }>(({ isLoading }) => (
     <LoaderTemplate className={styles.main} isLoading={isLoading}>
         <Points />
         <ListReflect />
