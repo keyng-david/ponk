@@ -21,7 +21,9 @@ function toDomain(data: GetEarnDataResponse, taskStatuses: taskStatus[]): EarnIt
   };
 
   return data.payload ? data.payload.tasks.map((item: GetEarnDataResponseItem) => {
-    const taskStatus = taskStatuses.find(status => status.task_id === item.id);
+    // Find the taskStatus for the current task item
+    const taskStatus = taskStatuses?.find(status => status.task_id === item.id);
+
     return {
       id: item.id,
       avatar: item.image_link,
@@ -32,7 +34,8 @@ function toDomain(data: GetEarnDataResponse, taskStatuses: taskStatus[]): EarnIt
       tasks: item.task_list,
       link: item.link,
       participants: item.total_clicks,
-      completed: taskStatus ? taskStatus.status === 'completed' : false
+      // Safely check taskStatus and set `completed` based on its value
+      completed: taskStatus?.status === 'completed' || false,
     };
   }) : [];
 }
@@ -84,11 +87,12 @@ const fetchFx = createEffect(async (): Promise<GetEarnDataResponse> => {
 
 const statusFx = createEffect(async (): Promise<taskStatus[]> => {
   const statusData = await earnApi.getUserTasks();
-  
+
   if (!Array.isArray(statusData) || statusData.length === 0) {
-    throw new Error("Failed to fetch taskStatus or no task statuses available");
+    console.warn("No task statuses available, defaulting to empty array");
+    return []; // Return an empty array if no statuses are available
   }
-  
+
   return statusData;
 });
 
