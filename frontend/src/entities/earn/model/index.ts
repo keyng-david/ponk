@@ -13,7 +13,7 @@ function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
 }
 
 
-function toDomain(data: GetEarnDataResponse, taskStatuses: taskStatus[]): EarnItem[] {
+function toDomain(data: GetEarnDataResponse): EarnItem[] {
   const getAmountFn = (item: GetEarnDataResponseItem): string => {
     const level = data.payload!.user_level as 1 | 2 | 3;
     const sum = level && item[`reward${level}`] ? item[`reward${level}`] : item.reward;
