@@ -82,8 +82,8 @@ const ListReflect = reflect({
 
 const Task = React.memo<EarnItem & { onClick: (item: EarnItem) => void }>(({ onClick, isDone, ...item }) => (
     <div
-  className={`${styles.task} ${isDone === 'done' ? styles.completed : ''}`}
-  onClick={() => isDone !== 'done' && onClick(item)}
+  className={`${styles.task} ${item.isDone === 'done' ? styles.completed : ''}`}
+  onClick={() => item.isDone !== 'done' && onClick(item)}
 >
         <img src={item.avatar} className={styles['task-label']} />
         <p className={styles['task-title']}>{item.name}</p>
