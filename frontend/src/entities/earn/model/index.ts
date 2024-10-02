@@ -21,20 +21,20 @@ function toDomain(data: GetEarnDataResponse, taskStatuses: taskStatus[]): EarnIt
   };
 
   return data.payload ? data.payload.tasks.map((item: GetEarnDataResponseItem) => {
- const taskStatus = taskStatuses.find(status => status.task_id === item.id);
-        return {
-            id: item.id,
-            avatar: item.image_link,
-            name: item.name,
-            amount: getAmountFn(item),
-            description: item.description,
-            time: item.end_time,
-            tasks: item.task_list,
-            link: item.link,
-            participants: item.total_clicks,
-            completed: taskStatus ? taskStatus.status === 'completed' : false
-        };
-    }) : [];
+    const taskStatus = taskStatuses.find(status => status.task_id === item.id);
+    return {
+      id: item.id,
+      avatar: item.image_link,
+      name: item.name,
+      amount: getAmountFn(item),
+      description: item.description,
+      time: item.end_time,
+      tasks: item.task_list,
+      link: item.link,
+      participants: item.total_clicks,
+      completed: taskStatus ? taskStatus.status === 'completed' : false
+    };
+  }) : [];
 }
 
 // Optimistic task completion handler
