@@ -31,7 +31,7 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
       tasks: item.task_list,
       link: item.link,
       participants: item.total_clicks,
-      completed: item.completed
+      completed: item.completed ? 'true' : 'false',
     };
   }) : [];
 }
@@ -39,7 +39,7 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
 // Optimistic task completion handler
 function handleTaskCompletion(taskId: number, reward: string) {
   const updatedTasks = $list.getState().map(task =>
-    task.id === taskId ? { ...task, completed: true } : task
+    task.id === taskId ? { ...task, completed: 'true' } : task
   );
   tasksUpdated(updatedTasks);
 
