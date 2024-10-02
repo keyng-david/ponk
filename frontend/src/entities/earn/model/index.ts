@@ -4,7 +4,6 @@ import { createEvent, createStore, sample, createEffect } from 'effector';
 import { GetEarnDataResponse, GetEarnDataResponseItem, taskStatus } from '@/shared/api/earn/types';
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
-import { getUserTasks } from '@/shared/api/earn/rest';
 
 // Globally accessible function to calculate the reward based on user level
 function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
@@ -48,7 +47,7 @@ function handleTaskCompletion(taskId: number, reward: string) {
   clickerModel.clicked({
     score: newScore,
     click_score: Number(reward),
-    available_clicks: clickerModel.$available.getState() - Number(reward),
+    available_clicks: clickerModel.$available
   });
 
   return earnApi.taskJoined({ id: taskId, reward });
@@ -82,17 +81,6 @@ const fetchFx = createEffect(async (): Promise<GetEarnDataResponse> => {
   return earnData;
 });
 
-const statusFx = createEffect(async (): Promise<taskStatus[]> => {
-  const statusData = await getUserTasks();  
-
-  if (!Array.isArray(statusData) || statusData.length === 0) {
-    console.warn("No task statuses available, defaulting to empty array");
-    return []; // Return an empty array if no statuses are available
-  }
-
-  return statusData;
-});
-
 // Effect to handle timing for tasks
 const secondLeftedFx = createEffect(async () => {
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -118,15 +106,14 @@ const tasksRequested = createEvent();
 // Sample for fetching data when tasks are requested
 sample({
   clock: tasksRequested,
-  target: [fetchFx, statusFx],
+  target: fetchFx,
 });
 
 sample({
-  clock: fetchFx.doneData,
-  source: statusFx.doneData,
-  fn: (taskStatuses, earnData) => toDomain(earnData, taskStatuses),
-  target: $list,
-});
+    clock: fetchFx.doneData,
+    fn: toDomain,
+    target: $list,
+})
 
 // Sample logic for task selection and task closing
 const taskSelected = createEvent<EarnItem>();
