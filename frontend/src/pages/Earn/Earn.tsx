@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import { reflect } from '@effector/reflect';
+import React from 'react'
+import { reflect } from '@effector/reflect'
 
-import { earnModel } from "@/entities/earn/model";
-import { LoaderTemplate } from '@/shared/ui/LoaderTemplate';
-import background from '@/shared/assets/images/frens/background.png';
-import points from '@/shared/assets/images/frens/points.png';
-import taskBg from '@/shared/assets/images/earn/task_bg.png';
+import { earnModel } from "@/entities/earn/model"
 
-import styles from './Earn.module.scss';
-import { EarnItem } from '@/entities/earn/model/types';
+import { LoaderTemplate } from '@/shared/ui/LoaderTemplate'
+import background from '@/shared/assets/images/frens/background.png'
+import points from '@/shared/assets/images/frens/points.png'
+import taskBg from '@/shared/assets/images/earn/task_bg.png'
+
+import styles from './Earn.module.scss'
+import { EarnItem } from '@/entities/earn/model/types'
 
 export const Earn = () => {
     return (
@@ -17,69 +18,75 @@ export const Earn = () => {
             <MainReflect />
             <Decorations />
         </div>
-    );
-};
+    )
+}
 
-const Main = React.memo<{ isLoading: boolean }>(({ isLoading }) => (
+const Main = React.memo<{
+    isLoading: boolean
+}>(({ isLoading }) => (
     <LoaderTemplate className={styles.main} isLoading={isLoading}>
         <Points />
         <ListReflect />
     </LoaderTemplate>
-));
+))
 
 const MainReflect = reflect({
     view: Main,
     bind: {
         isLoading: earnModel.$isLoading,
-    },
-});
+    }
+})
 
-const Title = React.memo(({ count }) => (
+const Title = React.memo<{
+    count: number
+}>(({ count }) => (
     <>
         <h2 className={styles.title}>{count} COLLABS</h2>
         <h2 className={styles.title}>{count} COLLABS</h2>
     </>
-));
+))
 
 const TitleReflect = reflect({
     view: Title,
     bind: {
-        count: earnModel.$collabs,
-    },
-});
+        count: earnModel.$collabs
+    }
+})
 
 const Points = () => (
     <div className={styles.points}>
-        <img src={points} alt="points" />
-        <p className={styles['points-value']}>PARTNERS</p>
-        <p className={styles['points-description']}>EARN DROPS</p>
+        <img src={points} alt={'points'} />
+        <p  className={styles['points-value']}>PARTNERS</p>
+        <p  className={styles['points-description']}>EARN DROPS</p>
     </div>
-);
+)
 
-const List = React.memo(({ list }) => (
+const List = React.memo<{
+    list: EarnItem[]
+}>(({ list }) => (
     <div className={styles['task-list-wrapper']}>
         <div className={styles['task-list']}>
             {list.map(item => (
-                <TaskReflect key={item.id} {...item} />
+                <TaskReflect key={item.name} {...item} />
             ))}
         </div>
     </div>
-));
+))
 
 const ListReflect = reflect({
     view: List,
     bind: {
         list: earnModel.$list,
-    },
-});
+    }
+})
 
 const Task = React.memo(({ onClick, isDone, ...item }) => {
-   
+
     const [completed, setCompleted] = useState(isDone);
 
     const handleTaskClick = () => {
         if (completed !== 'done') {
-            
+
             onClick(item);
         }
     };
@@ -99,12 +106,12 @@ const Task = React.memo(({ onClick, isDone, ...item }) => {
 const TaskReflect = reflect({
     view: Task,
     bind: {
-        onClick: earnModel.taskSelected,
-    },
-});
+        onClick: earnModel.taskSelected
+    }
+})
 
 const Decorations = () => (
     <>
-        <img src={background} className={styles.background} alt="background" />
+        <img src={background} className={styles.background} alt={'background'}/>
     </>
-);
+)
