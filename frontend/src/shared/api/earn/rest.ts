@@ -48,6 +48,11 @@ async function fetchData<T>(url: string): Promise<ResponseDefault<T>> {
   }
 }
 
+async function getUserTasks(): Promise<taskStatus[]> {
+  const response = await fetchData<{ task_id: number, status: string }[]>('/api/earn/complete_task.php');
+  return response.payload || [];
+}
+
 // Traditional fetch function for POST requests
 async function postData<T>(url: string, body: any): Promise<ResponseDefault<T>> {
   const sessionId = getSessionId();  // Get session ID globally
@@ -88,11 +93,6 @@ export const earnApi: EarnApi = {
     return response as GetEarnDataResponse; // Ensure the correct return type
   },
 
-  getUserTasks: async (): Promise<taskStatus[]> => {
-    const response = await fetchData<{ task_id: number, status: string }[]>('/api/earn/complete_task.php');
-    return response.payload || [];
-  },
-
   taskJoined: async (data: { id: number; reward: string }) => {
     console.log("Sending request to complete_task.php with data:", data);  // Log the outgoing request
     const response = await postData('/api/earn/complete_task.php', {
@@ -109,3 +109,6 @@ export const earnApi: EarnApi = {
     return response;
   },
 };
+
+
+export { getUserTasks };
