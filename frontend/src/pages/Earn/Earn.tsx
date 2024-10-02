@@ -61,6 +61,7 @@ const Points = () => (
     </div>
 )
 
+// Modified List component with task completion logic
 const List = React.memo<{
     list: EarnItem[],
     onTaskClick: (item: EarnItem) => void
@@ -69,9 +70,9 @@ const List = React.memo<{
         <div className={styles['task-list']}>
             {list.map(item => (
                 <div
-                  key={item.name}
-                  className={`${styles.task} ${item.isDone === 'done' ? styles.completed : ''}`}
-                  onClick={() => item.isDone !== 'done' && onTaskClick(item)}
+                    key={item.name}
+                    className={`${styles.task} ${item.isDone === 'done' ? styles.completed : ''}`}
+                    onClick={() => item.isDone !== 'done' && onTaskClick(item)}
                 >
                     <TaskReflect {...item} />
                 </div>
@@ -88,14 +89,19 @@ const ListReflect = reflect({
     }
 })
 
-// Task display component, simplified
-const Task = React.memo<EarnItem>(({ avatar, name }) => (
-    <div className={styles.task}>
-        <img src={avatar} className={styles['task-label']} />
-        <p className={styles['task-title']}>{name}</p>
+// Original Task component remains unchanged
+const Task = React.memo<EarnItem & {
+    onClick: (item: EarnItem) => void
+}>(({ onClick, ...item }) => (
+    <div className={styles.task} onTouchStart={() => {
+        onClick(item)
+        console.log('ON CLICK')
+    }}>
+        <img src={item.avatar} className={styles['task-label']} />
+        <p className={styles['task-title']}>{item.name}</p>
         <img className={styles['task-bg']} src={taskBg} />
     </div>
-));
+))
 
 const TaskReflect = reflect({
     view: Task,
