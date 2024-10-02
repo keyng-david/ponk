@@ -47,7 +47,7 @@ function handleTaskCompletion(taskId: number, reward: string) {
   clickerModel.clicked({
     score: newScore,
     click_score: Number(reward),
-    available_clicks: clickerModel.$available
+    available_clicks: clickerModel.$available,
   });
 
   return earnApi.taskJoined({ id: taskId, reward });
