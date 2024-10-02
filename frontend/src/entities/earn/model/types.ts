@@ -8,5 +8,5 @@ export type EarnItem = {
   tasks: string[];
   link: string;
   participants: number;
-  completed: string;
+  isDone: string;
 };
