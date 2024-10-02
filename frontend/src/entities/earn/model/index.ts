@@ -121,10 +121,10 @@ sample({
 });
 
 sample({
-    clock: fetchFx.doneData,
-    source: statusFx.doneData,
-    fn: (earnData, taskStatuses) => toDomain(earnData, taskStatuses),
-    target: $list,
+  clock: fetchFx.doneData,
+  source: statusFx.doneData,
+  fn: (taskStatuses, earnData) => toDomain(earnData, taskStatuses),
+  target: $list,
 });
 
 // Sample logic for task selection and task closing
