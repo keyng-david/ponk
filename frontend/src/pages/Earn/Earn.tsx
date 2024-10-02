@@ -62,12 +62,19 @@ const Points = () => (
 )
 
 const List = React.memo<{
-    list: EarnItem[]
-}>(({ list }) => (
+    list: EarnItem[],
+    onTaskClick: (item: EarnItem) => void
+}>(({ list, onTaskClick }) => (
     <div className={styles['task-list-wrapper']}>
         <div className={styles['task-list']}>
             {list.map(item => (
-                <TaskReflect key={item.name} {...item} />
+                <div
+                  key={item.name}
+                  className={`${styles.task} ${item.isDone === 'done' ? styles.completed : ''}`}
+                  onClick={() => item.isDone !== 'done' && onTaskClick(item)}
+                >
+                    <TaskReflect {...item} />
+                </div>
             ))}
         </div>
     </div>
@@ -77,31 +84,18 @@ const ListReflect = reflect({
     view: List,
     bind: {
         list: earnModel.$list,
+        onTaskClick: earnModel.taskSelected
     }
 })
 
-const Task = React.memo(({ onClick, isDone, ...item }) => {
-
-    const [completed, setCompleted] = useState(isDone);
-
-    const handleTaskClick = () => {
-        if (completed !== 'done') {
-
-            onClick(item);
-        }
-    };
-
-    return (
-        <div
-            className={`${styles.task} ${completed === 'done' ? styles.completed : ''}`}
-            onClick={handleTaskClick}
-        >
-            <img src={item.avatar} className={styles['task-label']} alt="task avatar" />
-            <p className={styles['task-title']}>{item.name}</p>
-            <img className={styles['task-bg']} src={taskBg} alt="task background" />
-        </div>
-    );
-});
+// Task display component, simplified
+const Task = React.memo<EarnItem>(({ avatar, name }) => (
+    <div className={styles.task}>
+        <img src={avatar} className={styles['task-label']} />
+        <p className={styles['task-title']}>{name}</p>
+        <img className={styles['task-bg']} src={taskBg} />
+    </div>
+));
 
 const TaskReflect = reflect({
     view: Task,
