@@ -42,10 +42,7 @@ try {
 
     $userData = $resultUser->fetch_assoc();
     $userId = $userData['id'];
-    $userLevel = $userData['level']; // Update: 'level' instead of 'user_level'
-
-    // Debug log for user data
-    error_log("Debug: Fetched user data - ID: $userId, Level: $userLevel");
+    $userLevel = $userData['level'];
 
     // Fetch tasks data
     $stmtTasks = $mysqli->prepare("
@@ -69,10 +66,28 @@ try {
         $rewardKey = 'reward' . $userLevel;
         $task['reward'] = isset($task[$rewardKey]) ? $task[$rewardKey] : $task['reward'];
 
-        // Debug log for each task
-        error_log("Debug: Processing task ID: " . $task['id'] . " with reward: " . $task['reward']);
+        // Check if the user has completed the task
+        $stmtUserTask = $mysqli->prepare("
+            SELECT status FROM user_tasks WHERE user_id = ? AND task_id = ?
+        ");
+        if (!$stmtUserTask) {
+            throw new Exception('MySQL prepare failed for user_tasks query - ' . $mysqli->error);
+        }
+        
+        $stmtUserTask->bind_param("ii", $userId, $task['id']);
+        $stmtUserTask->execute();
+        $resultUserTask = $stmtUserTask->get_result();
 
-        // Add each task to the tasks array, including reward1, reward2, reward3
+        // Determine the 'isDone' status
+        if ($resultUserTask->num_rows > 0) {
+            $userTaskData = $resultUserTask->fetch_assoc();
+            $task['isDone'] = ($userTaskData['status'] === 'completed') ? 'done' : 'pending';
+        } else {
+            // No entry found in user_tasks, set 'isDone' to 'pending'
+            $task['isDone'] = 'pending';
+        }
+
+        // Add the task to the response array
         $tasks[] = [
             'id' => $task['id'],
             'name' => $task['name'],
@@ -87,13 +102,13 @@ try {
             'link' => $task['link'],
             'image_link' => $task['image_link'],
             'task_list' => json_decode($task['task_list']), // Decode JSON task list
+            'isDone' => $task['isDone'], // Add the 'isDone' status
         ];
+
+        $stmtUserTask->close();
     }
 
-    // Debug log for total tasks fetched
-    error_log("Debug: Total tasks fetched: " . count($tasks));
-
-    // Prepare the response payload (no 'payload' key wrapping)
+    // Prepare the response payload
     $responsePayload = [
         'tasks' => $tasks,
         'user_level' => $userLevel
@@ -101,9 +116,6 @@ try {
 
     // Convert the response to JSON
     $responseJson = json_encode($responsePayload);
-
-    // Log the response being sent
-    error_log("Debug: Response sent to frontend: " . $responseJson);
 
     // Send the response
     echo $responseJson;
