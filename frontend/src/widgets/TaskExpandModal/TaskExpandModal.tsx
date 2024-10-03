@@ -87,18 +87,19 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                         {data?.tasks.map((item, key) => <p key={key}>{key + 1} {item}</p>)}
                     </div>
                     <img 
-                        className={styles['join-button']} 
-                        src={joinButton} 
-                        alt='join button' 
-                        onClick={
-                            data?.link && data.id
-                                ? () => earnModel.taskJoinedFx({
-                                    id: data.id,
-                                    link: data.link,
-                                })
-                                : () => 0
-                        }
-                    />
+    className={`${styles['join-button']} ${data?.isDone === 'done' ? styles['disabled'] : ''}`} 
+    src={joinButton} 
+    alt='join button' 
+    onClick={
+        data?.link && data.id && data?.amount && data?.isDone !== 'done' 
+            ? () => earnModel.taskJoinedFx({
+                id: data.id,
+                link: data.link,
+                amount: data.amount,
+            })
+            : () => 0
+    }
+/>
                     <p className={styles.participants}>
                         PARTICIPANTS:
                         <br />
