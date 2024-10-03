@@ -65,21 +65,36 @@ const Points = () => (
 const List = React.memo<{
     list: EarnItem[],
     onTaskClick: (item: EarnItem) => void
-}>(({ list, onTaskClick }) => (
-    <div className={styles['task-list-wrapper']}>
-        <div className={styles['task-list']}>
-            {list.map(item => (
-                <div
-                    key={item.name}
-                    className={`${styles.task} ${item.isDone === 'done' ? styles.completed : ''}`}
-                    onClick={() => item.isDone !== 'done' && onTaskClick(item)}
-                >
-                    <TaskReflect {...item} />
-                </div>
-            ))}
+}>(({ list, onTaskClick }) => {
+
+    // Helper function to determine if a task is done based on backend data
+    const isTaskDone = (item: EarnItem) => {
+        return item.isDone === 'done';
+    };
+
+    // Handle task click, triggering only if the task is not done
+    const handleTaskClick = (item: EarnItem) => {
+        if (!isTaskDone(item)) {
+            onTaskClick(item);
+        }
+    };
+
+    return (
+        <div className={styles['task-list-wrapper']}>
+            <div className={styles['task-list']}>
+                {list.map(item => (
+                    <div
+                        key={item.name}
+                        className={`${styles.task} ${isTaskDone(item) ? styles.completed : ''}`}
+                        onClick={() => handleTaskClick(item)}
+                    >
+                        <TaskReflect {...item} />
+                    </div>
+                ))}
+            </div>
         </div>
-    </div>
-))
+    );
+});
 
 const ListReflect = reflect({
     view: List,
