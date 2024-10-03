@@ -191,3 +191,9 @@
     opacity: 0.5;
     pointer-events: none;
 }
+
+.list {
+    overflow-y: scroll;
+    touch-action: pan-y; /* Allow vertical scrolling without triggering task selection */
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on mobile devices */
+}
