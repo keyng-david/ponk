@@ -20,7 +20,8 @@ export const earnApi: EarnApi = {
                     total_clicks: 10000,
                     link: 'https://www.google.ru/?hl=ru',
                     image_link: '',
-                    task_list: new Array(5).fill(1).map((_, index) => `task ${index}`)
+                    task_list: new Array(5).fill(1).map((_, index) => `task ${index}`),
+                    isDone: 'pending'
                 })),
                 user_level: 2,
             }
