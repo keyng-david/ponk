@@ -212,3 +212,14 @@
     color: #FFCC00;
     text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000;
 }
+
+.list {
+    overflow-y: scroll;
+    touch-action: pan-y; /* Allow vertical scrolling without triggering task selection */
+    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on mobile devices */
+}
+
+.completedTask {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
