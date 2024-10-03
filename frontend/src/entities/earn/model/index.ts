@@ -60,11 +60,11 @@ function calculateNewScore(reward: string): number {
 }
 
 // Effect to join a task and handle task completion
-const taskJoinedFx = createEffect(async (data: { id: number, link: string }) => {
+const taskJoinedFx = createEffect(async (data: { id: number, link: string, amount: string }) => {
     const tg = (window as unknown as TelegramWindow);
     const task = $list.getState().find(t => t.id === data.id);
     if (!task) throw new Error('Task not found');
-    const reward = task.amount;
+    const reward = data.amount;
 
     await earnApi.taskJoined({ id: data.id, reward });
 
