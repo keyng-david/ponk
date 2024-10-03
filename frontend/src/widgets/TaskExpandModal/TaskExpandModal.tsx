@@ -57,7 +57,7 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
             }
         }, [data])
 
-        const handleTaskClick = (task: string, event: React.TouchEvent) => {
+        const handleTaskClick = (task: EarnItem, event: React.TouchEvent) => {
             if (Math.abs(event.changedTouches[0].clientY - event.touches[0].clientY) < 5) {
                 // Only select task if it's a tap, not a scroll
                 earnModel.taskSelected(task);
