@@ -1,4 +1,4 @@
-import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, taskStatus, ResponseDefault } from './types';
+import { EarnApi, GetEarnDataResponse, GetEarnDataResponseItem, ResponseDefault } from './types';
 import { $sessionId } from "@/shared/model/session";
 
 // Helper function to handle API responses
