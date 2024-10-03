@@ -85,7 +85,6 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                                 <div
                                     key={key}
                                     className={data.isDone === 'done' ? styles.completedTask : ''}
-                                    onTouchEnd={(event) => handleTaskClick(item, event)}
                                 >
                                     {key + 1} {item}
                                 </div>
