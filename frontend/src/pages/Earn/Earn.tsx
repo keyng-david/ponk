@@ -56,54 +56,58 @@ const TitleReflect = reflect({
 const Points = () => (
     <div className={styles.points}>
         <img src={points} alt={'points'} />
-        <p  className={styles['points-value']}>PARTNERS</p>
-        <p  className={styles['points-description']}>EARN DROPS</p>
+        <p className={styles['points-value']}>PARTNERS</p>
+        <p className={styles['points-description']}>EARN DROPS</p>
     </div>
 )
 
-// Modified List component with task completion logic
+// Fixed List component with task completion logic
 const List = React.memo<{
     list: EarnItem[],
     onTaskClick: (item: EarnItem) => void
 }>(({ list, onTaskClick }) => {
 
-    // Helper function to determine if a task is done based on backend data
+    // Helper function to determine if a task is done
     const isTaskDone = (item: EarnItem) => {
         return item.isDone === 'done';
     };
 
     // Handle task click, triggering only if the task is not done
     const handleTaskClick = (item: EarnItem) => {
-    let touchStartTime: number;
+        let touchStartTime: number;
 
-    const onTouchStart = () => {
-        touchStartTime = Date.now();
+        const onTouchStart = () => {
+            touchStartTime = Date.now();
+        };
+
+        const onTouchEnd = () => {
+            const touchDuration = Date.now() - touchStartTime;
+
+            // Treat as click if touch is short enough and task is not done
+            if (touchDuration < 150 && !isTaskDone(item)) {
+                onTaskClick(item);
+            }
+        };
+
+        return { onTouchStart, onTouchEnd };
     };
-
-    const onTouchEnd = () => {
-        const touchDuration = Date.now() - touchStartTime;
-
-        // Only treat it as a click if the touch duration is short enough
-        if (touchDuration < 150 && !isTaskDone(item)) {
-            onTaskClick(item);
-        }
-    };
-
-    return { onTouchStart, onTouchEnd };
-};
 
     return (
         <div className={styles['task-list-wrapper']}>
             <div className={styles['task-list']}>
-                {list.map(item => (
-                    <div
-                        key={item.name}
-                        className={`${styles.task} ${isTaskDone(item) ? styles.completed : ''}`}
-                        onClick={() => handleTaskClick(item)}
-                    >
-                        <TaskReflect {...item} />
-                    </div>
-                ))}
+                {list.map(item => {
+                    const { onTouchStart, onTouchEnd } = handleTaskClick(item);
+                    return (
+                        <div
+                            key={item.name}
+                            className={`${styles.task} ${isTaskDone(item) ? styles.completed : ''}`}
+                            onTouchStart={onTouchStart}
+                            onTouchEnd={onTouchEnd}
+                        >
+                            <TaskReflect {...item} />
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
@@ -117,24 +121,15 @@ const ListReflect = reflect({
     }
 })
 
-// Original Task component remains unchanged
 const Task = React.memo<EarnItem & {
     onClick: (item: EarnItem) => void
-}>(({ onClick, ...item }) => {
-    const { onTouchStart, onTouchEnd } = handleTaskClick(item);
-
-    return (
-        <div
-            className={styles.task}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-        >
-            <img src={item.avatar} className={styles['task-label']} />
-            <p className={styles['task-title']}>{item.name}</p>
-            <img className={styles['task-bg']} src={taskBg} />
-        </div>
-    );
-});
+}>(({ onClick, ...item }) => (
+    <div className={styles.task}>
+        <img src={item.avatar} className={styles['task-label']} />
+        <p className={styles['task-title']}>{item.name}</p>
+        <img className={styles['task-bg']} src={taskBg} />
+    </div>
+))
 
 const TaskReflect = reflect({
     view: Task,
