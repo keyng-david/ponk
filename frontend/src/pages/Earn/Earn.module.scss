@@ -194,6 +194,6 @@
 
 .list {
     overflow-y: scroll;
-    touch-action: pan-y; /* Allow vertical scrolling without triggering task selection */
-    -webkit-overflow-scrolling: touch; /* Enable smooth scrolling on mobile devices */
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
 }
