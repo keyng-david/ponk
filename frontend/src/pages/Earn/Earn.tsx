@@ -74,10 +74,23 @@ const List = React.memo<{
 
     // Handle task click, triggering only if the task is not done
     const handleTaskClick = (item: EarnItem) => {
-        if (!isTaskDone(item)) {
+    let touchStartTime: number;
+
+    const onTouchStart = () => {
+        touchStartTime = Date.now();
+    };
+
+    const onTouchEnd = () => {
+        const touchDuration = Date.now() - touchStartTime;
+
+        // Only treat it as a click if the touch duration is short enough
+        if (touchDuration < 150 && !isTaskDone(item)) {
             onTaskClick(item);
         }
     };
+
+    return { onTouchStart, onTouchEnd };
+};
 
     return (
         <div className={styles['task-list-wrapper']}>
@@ -107,16 +120,21 @@ const ListReflect = reflect({
 // Original Task component remains unchanged
 const Task = React.memo<EarnItem & {
     onClick: (item: EarnItem) => void
-}>(({ onClick, ...item }) => (
-    <div className={styles.task} onTouchStart={() => {
-        onClick(item)
-        console.log('ON CLICK')
-    }}>
-        <img src={item.avatar} className={styles['task-label']} />
-        <p className={styles['task-title']}>{item.name}</p>
-        <img className={styles['task-bg']} src={taskBg} />
-    </div>
-))
+}>(({ onClick, ...item }) => {
+    const { onTouchStart, onTouchEnd } = handleTaskClick(item);
+
+    return (
+        <div
+            className={styles.task}
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+        >
+            <img src={item.avatar} className={styles['task-label']} />
+            <p className={styles['task-title']}>{item.name}</p>
+            <img className={styles['task-bg']} src={taskBg} />
+        </div>
+    );
+});
 
 const TaskReflect = reflect({
     view: Task,
