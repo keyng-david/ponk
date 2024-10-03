@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-
 import { EarnItem } from '@/entities/earn/model/types'
 
 import taskInfoBg from '@/shared/assets/images/earn/task_info.png'
@@ -9,7 +8,7 @@ import joinButton from '@/shared/assets/images/earn/join-button.png'
 import styles from './TaskExpandModal.module.scss'
 import { toFormattedNumber } from '@/shared/lib/number'
 import { useTelegram } from '@/shared/lib/hooks/useTelegram'
-import {earnModel} from "@/entities/earn/model";
+import { earnModel } from "@/entities/earn/model";
 
 export type TaskExpandModalProps = {
     data: EarnItem | null
@@ -22,11 +21,9 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
 
         const rootClasses = useMemo(() => {
             const classes = [styles.root]
-
             if (!!data) {
                 classes.push(styles['is-active'])
             }
-
             return classes.join(' ')
         }, [data])
 
@@ -35,16 +32,13 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                 if (v < 10) {
                     return `0${v}`
                 }
-
                 return `${v}`
             }
-
             if (data?.time) {
                 const days = Math.floor(data.time / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((data.time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((data.time % (1000 * 60 * 60)) / (1000 * 60));
+                const minutes = Math.floor((data.time % (1000 * 60)) / (1000 * 60));
                 const seconds = Math.floor((data.time % (1000 * 60)) / 1000);
-
                 return {
                     days: toView(days),
                     hours: toView(hours),
@@ -52,7 +46,6 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                     seconds: toView(seconds)
                 }
             }
-
             return {
                 days: '00',
                 hours: '00',
@@ -61,13 +54,32 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
             }
         }, [data])
 
+        const handleTaskClick = (task: EarnItem, event: React.TouchEvent) => {
+            if (Math.abs(event.changedTouches[0].clientY - event.touches[0].clientY) < 5) {
+                // Only select task if it's a tap, not a scroll
+                earnModel.taskSelected(task);
+            }
+        }
+
+        const List = ({ tasks }: { tasks: EarnItem[] }) => (
+            <div className={styles.list}>
+                {tasks.map((task, key) => (
+                    <div
+                        key={key}
+                        className={task.isDone === 'done' ? styles.completedTask : ''}
+                        onTouchEnd={(event) => handleTaskClick(task, event)}
+                    >
+                        {key + 1} {task.name}
+                    </div>
+                ))}
+            </div>
+        );
+
         return (
             <div className={rootClasses}>
                 <div className={styles.background} />
                 <div className={styles.container} >
-                    <button className={styles['close-button']} onClick={onClose}>
-                        x
-                    </button>
+                    <button className={styles['close-button']} onClick={onClose}>x</button>
                     <div className={styles.header}>
                         <img className={styles['section-background']} src={taskInfoBg} alt='background' />
                         <img className={styles.avatar} src={data?.avatar} />
@@ -84,22 +96,22 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                     <div className={styles.tasks}>
                         <img className={styles['section-background']} src={itemBg} alt='background' />
                         <p>TASK LIST:</p>
-                        {data?.tasks.map((item, key) => <p key={key}>{key + 1} {item}</p>)}
+                        {data?.tasks && <List tasks={data.tasks} />}
                     </div>
                     <img 
-    className={`${styles['join-button']} ${data?.isDone === 'done' ? styles['disabled'] : ''}`} 
-    src={joinButton} 
-    alt='join button' 
-    onClick={
-        data?.link && data.id && data?.amount && data?.isDone !== 'done' 
-            ? () => earnModel.taskJoinedFx({
-                id: data.id,
-                link: data.link,
-                amount: data.amount,
-            })
-            : () => 0
-    }
-/>
+                        className={`${styles['join-button']} ${data?.isDone === 'done' ? styles['disabled'] : ''}`} 
+                        src={joinButton} 
+                        alt='join button' 
+                        onClick={
+                            data?.link && data.id && data?.amount && data?.isDone !== 'done' 
+                                ? () => earnModel.taskJoinedFx({
+                                    id: data.id,
+                                    link: data.link,
+                                    amount: data.amount,
+                                })
+                                : () => 0
+                        }
+                    />
                     <p className={styles.participants}>
                         PARTICIPANTS:
                         <br />
