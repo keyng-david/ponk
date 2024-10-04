@@ -36,14 +36,21 @@ function toDomain(data: GetEarnDataResponse): EarnItem[] {
   }) : [];
 }
 
-// Optimistic task completion handler
+
 function handleTaskCompletion(taskId: number, reward: string) {
+  console.log('Handling task completion for Task ID:', taskId);
+  console.log('Reward added to local state (Optimistic UI):', reward);
+
   const updatedTasks = $list.getState().map(task =>
     task.id === taskId ? { ...task, isDone: 'done' } : task
   );
+  console.log('Updated task list with completed task:', updatedTasks);
+
   tasksUpdated(updatedTasks);
 
   const newScore = calculateNewScore(reward);
+  console.log('New score after adding reward:', newScore);
+
   clickerModel.clicked({
     score: newScore,
     click_score: Number(reward),
