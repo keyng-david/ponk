@@ -60,27 +60,36 @@ function calculateNewScore(reward: string): number {
 }
 
 // Effect to join a task and handle task completion
+// index.ts
 const taskJoinedFx = createEffect(async (data: { id: number, link: string, amount: string }) => {
-    const tg = (window as unknown as TelegramWindow);
-    const task = $list.getState().find(t => t.id === data.id);
-    if (!task) throw new Error('Task not found');
-    const reward = data.amount;
+  const tg = (window as unknown as TelegramWindow);
+  const task = $list.getState().find(t => t.id === data.id);
 
-    await earnApi.taskJoined({ id: data.id, reward });
+  if (!task) throw new Error('Task not found');
+  
+  const reward = data.amount;
+  console.log('Reward being passed to taskJoined API:', reward);
 
-    const updatedTasks = $list.getState().map(t =>
-        t.id === data.id ? { ...t, isDone: 'done' } : t
-    );
-    tasksUpdated(updatedTasks);
+  // Check if the reward is a string or number
+  console.log('Reward type:', typeof reward);
 
-    const newScore = calculateNewScore(reward);
-    clickerModel.clicked({
-        score: newScore,
-        click_score: Number(reward),
-        available_clicks: clickerModel.$available.getState(),
-    });
+  await earnApi.taskJoined({ id: data.id, reward });
 
-    tg.Telegram.WebApp.openLink(data.link);
+  const updatedTasks = $list.getState().map(t =>
+    t.id === data.id ? { ...t, isDone: 'done' } : t
+  );
+  tasksUpdated(updatedTasks);
+
+  const newScore = calculateNewScore(reward);
+  console.log('New score calculated:', newScore);
+
+  clickerModel.clicked({
+    score: newScore,
+    click_score: Number(reward),
+    available_clicks: clickerModel.$available.getState(),
+  });
+
+  tg.Telegram.WebApp.openLink(data.link);
 });
 
 // Corrected Effect to fetch data and tasks
