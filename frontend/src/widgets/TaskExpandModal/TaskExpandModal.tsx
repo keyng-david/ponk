@@ -92,19 +92,26 @@ export const TaskExpandModal = React.memo<TaskExpandModalProps>(
                         </div>
                     </div>
                     <img
-                        className={`${styles['join-button']} ${data?.isDone === 'done' ? styles['disabled'] : ''}`} 
-                        src={joinButton}
-                        alt='join button'
-                        onClick={
-                            data?.link && data.id && data?.amount && data?.isDone !== 'done'
-                                ? () => earnModel.taskJoinedFx({
-                                    id: data.id,
-                                    link: data.link,
-                                    amount: data.amount,
-                                })
-                                : () => 0
-                        }
-                    />
+            className={`${styles['join-button']} ${data?.isDone === 'done' ? styles['disabled'] : ''}`}
+            src={joinButton}
+            alt="join button"
+            onClick={() => {
+              if (data?.link && data.id && data?.amount && data?.isDone !== 'done') {
+                console.log("Joining task with data:", {
+                  id: data.id,
+                  link: data.link,
+                  amount: data.amount,
+                });
+                earnModel.taskJoinedFx({
+                  id: data.id,
+                  link: data.link,
+                  amount: data.amount,
+                });
+              } else {
+                console.log("Button click ignored, data is incomplete or task is already done.");
+              }
+            }}
+          />
                     <p className={styles.participants}>
                         PARTICIPANTS:
                         <br />
