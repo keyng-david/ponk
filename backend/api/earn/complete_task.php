@@ -25,14 +25,14 @@ try {
     // Log input data
     error_log("Debug: Input data: " . json_encode($input));
 
-    if (!isset($input['id']) || !isset($input['reward'])) {
+    if (!isset($input['task_id']) || !isset($input['reward'])) {
         header('HTTP/1.0 400 Bad Request');
         error_log("Error: Task ID or reward missing in request.");
         echo json_encode(['message' => 'Task ID and reward are required']);
         exit();
     }
 
-    $taskId = $input['id'];
+    $taskId = $input['task_id'];
     $reward = (int)$input['reward'];
 
     // Fetch the user associated with the session ID
