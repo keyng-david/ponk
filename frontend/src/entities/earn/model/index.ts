@@ -5,13 +5,6 @@ import { GetEarnDataResponse, GetEarnDataResponseItem } from '@/shared/api/earn/
 import { TelegramWindow } from "@/shared/lib/hooks/useTelegram";
 import { clickerModel } from "@/features/clicker/model";
 
-// Globally accessible function to calculate the reward based on user level
-function getAmount(item: GetEarnDataResponseItem, userLevel: number): string {
-  const rewardKey = `reward${userLevel}` as keyof GetEarnDataResponseItem;
-  const sum = item[rewardKey] !== undefined ? item[rewardKey] : item.reward;
-  return `${sum} ${item.reward_symbol}`;
-}
-
 
 function toDomain(data: GetEarnDataResponse): EarnItem[] {
   const getAmountFn = (item: GetEarnDataResponseItem): string => {
@@ -74,7 +67,7 @@ const taskJoinedFx = createEffect(async (data: { id: number, link: string, amoun
 
   if (!task) throw new Error('Task not found');
   
-  const reward = data.amount;
+  const reward = data.amount.split(' ')[0];
   console.log('Reward being passed to taskJoined API:', reward);
 
   // Check if the reward is a string or number
