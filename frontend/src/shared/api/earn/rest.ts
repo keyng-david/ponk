@@ -93,7 +93,7 @@ export const earnApi: EarnApi = {
     const response = await postData('/api/earn/complete_task.php', {
       task_id: data.id,
       reward: data.reward,
-      status: 'isDone',
+      status: 'completed',
     });
 
     console.log("Response from complete_task.php:", response);  // Log the response from the backend
