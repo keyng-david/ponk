@@ -54,9 +54,19 @@ error_log("Settings: " . json_encode($settings));
 $referralLink = $settings['referral_link'] . '?start=' . $telegramId;
 error_log("Referral link: " . $referralLink);
 
-// Query the users_friends table to get the number of referred friends and their score
-$stmt = $mysqli->prepare("SELECT COUNT(*) AS friends, SUM(score) AS score FROM users_friends WHERE user_id = ?");
+$stmt = $mysqli->prepare("SELECT id FROM users WHERE telegram_id = ?");
 $stmt->bind_param("i", $telegramId);
+$stmt->execute();
+$userResult = $stmt->get_result();
+$userData = $userResult->fetch_assoc();
+$userId = $userData['id'];
+
+// Log if user ID is found
+error_log("User ID for referral query: " . $userId);
+
+// Now, retrieve the number of friends and their score from users_friends using the correct user ID
+$stmt = $mysqli->prepare("SELECT COUNT(*) AS friends, SUM(score) AS score FROM users_friends WHERE user_id = ?");
+$stmt->bind_param("i", $userId);
 $stmt->execute();
 $friendResult = $stmt->get_result();
 $friendData = $friendResult->fetch_assoc();
