@@ -56,7 +56,7 @@ CREATE TABLE users_friends (
 CREATE TABLE settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
     referral_link VARCHAR(255) NOT NULL,
-    default_reward INT DEFAULT 10,
+    default_reward INT DEFAULT 1000,
     premium_reward INT DEFAULT 20
 );
 
