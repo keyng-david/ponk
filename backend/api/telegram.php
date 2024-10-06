@@ -222,22 +222,38 @@ function createNewSessionId($mysqli, $telegramId) {
     return $sessionId;
 }
 
-function createUserIfNotExists($mysqli, $telegramId, $username) {
+function createUserIfNotExists($mysqli, $telegramId, $username = null, $referredBy = null) {
+    // Log the creation attempt
+    error_log("Checking if user exists: Telegram ID = " . $telegramId);
+
+    // Check if the user exists
     $stmt = $mysqli->prepare("SELECT * FROM users WHERE telegram_id = ?");
     $stmt->bind_param("i", $telegramId);
     $stmt->execute();
-    $user = $stmt->get_result()->fetch_assoc();
+    $result = $stmt->get_result();
 
-    if (!$user) {
-        $stmt = $mysqli->prepare("INSERT INTO users (telegram_id, username, score, level, wallet, available_clicks) VALUES (?, ?, 0, 0, '', 500)");
-        $stmt->bind_param("is", $telegramId, $username);
-        $stmt->execute();
+    if ($result->num_rows > 0) {
+        // User exists, return the user data
+        error_log("User already exists. Telegram ID: " . $telegramId);
+        return $result->fetch_assoc();
+    }
 
+    // User does not exist, create a new user
+    error_log("Creating new user: Telegram ID = " . $telegramId . ", Username = " . $username . ", Referred By = " . $referredBy);
+
+    // Insert new user into the users table
+    $stmt = $mysqli->prepare("INSERT INTO users (telegram_id, username, referred_by) VALUES (?, ?, ?)");
+    $stmt->bind_param("isi", $telegramId, $username, $referredBy);
+    
+    if ($stmt->execute()) {
+        // Return the newly created user
+        error_log("New user created successfully. Telegram ID: " . $telegramId);
         $stmt = $mysqli->prepare("SELECT * FROM users WHERE telegram_id = ?");
         $stmt->bind_param("i", $telegramId);
         $stmt->execute();
-        $user = $stmt->get_result()->fetch_assoc();
+        return $stmt->get_result()->fetch_assoc();
+    } else {
+        error_log("Error creating new user: " . $stmt->error);
+        return null;
     }
-
-    return $user;
 }
