@@ -38,7 +38,7 @@ if (!$settings) {
 }
 
 // Append the user's telegram_id to the referral link
-$referralLink = $settings['referral_link'] . '?ref=' . $telegramId;
+$referralLink = $settings['referral_link'] . '?start=' . $telegramId;
 
 // Query the users_friends table to get the number of referred friends and their score
 $stmt = $mysqli->prepare("SELECT COUNT(*) AS friends, SUM(score) AS score FROM users_friends WHERE user_id = ?");
