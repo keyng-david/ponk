@@ -155,8 +155,9 @@ class StartCommand extends Command
             $query_params = explode(' ', $update['message']['text']);
             error_log("Processing /start command. Query parameters: " . json_encode($query_params));
 
-            if (isset($query_params[1])) {
-                $referral_id = $query_params[1]; // Referring user's Telegram ID
+            if (count($query_params) > 1) {
+        $referral_id = $query_params[1]; // Referring user's Telegram ID
+
                 error_log("Referral ID found: " . $referral_id);
                 processReferralReward($referral_id, $update['message']['from']['id']);
             } else {
