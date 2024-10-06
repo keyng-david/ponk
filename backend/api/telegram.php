@@ -33,6 +33,12 @@ $mysqli = getDbConnection();
 function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is_premium = false) {
     global $mysqli;
 
+    // Debugging start
+    error_log("Starting processReferralReward");
+    error_log("Referral Telegram ID: " . $referral_telegram_id);
+    error_log("New User Telegram ID: " . $new_user_telegram_id);
+    error_log("Is Premium: " . ($is_premium ? 'Yes' : 'No'));
+
     // Check if the referral is valid
     $stmt = $mysqli->prepare("SELECT telegram_id FROM users WHERE telegram_id = ?");
     $stmt->bind_param("i", $referral_telegram_id);
@@ -40,28 +46,44 @@ function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is
     $referring_user = $stmt->get_result()->fetch_assoc();
 
     if (!$referring_user) {
+        error_log("Invalid referral: Referrer not found in the database.");
         return ['error' => 'Invalid referral'];
     }
+
+    error_log("Referring user found: " . $referring_user['telegram_id']);
 
     // Update the new user's referred_by column
     $stmt = $mysqli->prepare("UPDATE users SET referred_by = ? WHERE telegram_id = ?");
     $stmt->bind_param("ii", $referral_telegram_id, $new_user_telegram_id);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        error_log("Failed to update new user's referred_by: " . $stmt->error);
+    } else {
+        error_log("Successfully updated new user's referred_by to " . $referral_telegram_id);
+    }
 
     // Get the default and premium rewards from the settings table
     $stmt = $mysqli->prepare("SELECT default_reward, premium_reward FROM settings LIMIT 1");
     $stmt->execute();
     $settings = $stmt->get_result()->fetch_assoc();
 
+    error_log("Rewards settings fetched: Default Reward = " . $settings['default_reward'] . ", Premium Reward = " . $settings['premium_reward']);
+
     // Rewards for direct and upliner referrer
     $level_1_reward = $settings['default_reward'];
     $premium_percentage = $settings['premium_reward'] / 100;
     $level_2_reward = $level_1_reward * $premium_percentage;
 
+    error_log("Level 1 reward: " . $level_1_reward);
+    error_log("Level 2 reward (Premium %): " . $premium_percentage . " -> " . $level_2_reward);
+
     // Add reward to the immediate referrer (Level 1)
     $stmt = $mysqli->prepare("UPDATE users SET score = score + ? WHERE telegram_id = ?");
     $stmt->bind_param("ii", $level_1_reward, $referral_telegram_id);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        error_log("Failed to add Level 1 reward: " . $stmt->error);
+    } else {
+        error_log("Successfully added Level 1 reward to user " . $referral_telegram_id);
+    }
 
     // Check if there is a Level 2 referrer
     $stmt = $mysqli->prepare("SELECT referred_by FROM users WHERE telegram_id = ?");
@@ -70,10 +92,18 @@ function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is
     $level_2_referrer = $stmt->get_result()->fetch_assoc();
 
     if ($level_2_referrer && $level_2_referrer['referred_by']) {
+        error_log("Level 2 referrer found: " . $level_2_referrer['referred_by']);
+
         // Add reward to the Level 2 referrer
         $stmt = $mysqli->prepare("UPDATE users SET score = score + ? WHERE telegram_id = ?");
         $stmt->bind_param("ii", $level_2_reward, $level_2_referrer['referred_by']);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Failed to add Level 2 reward: " . $stmt->error);
+        } else {
+            error_log("Successfully added Level 2 reward to user " . $level_2_referrer['referred_by']);
+        }
+    } else {
+        error_log("No Level 2 referrer found for user " . $referral_telegram_id);
     }
 
     // Update or insert into the users_friends table for Level 1
@@ -81,7 +111,11 @@ function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is
                                VALUES (?, ?, ?, 1) 
                                ON DUPLICATE KEY UPDATE score = score + ?");
     $stmt->bind_param("iiii", $referral_telegram_id, $new_user_telegram_id, $level_1_reward, $level_1_reward);
-    $stmt->execute();
+    if (!$stmt->execute()) {
+        error_log("Failed to update/insert Level 1 friendship record: " . $stmt->error);
+    } else {
+        error_log("Successfully updated/inserted Level 1 friendship record.");
+    }
 
     // If there is a Level 2 referrer, update or insert their record
     if ($level_2_referrer && $level_2_referrer['referred_by']) {
@@ -89,8 +123,14 @@ function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is
                                    VALUES (?, ?, ?, 2) 
                                    ON DUPLICATE KEY UPDATE score = score + ?");
         $stmt->bind_param("iiii", $level_2_referrer['referred_by'], $new_user_telegram_id, $level_2_reward, $level_2_reward);
-        $stmt->execute();
+        if (!$stmt->execute()) {
+            error_log("Failed to update/insert Level 2 friendship record: " . $stmt->error);
+        } else {
+            error_log("Successfully updated/inserted Level 2 friendship record.");
+        }
     }
+
+    error_log("Referral processing completed for new user: " . $new_user_telegram_id);
 
     return ['success' => 'Referral processed'];
 }
