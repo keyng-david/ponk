@@ -41,16 +41,22 @@ CREATE TABLE user_tasks (
 );
 
 
-CREATE TABLE friends (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT,
-  friend_user_id INT,
-  score INT DEFAULT 0,
-  default_reward DECIMAL(10, 2) DEFAULT 20000.00,
-  premium_reward DECIMAL(10, 2) DEFAULT 35000.00,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (friend_user_id) REFERENCES users(id) ON DELETE CASCADE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE users_friends (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL, 
+    friend_telegram_id INT NOT NULL,
+    score INT DEFAULT 0,
+    referral_level INT DEFAULT 1,
+    referred_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(telegram_id)
+);
+
+
+CREATE TABLE settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    referral_link VARCHAR(255) NOT NULL,
+    default_reward INT DEFAULT 10,
+    premium_reward INT DEFAULT 20
 );
 
 
