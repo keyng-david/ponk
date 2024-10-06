@@ -49,7 +49,7 @@ CREATE TABLE users_friends (
     score INT DEFAULT 0,
     referral_level INT DEFAULT 1,
     referred_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(telegram_id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 
