@@ -107,12 +107,20 @@ class StartCommand extends Command
 
         $update = $this->getUpdate();
 
+        // Log the incoming message for debugging
+        error_log("Received message: " . json_encode($update));
+
         // Check for query parameters for referrals
         if (isset($update['message']['text']) && strpos($update['message']['text'], '/start') === 0) {
             $query_params = explode(' ', $update['message']['text']);
+            error_log("Processing /start command. Query parameters: " . json_encode($query_params));
+
             if (isset($query_params[1])) {
                 $referral_id = $query_params[1]; // Referring user's Telegram ID
+                error_log("Referral ID found: " . $referral_id);
                 processReferralReward($referral_id, $update['message']['from']['id']);
+            } else {
+                error_log("No referral ID found.");
             }
         }
 
