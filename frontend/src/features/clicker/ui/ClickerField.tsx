@@ -6,6 +6,7 @@ import skin1 from '@/shared/assets/images/skins/skin1.png';
 import skin2 from '@/shared/assets/images/skins/skin2.png';
 import skin3 from '@/shared/assets/images/skins/skin3.png';
 import skin4 from '@/shared/assets/images/skins/skin4.png';
+import {randModel} from "@/shared/model/rang";
 
 import { MAX_AVAILABLE, clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
