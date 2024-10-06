@@ -107,15 +107,26 @@ function processReferralReward($referral_telegram_id, $new_user_telegram_id, $is
     }
 
     // Update or insert into the users_friends table for Level 1
+    // Ensure you're using the correct user ID from the 'users' table
+$stmt = $mysqli->prepare("SELECT id FROM users WHERE telegram_id = ?");
+$stmt->bind_param("i", $referral_telegram_id);
+$stmt->execute();
+$referral_user = $stmt->get_result()->fetch_assoc();
+
+if ($referral_user) {
+    $referral_user_id = $referral_user['id']; // Use the 'id' from the users table, not 'telegram_id'
+
+    // Then proceed with inserting into the users_friends table
     $stmt = $mysqli->prepare("INSERT INTO users_friends (user_id, friend_telegram_id, score, referral_level) 
                                VALUES (?, ?, ?, 1) 
                                ON DUPLICATE KEY UPDATE score = score + ?");
-    $stmt->bind_param("iiii", $referral_telegram_id, $new_user_telegram_id, $level_1_reward, $level_1_reward);
+    $stmt->bind_param("iiii", $referral_user_id, $new_user_telegram_id, $level_1_reward, $level_1_reward);
     if (!$stmt->execute()) {
-        error_log("Failed to update/insert Level 1 friendship record: " . $stmt->error);
+        error_log("Failed to insert into users_friends: " . $stmt->error);
     } else {
         error_log("Successfully updated/inserted Level 1 friendship record.");
     }
+   }
 
     // If there is a Level 2 referrer, update or insert their record
     if ($level_2_referrer && $level_2_referrer['referred_by']) {
