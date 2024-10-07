@@ -6,7 +6,7 @@ import skin1 from '@/shared/assets/images/skins/Skin1.webp';
 import skin2 from '@/shared/assets/images/skins/Skin2.webp';
 import skin3 from '@/shared/assets/images/skins/Skin3.webp';
 import skin4 from '@/shared/assets/images/skins/Skin4.webp';
-import {randModel} from "@/shared/model/rang";
+import { randModel } from "@/shared/model/rang";
 
 import { MAX_AVAILABLE, clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
@@ -18,8 +18,9 @@ let timeout1: NodeJS.Timeout;
 export const ClickerField = () => {
     const { value, available, canBeClicked, onClick } = clickerModel.useClicker();
     const { haptic } = useTelegram();
-
+    
     const [isClickEnabled, setIsClickEnabled] = useState(true);
+    const [skinStyle, setSkinStyle] = useState({ transform: '', transition: '' });
 
     // Fetching user's rank to determine the skin image
     const { rang } = randModel.useRang();
@@ -64,13 +65,23 @@ export const ClickerField = () => {
                     if (pointParent && document.querySelector('#clicker')) {
                         document.querySelector('#clicker')!.removeChild(pointParent);
                     }
-
                     clearTimeout(timeout1);
                 }, 500);
             }
 
+            // Add transformation to the skin image
+            setSkinStyle({
+                transform: `rotate(${getRandomInt(-10, 10)}deg) scale(1.1)`,
+                transition: 'transform 0.3s ease-out',
+            });
+
             setIsClickEnabled(false);
             timeout1 = setTimeout(() => {
+                // Reset transformation
+                setSkinStyle({
+                    transform: '',
+                    transition: 'transform 0.2s ease-in',
+                });
                 setIsClickEnabled(true);
                 clearTimeout(timeout1);
             }, 150);
@@ -96,7 +107,13 @@ export const ClickerField = () => {
             <p className={styles.value}>{valueString}</p>
             <ProgressBar value={available} />
             <div className={styles.skinContainer}>
-                <img id={'skinImage'} className={styles.skinImage} src={skinImage} alt={'skin image'} />
+                <img
+                    id={'skinImage'}
+                    className={styles.skinImage}
+                    src={skinImage}
+                    alt={'skin image'}
+                    style={skinStyle}  // Apply the dynamic style here
+                />
             </div>
         </div>
     );
