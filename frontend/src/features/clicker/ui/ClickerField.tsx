@@ -1,6 +1,6 @@
 import React, { TouchEvent, useCallback, useMemo, useState } from "react";
 import progress from '@/shared/assets/images/main/progress.png';
-import pointImage from '@/shared/assets/images/main/point.webp';
+import pointImage from '@/shared/assets/images/main/Point.webp';
 
 import skin1 from '@/shared/assets/images/skins/Skin1.webp';
 import skin2 from '@/shared/assets/images/skins/Skin2.webp';
