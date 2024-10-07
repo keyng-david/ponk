@@ -1,11 +1,11 @@
 import React, { TouchEvent, useCallback, useMemo, useState } from "react";
 import progress from '@/shared/assets/images/main/progress.png';
-import pointImage from '@/shared/assets/images/main/point.png';
+import pointImage from '@/shared/assets/images/main/point.webp';
 
-import skin1 from '@/shared/assets/images/skins/skin1.png';
-import skin2 from '@/shared/assets/images/skins/skin2.png';
-import skin3 from '@/shared/assets/images/skins/skin3.png';
-import skin4 from '@/shared/assets/images/skins/skin4.png';
+import skin1 from '@/shared/assets/images/skins/Skin1.webp';
+import skin2 from '@/shared/assets/images/skins/Skin2.webp';
+import skin3 from '@/shared/assets/images/skins/Skin3.webp';
+import skin4 from '@/shared/assets/images/skins/Skin4.webp';
 import {randModel} from "@/shared/model/rang";
 
 import { MAX_AVAILABLE, clickerModel } from "../model";
