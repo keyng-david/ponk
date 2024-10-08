@@ -18,9 +18,8 @@ let timeout1: NodeJS.Timeout;
 export const ClickerField = () => {
     const { value, available, canBeClicked, onClick } = clickerModel.useClicker();
     const { haptic } = useTelegram();
-    
+
     const [isClickEnabled, setIsClickEnabled] = useState(true);
-    const [skinStyle, setSkinStyle] = useState({ transform: '', transition: '' });
 
     // Fetching user's rank to determine the skin image
     const { rang } = randModel.useRang();
@@ -39,6 +38,23 @@ export const ClickerField = () => {
     const onTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (isClickEnabled) {
             let pointParent: HTMLDivElement | null = null;
+
+            // Adding animation to skinImage
+            const skinImageElement = document.getElementById('skinImage');
+            if (skinImageElement) {
+                const { clientX, clientY } = e.touches[0];
+                const rect = skinImageElement.getBoundingClientRect();
+                const x = clientX - rect.left - rect.width / 2;
+                const y = clientY - rect.top - rect.height / 2;
+
+                // Apply transformation based on touch position
+                skinImageElement.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) scale(1.05)`;
+
+                // Reset transformation after a short delay
+                setTimeout(() => {
+                    skinImageElement.style.transform = '';
+                }, 100);
+            }
 
             for (let i = 0; i < Math.min(e.touches.length, 3); i++) {
                 const { clientX, clientY } = e.touches[i];
@@ -65,23 +81,13 @@ export const ClickerField = () => {
                     if (pointParent && document.querySelector('#clicker')) {
                         document.querySelector('#clicker')!.removeChild(pointParent);
                     }
+
                     clearTimeout(timeout1);
                 }, 500);
             }
 
-            // Add transformation to the skin image
-            setSkinStyle({
-                transform: `rotate(${getRandomInt(-10, 10)}deg) scale(1.1)`,
-                transition: 'transform 0.3s ease-out',
-            });
-
             setIsClickEnabled(false);
             timeout1 = setTimeout(() => {
-                // Reset transformation
-                setSkinStyle({
-                    transform: '',
-                    transition: 'transform 0.2s ease-in',
-                });
                 setIsClickEnabled(true);
                 clearTimeout(timeout1);
             }, 150);
@@ -107,13 +113,7 @@ export const ClickerField = () => {
             <p className={styles.value}>{valueString}</p>
             <ProgressBar value={available} />
             <div className={styles.skinContainer}>
-                <img
-                    id={'skinImage'}
-                    className={styles.skinImage}
-                    src={skinImage}
-                    alt={'skin image'}
-                    style={skinStyle}  // Apply the dynamic style here
-                />
+                <img id={'skinImage'} className={styles.skinImage} src={skinImage} alt={'skin image'} />
             </div>
         </div>
     );
