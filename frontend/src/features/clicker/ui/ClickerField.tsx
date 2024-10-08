@@ -6,7 +6,7 @@ import skin1 from '@/shared/assets/images/skins/Skin1.webp';
 import skin2 from '@/shared/assets/images/skins/Skin2.webp';
 import skin3 from '@/shared/assets/images/skins/Skin3.webp';
 import skin4 from '@/shared/assets/images/skins/Skin4.webp';
-import { randModel } from "@/shared/model/rang";
+import {randModel} from "@/shared/model/rang";
 
 import { MAX_AVAILABLE, clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
@@ -38,23 +38,6 @@ export const ClickerField = () => {
     const onTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
         if (isClickEnabled) {
             let pointParent: HTMLDivElement | null = null;
-
-            // Adding animation to skinImage
-            const skinImageElement = document.getElementById('skinImage');
-            if (skinImageElement) {
-                const { clientX, clientY } = e.touches[0];
-                const rect = skinImageElement.getBoundingClientRect();
-                const x = clientX - rect.left - rect.width / 2;
-                const y = clientY - rect.top - rect.height / 2;
-
-                // Apply transformation based on touch position
-                skinImageElement.style.transform = `perspective(1000px) rotateX(${-y / 15}deg) rotateY(${x / 15}deg) scale(1.05)`;
-
-                // Reset transformation after a short delay
-                setTimeout(() => {
-                    skinImageElement.style.transform = '';
-                }, 100);
-            }
 
             for (let i = 0; i < Math.min(e.touches.length, 3); i++) {
                 const { clientX, clientY } = e.touches[i];
@@ -94,6 +77,18 @@ export const ClickerField = () => {
         }
     }, [isClickEnabled, canBeClicked, haptic]);
 
+    // New function to handle skin image click animation
+    const handleSkinClick = (e: React.MouseEvent<HTMLImageElement>) => {
+        const skinImage = e.currentTarget;
+        const rect = skinImage.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        skinImage.style.transform = `perspective(1000px) rotateX(${-y / 10}deg) rotateY(${x / 10}deg)`;
+        setTimeout(() => {
+            skinImage.style.transform = '';
+        }, 100);
+    };
+
     function handleTouchMove(event: TouchEvent<HTMLDivElement>) {
         event.preventDefault();
     }
@@ -113,7 +108,13 @@ export const ClickerField = () => {
             <p className={styles.value}>{valueString}</p>
             <ProgressBar value={available} />
             <div className={styles.skinContainer}>
-                <img id={'skinImage'} className={styles.skinImage} src={skinImage} alt={'skin image'} />
+                <img
+                    id={'skinImage'}
+                    className={styles.skinImage}
+                    src={skinImage}
+                    alt={'skin image'}
+                    onClick={handleSkinClick}  // Add onClick handler to skinImage
+                />
             </div>
         </div>
     );
