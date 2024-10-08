@@ -54,32 +54,24 @@
 
 
 .value {
-    position: absolute;
-    bottom: hp(740);
-    left: 50%;
-    transform: translateX(-50%);
-    width: wp(330);
-
-    font-size: 48px;
-    line-height: 150%;
-    background-image: url("../../../shared/assets/images/auth/newBg.png");
-    background-repeat: repeat;
-    background-size: cover;
-    -webkit-background-clip: text;
-    text-align: center;
-    margin: 0;
-
-    &:nth-child(1) {
-        text-shadow: 3px 0 #000, -3px 0 #000, 0 3px #000, 0 -3px #000, 2px 2px #000, -2px -2px #000, 2px -2px #000, -2px 2px #000
-    }
-
-    &:nth-child(2) {
-        -webkit-text-fill-color: transparent;
-    }
-
-    transition: 0.3s ease;
-    transition-property: transform;
-    transition-delay: 0.3s;
+  position: absolute;
+  bottom: hp(740);
+  left: 50%;
+  transform: translateX(-50%);
+  width: wp(330);
+  font-size: 48px;
+  line-height: 150%;
+  background-image: url("../../../shared/assets/images/auth/auth-background.png");
+  background-repeat: repeat;
+  background-size: cover;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  margin: 0;
+  transition: 0.3s ease;
+  transition-property: transform;
+  transition-delay: 0.3s;
+  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
 }
 
 .progress-bar {
