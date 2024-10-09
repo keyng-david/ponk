@@ -1,4 +1,4 @@
-import backgroundImage from '@/shared/assets/images/main/background.webp'
+import backgroundImage from '@/shared/assets/images/main/background.svg'
 import logo from '@/shared/assets/images/main/logo.png'
 import walletButton from '@/shared/assets/images/main/wallet-button.png'
 
