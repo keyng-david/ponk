@@ -1,3 +1,4 @@
+import backgroundImage from '@/shared/assets/images/main/background.png'
 import logo from '@/shared/assets/images/main/logo.png'
 import walletButton from '@/shared/assets/images/main/wallet-button.png'
 
@@ -64,6 +65,11 @@ export const Main = () => {
 }
 
 const Background = () => (
-    <div className={styles.background} style={{ backgroundColor: '#95866C' }}>
+    <div className={styles.background}>
+            <img
+                className={styles['background-image']}
+                src={backgroundImage}
+                alt={'background'}
+            />
     </div>
 )
