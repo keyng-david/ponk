@@ -1,11 +1,10 @@
-$mainFontFamily: 'CCMaladroit-Bold';
+$mainFontFamily: 'Lato';
 
 @font-face {
     font-family: $mainFontFamily;
     src:
-            local('MainFont'),
-            url("../../shared/assets/fonts/CCMaladroit-Bold.woff") format('woff'),
-            url("../../shared/assets/fonts/CCMaladroit-Bold.woff2") format('woff2');
+            local('Lato'),
+            url('https://fonts.googleapis.com/css?family=Lato:300,400,700') format('woff2');
 }
 
 html {
