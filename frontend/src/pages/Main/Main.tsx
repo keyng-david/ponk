@@ -1,4 +1,3 @@
-import backgroundImage from '@/shared/assets/images/main/background.svg'
 import logo from '@/shared/assets/images/main/logo.png'
 import walletButton from '@/shared/assets/images/main/wallet-button.png'
 
@@ -7,6 +6,7 @@ import soldier from '@/shared/assets/images/rangs/soldier.png'
 import lieutenant from '@/shared/assets/images/rangs/lieutnent.png'
 import general from '@/shared/assets/images/rangs/general.png'
 
+import './backGround.css' 
 import styles from './Main.module.scss'
 import {ClickerField} from "@/features/clicker/ui";
 import {useConnectTon} from "@/features/ton/useConnectTon";
@@ -66,10 +66,8 @@ export const Main = () => {
 
 const Background = () => (
     <div className={styles.background}>
-            <img
-                className={styles['background-image']}
-                src={backgroundImage}
-                alt={'background'}
-            />
+        {/* Instead of using an image, the galaxy animation will be applied */}
+        <div id="stars"></div>
+        <div id="stars2"></div>
     </div>
 )
