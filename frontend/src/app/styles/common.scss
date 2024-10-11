@@ -1,36 +1,51 @@
-$mainFontFamily: 'Lato';
+$mainFontFamily: 'Orbitron';
 
 @font-face {
     font-family: $mainFontFamily;
-    src:
-            local('Lato'),
-            url('https://fonts.googleapis.com/css?family=Lato:300,400,700') format('woff2');
+    src: local('Orbitron'),
+         url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap') format('woff2');
 }
 
 html {
     overflow-x: hidden;
     overflow-y: hidden;
     height: 100vh;
+    font-family: $mainFontFamily, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
 }
 
 body {
     position: relative;
     margin: 0;
     font-family: $mainFontFamily, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
     overflow-y: hidden;
     height: 100vh;
+    background-color: #0a0a0a; /* Dark futuristic background */
+    color: #f0f0f0; /* Light text color for high contrast */
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+        monospace;
 }
 
-h1 {
+h1, h2, h3, h4, h5, h6 {
+    font-family: $mainFontFamily;
+    letter-spacing: 2px; /* Adds a futuristic touch */
+    color: #00ffe7; /* Neon-like color */
     margin-top: 0;
+}
+
+a {
+    color: #00ffe7; /* Matching neon color for links */
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }
