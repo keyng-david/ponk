@@ -85,28 +85,9 @@
     width: wp(151);
 }
 
-.general-button {
-    position: absolute;
-    z-index: 1001;
-    bottom: hp(815);
-    left: wp(8);
-    width: wp(113);
-
-    transition: 0.3s ease;
-    transition-property: transform;
-    transition-delay: 0.3s;
-}
-
+.general-button,
 .wallet-button {
-    position: absolute;
-    z-index: 1001;
-    bottom: hp(815);
-    right: wp(8);
-    width: wp(113);
-
-    transition: 0.3s ease;
-    transition-property: transform;
-    transition-delay: 0.3s;
+    /* These are replaced with Tailwind utility classes in the JSX */
 }
 
 .ton-connect-button {
