@@ -9,24 +9,28 @@ export function getRandomArbitrary(min: number, max: number) {
 }
 
 export function toFormattedNumber(value: number) {
-    let newValue = ''
+    let newValue = '';
 
-    const removeSpaces = value!.toString().replace(/\s/g, '')
-    const isHasFractions =
-        ~removeSpaces.indexOf(',') || ~removeSpaces.indexOf('.')
-    const withFractions = parseFloat(removeSpaces.replace(',', '.'))
-        .toFixed(2)
-        .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    // Convert the value to a string and remove any spaces
+    const removeSpaces = value.toString().replace(/\s/g, '');
 
-    if (isHasFractions) {
-        newValue = withFractions
+    // Check if the number has decimal (fraction) parts
+    const hasFractions = removeSpaces.includes('.') || removeSpaces.includes(',');
+
+    // Replace any commas with periods, convert to a float, then format the number
+    const formattedValue = parseFloat(removeSpaces.replace(',', '.'))
+        .toFixed(2) // Ensures two decimal places
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Use commas for thousand separators
+
+    if (hasFractions) {
+        newValue = formattedValue; // If it has fractions, format it as a float with commas
     } else {
-        newValue = parseInt(removeSpaces, 10)
+        newValue = parseInt(removeSpaces, 10) // If it's an integer, format without decimals
             .toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Apply commas for thousands
     }
 
-    return newValue
+    return newValue;
 }
 
 export function toFormattedIndex(value: number) {
