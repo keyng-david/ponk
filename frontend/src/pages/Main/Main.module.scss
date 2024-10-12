@@ -85,9 +85,23 @@
     width: wp(151);
 }
 
-.general-button,
+.general-button {
+    position: absolute;
+    z-index: 1001;
+    bottom: hp(815);
+    left: wp(8);
+    width: wp(113);
+    // Transition from the old image style
+    transition: 0.3s ease;
+}
+
 .wallet-button {
-    /* These are replaced with Tailwind utility classes in the JSX */
+    position: absolute;
+    z-index: 1001;
+    bottom: hp(815);
+    right: wp(8);
+    width: wp(113);
+    transition: 0.3s ease;
 }
 
 .ton-connect-button {
