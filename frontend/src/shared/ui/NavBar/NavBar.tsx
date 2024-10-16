@@ -18,7 +18,9 @@ export const NavBar = () => {
         earnModel.tasksRequested();
         stepChanged(Steps.EARN);
     };
-    const handleProfileClick = () => stepChanged(Steps.PROFILE);
+    const handleProfileClick = () => {
+  alert("Coming soon");
+};
 
     useEffect(() => {
         // JavaScript to handle active state switching
