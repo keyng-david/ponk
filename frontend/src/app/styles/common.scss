@@ -1,10 +1,6 @@
-$mainFontFamily: 'Orbitron';
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
 
-@font-face {
-    font-family: $mainFontFamily;
-    src: local('Orbitron'),
-         url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap') format('woff2');
-}
+$mainFontFamily: 'Orbitron';
 
 html {
     overflow-x: hidden;
@@ -26,26 +22,26 @@ body {
     overflow-x: hidden;
     overflow-y: hidden;
     height: 100vh;
-    background-color: #0a0a0a; /* Dark futuristic background */
-    color: #f0f0f0; /* Light text color for high contrast */
+    background-color: #0a0a0a;
+    color: #f0f0f0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $mainFontFamily;
+    letter-spacing: 2px;
+    color: #00ffe7; 
+    margin-top: 0;
+}
+
+a {
+    color: #00ffe7; 
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: $mainFontFamily;
-    letter-spacing: 2px; /* Adds a futuristic touch */
-    color: #00ffe7; /* Neon-like color */
-    margin-top: 0;
-}
-
-a {
-    color: #00ffe7; /* Matching neon color for links */
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
 }
