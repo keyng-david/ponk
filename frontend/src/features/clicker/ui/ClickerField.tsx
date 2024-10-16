@@ -135,14 +135,12 @@ const ProgressBar = React.memo<{
         return count;
     }, [value]);
 
+    // Calculate percentage for the progress bar width
+    const percentage = (value / MAX_AVAILABLE) * 100;
+
     return (
-        <div className={styles['progress-bar']}>
-            <span className={styles.available}>{value}</span>
-            <div className={styles.row}>
-                {Array(list).fill(1).map((_, index) => (
-                    <img key={index} className={styles['item']} src={progress} alt={'progress'} />
-                ))}
-            </div>
+        <div className="range" style={{ '--p': percentage } as React.CSSProperties}>
+            <div className="available">{value}</div>
         </div>
     );
 });
