@@ -18,7 +18,7 @@ export const NavBar = () => {
         earnModel.tasksRequested();
         stepChanged(Steps.EARN);
     };
-    const handleProfileClick = () => {
+        const handleDropClick = () => {
   alert("Coming soon");
 };
 
@@ -58,10 +58,10 @@ export const NavBar = () => {
                         <span className="text">Earn</span>
                     </a>
                 </li>
-                <li className="list_item" onClick={handleProfileClick}>
+                <li className="list_item" onClick={handleDropClick}>
                     <a href="#profile" style={{ color: 'white' }}>
                         <span className="icon"><ion-icon name="gift-outline"></ion-icon></span>
-                        <span className="text">Profile</span>
+                        <span className="text">Airdrop</span>
                     </a>
                 </li>
                 <div className="indicator"></div>
