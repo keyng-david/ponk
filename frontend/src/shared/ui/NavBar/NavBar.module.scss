@@ -141,39 +141,3 @@ body {
 .navigation ul li:nth-child(5).active ~ .indicator {
   transform: translateX(calc(70px * 4 + 30px));
 }
-
-.item {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%) scale(0.8);
-    opacity: 0;
-    height: lhp(127);
-
-    transition: 0.3s ease;
-    transition-property: transform, opacity;
-
-    &-1 {
-        left: lwp(5);
-        width: lwp(106);
-    }
-
-    &-2 {
-        width: lwp(106);
-        left: lwp(112);
-    }
-
-    &-3 {
-        width: lwp(110);
-        left: lwp(208);
-    }
-
-    &-4 {
-        width: lwp(110);
-        left: lwp(300);
-    }
-
-    &.is-active {
-        transform: translateY(-50%) scale(1);
-        opacity: 1;
-    }
-}
