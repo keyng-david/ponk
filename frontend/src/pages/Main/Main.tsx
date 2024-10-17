@@ -1,4 +1,5 @@
-import logo from '@/shared/assets/images/main/logo.png'
+import Avatar from '@/shared/assets/images/skin/Avatar.webp'
+import trophy from '@/shared/assets/images/skin/leaderboard.png'
 import './backGround.css'
 import styles from './Main.module.scss'
 import {ClickerField} from "@/features/clicker/ui";
