@@ -4,9 +4,14 @@ import { IonIcon } from 'react-ionicons';  // Import IonIcon from npm package
 import styles from './NavBar.module.scss';
 import {leadersModel} from "@/entities/leaders/model";
 import {earnModel} from "@/entities/earn/model";
+import {walletModel} from "@/shared/model/wallet";
+import {useConnectTon} from "@/features/ton/useConnectTon";
 
 export const NavBar = () => {
     const { step, stepChanged } = useNavigatorModel();
+   
+    const { initialize } = useConnectTon();
+    const { wallet } = walletModel.useWalletModel();
 
     const handleItemClick = (page: Steps) => {
         stepChanged(page);
@@ -47,6 +52,12 @@ export const NavBar = () => {
                     <a href="#" style={{ color: 'white' }}>
                         <span className="icon"><IonIcon name="cash-outline" /></span>
                         <span className="text">Earn</span>
+                    </a>
+                </li>
+                <li className="list_item" onClick={wallet === 'none' ? initialize : undefined}>
+                    <a href="#" style={{ color: 'white' }}>
+                        <span className="icon"><IonIcon name="wallet-outline" /></span>
+                        <span className="text">Wallet</span>
                     </a>
                 </li>
                 <li className="list_item" onClick={handleDropClick}>
