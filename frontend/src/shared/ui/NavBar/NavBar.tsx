@@ -4,14 +4,9 @@ import { IonIcon } from 'react-ionicons';
 import styles from './NavBar.module.scss';
 import {leadersModel} from "@/entities/leaders/model";
 import {earnModel} from "@/entities/earn/model";
-import {walletModel} from "@/shared/model/wallet";
-import {useConnectTon} from "@/features/ton/useConnectTon";
 
 export const NavBar = () => {
     const { step, stepChanged } = useNavigatorModel();
-   
-    const { initialize } = useConnectTon();
-    const { wallet } = walletModel.useWalletModel();
 
     const handleItemClick = (page: Steps) => {
         stepChanged(page);
