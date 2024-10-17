@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { Steps, useNavigatorModel } from "@/shared/model";
-import { IonIcon } from 'react-ionicons';  // Import IonIcon from npm package
+import { IonIcon } from 'react-ionicons';
 import styles from './NavBar.module.scss';
 import {leadersModel} from "@/entities/leaders/model";
 import {earnModel} from "@/entities/earn/model";
