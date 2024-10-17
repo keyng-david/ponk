@@ -54,12 +54,6 @@ export const NavBar = () => {
                         <span className="text">Earn</span>
                     </a>
                 </li>
-                <li className="list_item" onClick={wallet === 'none' ? initialize : undefined}>
-                    <a href="#" style={{ color: 'white' }}>
-                        <span className="icon"><IonIcon name="wallet-outline" /></span>
-                        <span className="text">Wallet</span>
-                    </a>
-                </li>
                 <li className="list_item" onClick={handleDropClick}>
                     <a href="#" style={{ color: 'white' }}>
                         <span className="icon"><IonIcon name="gift-outline" /></span>
