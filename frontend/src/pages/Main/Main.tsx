@@ -17,6 +17,7 @@ export const Main = () => {
 
     const authModel = useAuth();
     const { isValidPlaform } = useTelegram();
+    const { userName } = authModel;  // Access userName from useAuth
 
     // Map rang value to corresponding rank label
     const rangLabel = useMemo(() => {
