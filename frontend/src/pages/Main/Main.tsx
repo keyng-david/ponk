@@ -41,7 +41,7 @@ export const Main = () => {
       <div className="w-[90%] max-w-lg mx-auto rounded-lg p-4 px-4 flex items-center justify-between text-white mt-6 shadow-lg" 
         style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}>
         <div className="flex items-center space-x-3">
-          <img src={Avatar} alt="User Avatar" class="w-10 h-10 rounded-full" />
+          <img src={Avatar} alt="User Avatar" className="w-10 h-10 rounded-full" />
           <div className="text-left">
             <span className="font-bold" style={{ background: "linear-gradient(115deg, #62cff4, #2c67f2)", WebkitBackgroundClip: "text", color: "transparent" }}>
               {userName || "Player"}
