@@ -1,5 +1,4 @@
 import React, { TouchEvent, useCallback, useMemo, useState } from "react";
-import progress from '@/shared/assets/images/main/progress.png';
 import pointImage from '@/shared/assets/images/main/Point.webp';
 import coinImage from '@/shared/assets/images/main/coin.png';
 
