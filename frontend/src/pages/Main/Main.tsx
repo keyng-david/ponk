@@ -38,23 +38,23 @@ export const Main = () => {
   return (
     <div className={styles.root}>
       {/* Replacing logo, wallet, and rank button with the new Header component */}
-      <div class="w-[90%] max-w-lg mx-auto rounded-lg p-4 px-4 flex items-center justify-between text-white mt-6 shadow-lg" 
+      <div className="w-[90%] max-w-lg mx-auto rounded-lg p-4 px-4 flex items-center justify-between text-white mt-6 shadow-lg" 
         style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}>
-        <div class="flex items-center space-x-3">
+        <div className="flex items-center space-x-3">
           <img src={Avatar} alt="User Avatar" class="w-10 h-10 rounded-full" />
-          <div class="text-left">
-            <span class="font-bold" style={{ background: "linear-gradient(115deg, #62cff4, #2c67f2)", WebkitBackgroundClip: "text", color: "transparent" }}>
+          <div className="text-left">
+            <span className="font-bold" style={{ background: "linear-gradient(115deg, #62cff4, #2c67f2)", WebkitBackgroundClip: "text", color: "transparent" }}>
               {userName || "Player"}
             </span>
-            <div class="text-sm flex items-center space-x-2">
-              <h3 class="text-lg font-bold">{rangLabel}</h3>
-              <span class="text-gray-400">•</span>
-              <span class="text-gray-400">Rank</span>
+            <div className="text-sm flex items-center space-x-2">
+              <h3 className="text-lg font-bold">{rangLabel}</h3>
+              <span className="text-gray-400">•</span>
+              <span className="text-gray-400">Rank</span>
             </div>
           </div>
         </div>
-        <div class="flex items-center space-x-2">
-          <button class="text-white font-bold px-4 py-2 rounded-full" 
+        <div className="flex items-center space-x-2">
+          <button className="text-white font-bold px-4 py-2 rounded-full" 
             style={{ background: "linear-gradient(115deg, #62cff4, #2c67f2)" }} 
             onClick={wallet === 'none' ? initialize : undefined}>
             Wallet
