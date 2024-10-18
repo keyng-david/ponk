@@ -131,19 +131,28 @@ export const ClickerField = () => {
       <div className="flex space-x-4 fixed bottom-28 inset-x-4">
       
         
-        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style="background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.6);">
+        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style={{ 
+  background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)', 
+  boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
+}}>
           <div className="text-xs text-gray-400 font-semibold">Energy</div>
           <div className="text-white text-lg font-bold">{formatNumberForGrid(MAX_AVAILABLE)}</div>
         </div>
       
         
-        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style="background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.6);">
+        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style={{ 
+  background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)', 
+  boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
+}}>
           <div className="text-xs text-gray-400 font-semibold">Boost</div>
           <div className="text-white text-lg font-bold"> 🚀 </div>
         </div>
       
         
-        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style="background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%); box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.6);">
+        <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style={{ 
+  background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)', 
+  boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
+}}>
           <div className="text-xs text-gray-400 font-semibold">Damage</div>
           <div className="text-white text-lg font-bold">{formatNumberForGrid(CLICK_STEP)}</div>
         </div>
