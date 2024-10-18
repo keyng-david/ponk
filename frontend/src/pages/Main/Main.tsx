@@ -48,13 +48,11 @@ export const Main = () => {
             </span>
             <div className="text-sm flex items-center space-x-2">
               <h3 className="text-lg font-bold">{rangLabel}</h3>
-              <span className="text-gray-400">•</span>
-              <span className="text-gray-400">Rank</span>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <button className="text-white font-bold px-4 py-2 rounded-full" 
+          <button className="text-white font-bold px-3 py-1.3 rounded-full" 
             style={{ background: "linear-gradient(115deg, #62cff4, #2c67f2)" }} 
             onClick={wallet === 'none' ? initialize : undefined}>
             Wallet
