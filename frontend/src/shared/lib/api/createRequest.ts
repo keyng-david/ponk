@@ -1,3 +1,5 @@
+import { $sessionId } from "@/shared/model/session";
+
 export type SuccessResponse<T> = {
   error: false;
   payload: T;
@@ -23,7 +25,7 @@ export async function createRequest<T>({
 }): Promise<ResponseDefault<T>> {
   try {
     // Fetch the session ID from localStorage (or wherever it's stored)
-    const sessionId = await localStorage.getItem("session_id");
+        const sessionId = $sessionId.getState();
 
     if (!sessionId) {
       throw new Error("Session ID is not available.");
