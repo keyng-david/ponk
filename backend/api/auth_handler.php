@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../db_connection.php';
+require __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 $mysqli = getDbConnection();
