@@ -72,7 +72,7 @@
 .value::before {
   content: "";
   display: inline-block;
-  background-image: url(${coinImage}); 
+  background-image: url("../../../shared/assets/images/main/coin.png"); 
   width: 30px; 
   height: 30px;
   background-size: contain;
