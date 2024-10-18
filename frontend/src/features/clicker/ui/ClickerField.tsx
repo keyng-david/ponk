@@ -10,7 +10,7 @@ import { randModel } from "@/shared/model/rang";
 
 import { MAX_AVAILABLE, CLICK_STEP, clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
-import { getRandomArbitrary, getRandomInt } from "@/shared/lib/number";
+import {getRandomArbitrary, getRandomInt, toFormattedNumber} from "@/shared/lib/number";
 import { useTelegram } from "@/shared/lib/hooks/useTelegram";
 
 // Function to format numbers specifically for Grid Component
