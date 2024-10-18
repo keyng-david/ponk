@@ -8,7 +8,7 @@ import skin3 from '@/shared/assets/images/skins/Skin3.webp';
 import skin4 from '@/shared/assets/images/skins/Skin4.webp';
 import {randModel} from "@/shared/model/rang";
 
-import { MAX_AVAILABLE, clickerModel } from "../model";
+import { MAX_AVAILABLE, CLICK_STEP, clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
 import { getRandomArbitrary, getRandomInt, toFormattedNumber } from "@/shared/lib/number";
 import { useTelegram } from "@/shared/lib/hooks/useTelegram";
