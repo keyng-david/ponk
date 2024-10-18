@@ -18,6 +18,9 @@ const $sessionId = createStore<string | null>(null).on(setSessionId, (_, id) => 
 const setIsAuth = createEvent<boolean>();
 const $isAuth = createStore(false).on(setIsAuth, (_, value) => value);
 
+const setUserName = createEvent<string>();
+const $userName = createStore<string | null>(null).on(setUserName, (_, name) => name);
+
 // New global stores for game data
 const { valueInited, availableInited } = clickerModel;
 
@@ -30,6 +33,7 @@ export const useAuth = () => {
   const { setError } = useErrorHandler();
   const telegramId = useUnit($telegramId);
   const sessionId = useUnit($sessionId);
+  const userName = useUnit($userName);
 
   const initialize = useCallback(async () => {
     if (isAuth) return; // Skip initialization if already authenticated
@@ -74,6 +78,13 @@ export const useAuth = () => {
         throw new Error("Invalid data structure from API");
       }
 
+      // Set the userName from the payload if available
+      if (data.payload.userName) {
+        setUserName(data.payload.userName);
+      } else {
+        console.warn("userName is undefined");
+      }
+
       // Store initial game data globally
       valueInited(data.payload.score);
       console.log("Initial Score set:", data.payload.score);
@@ -115,6 +126,7 @@ export const useAuth = () => {
     sessionId,
     isAuth,
     valueInited,
+    userName,
     availableInited,
   };
 };
