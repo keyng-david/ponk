@@ -55,7 +55,9 @@
   line-height: 150%;
   text-align: center;
   margin: 0;
-  color: white; 
+  background: -webkit-linear-gradient(white, #38495a); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   transition: 0.3s ease;
   transition-property: transform;
   transition-delay: 0.3s;
