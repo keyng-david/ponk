@@ -1,6 +1,6 @@
 import React, { TouchEvent, useCallback, useMemo, useState } from "react";
 import pointImage from '@/shared/assets/images/main/Point.webp';
-import coinImage from '@/shared/assets/images/main/coin.png';
+import coinImage from '@/shared/assets/images/main/coin.svg';
 
 import skin1 from '@/shared/assets/images/skins/Skin1.webp';
 import skin2 from '@/shared/assets/images/skins/Skin2.webp';
