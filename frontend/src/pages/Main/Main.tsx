@@ -1,4 +1,4 @@
-import Avatar from '@/shared/assets/images/skin/Avatar.webp';
+import Avatar from '@/shared/assets/images/skins/Avatar.webp';
 import './backGround.css';
 import styles from './Main.module.scss';
 import { ClickerField } from "@/features/clicker/ui";
