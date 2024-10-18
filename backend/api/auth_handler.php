@@ -27,7 +27,7 @@ if (!isset($input['sessionId'])) {
 $sessionId = $input['sessionId'];
 
 // Prepare SQL statement and check for errors
-$stmt = $mysqli->prepare("SELECT score, available_clicks, wallet, level FROM users WHERE session_id = ?");
+$stmt = $mysqli->prepare("SELECT score, available_clicks, wallet, level, username FROM users WHERE session_id = ?");
 if ($stmt === false) {
     header('Content-Type: application/json');
     header('HTTP/1.0 500 Internal Server Error');
