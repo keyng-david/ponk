@@ -47,11 +47,11 @@
 
 .value {
   position: absolute;
-  bottom: hp(740);
+  bottom: hp(680); 
   left: 50%;
   transform: translateX(-50%);
-  width: wp(330);
-  font-size: 48px;
+  width: wp(300); 
+  font-size: 36px; 
   line-height: 150%;
   background-image: url("../../../shared/assets/images/auth/auth-background.png");
   background-repeat: repeat;
@@ -63,7 +63,21 @@
   transition: 0.3s ease;
   transition-property: transform;
   transition-delay: 0.3s;
-  text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.value::before {
+  content: "";
+  display: inline-block;
+  background-image: url(${coinImage}); 
+  width: 30px; 
+  height: 30px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-right: 8px; 
 }
 
 .progress-bar {
