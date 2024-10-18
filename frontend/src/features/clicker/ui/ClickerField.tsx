@@ -115,7 +115,9 @@ export const ClickerField = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <p className={styles.value}>{valueString}</p>
+      <p className={styles.value}>
+  <img src={coinImage} alt="coin" /> {valueString}
+</p>
       <ProgressBar value={available} />
       <div className={styles.skinContainer}>
         <img
