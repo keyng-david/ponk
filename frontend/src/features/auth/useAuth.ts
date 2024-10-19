@@ -79,10 +79,10 @@ export const useAuth = () => {
       }
 
       // Set the userName from the payload if available
-      if (data.payload.userName) {
-        setUserName(data.payload.userName);
+      if (data.payload.username) {
+        setUserName(data.payload.username);
       } else {
-        console.warn("userName is undefined");
+        console.warn("username is undefined");
       }
 
       // Store initial game data globally
