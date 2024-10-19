@@ -5,7 +5,7 @@ CREATE TABLE users (
   session_id VARCHAR(32) UNIQUE,
   score INT DEFAULT 0,
   level INT DEFAULT 0,
-  wallet VARCHAR(255),
+  wallet VARCHAR(255) DEFAULT 'none',
   available_clicks INT DEFAULT 500,
   referred_by INT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
