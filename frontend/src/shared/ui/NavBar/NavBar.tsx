@@ -1,5 +1,7 @@
+
 import React, { useEffect } from "react";
-import { Steps, useNavigatorModel } from "@/shared/model";
+import { Steps, useNavigatorModel } from
+ "@/shared/model";
 import styles from './NavBar.module.scss';
 import { leadersModel } from "@/entities/leaders/model";
 import { earnModel } from "@/entities/earn/model";
@@ -36,10 +38,11 @@ export const NavBar = () => {
         }
     }, [step]);
 
-    const handleItemClick = (page: Steps) => {
-        console.log('Clicked item:', page);
-        stepChanged(page);
-    };
+    const handleItemClick = (index: number, page: Steps) => {
+    console.log('Clicked item:', page);
+    setActiveIndex(index);  
+    stepChanged(page);    
+};
 
     const handleDropClick = () => {
         alert("Coming Soon");
