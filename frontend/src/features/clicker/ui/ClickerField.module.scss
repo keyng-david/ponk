@@ -35,6 +35,11 @@
   animation: float 5s ease-in-out infinite;
 }
 
+.float-animation-delayed {
+  animation: float 5s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
 .root {
     position: absolute;
     width: 100%;
