@@ -9,13 +9,15 @@ import { homeOutline, trophyOutline, peopleOutline, cashOutline, giftOutline } f
 export const NavBar = () => {
     const { step, stepChanged } = useNavigatorModel();
 
+    const [activeIndex, setActiveIndex] = useState(0);
+
     // Log the initial step value and when the component is rendered
     useEffect(() => {
         console.log('NavBar component rendered');
         console.log('Current step:', step);
-    }, [step]);
- 
-    switch (step) {
+
+        // Update activeIndex based on step
+        switch (step) {
             case Steps.HOME:
                 setActiveIndex(0);
                 break;
