@@ -14,6 +14,25 @@ export const NavBar = () => {
         console.log('NavBar component rendered');
         console.log('Current step:', step);
     }, [step]);
+ 
+    switch (step) {
+            case Steps.HOME:
+                setActiveIndex(0);
+                break;
+            case Steps.BOARD:
+                setActiveIndex(1);
+                break;
+            case Steps.FRENS:
+                setActiveIndex(2);
+                break;
+            case Steps.EARN:
+                setActiveIndex(3);
+                break;
+            default:
+                setActiveIndex(0);
+                break;
+        }
+    }, [step]);
 
     const handleItemClick = (page: Steps) => {
         console.log('Clicked item:', page);
