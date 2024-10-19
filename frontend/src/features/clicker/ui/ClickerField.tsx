@@ -178,6 +178,11 @@ const ProgressBar = React.memo<{ value: number }>(({ value }) => {
 
   const percentage = (value / MAX_AVAILABLE) * 100;
 
+  // Log the current value, list count, and percentage
+  console.log('ProgressBar value:', value);
+  console.log('ProgressBar list count:', list);
+  console.log('ProgressBar percentage:', percentage);
+
   return (
     <div className="range" style={{ '--p': percentage } as React.CSSProperties}>
       <div className="available">{value}</div>
