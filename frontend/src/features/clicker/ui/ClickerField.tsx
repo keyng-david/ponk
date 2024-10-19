@@ -43,7 +43,7 @@ export const ClickerField = () => {
     }
   }, [rang]);
 
-  const valueString = formatNumberForGrid(value); // Use special formatting for value display in grid component
+      const valueString = toFormattedNumber(value);
 
   const onTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
     if (isClickEnabled) {
@@ -116,9 +116,8 @@ export const ClickerField = () => {
       onTouchEnd={handleTouchEnd}
     >
       <ProgressBar value={available} />
-    <p className={styles.value}>
-  <img src={coinImage} alt="coin" /> {toFormattedNumber(value)}
-</p>
+                <p className={styles.value}>{valueString}</p>
+            <p className={styles.value}>{valueString}</p>
       <div className={styles.skinContainer}>
   <img
     id={'skinImage'}
