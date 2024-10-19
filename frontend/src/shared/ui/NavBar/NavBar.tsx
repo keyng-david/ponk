@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Steps, useNavigatorModel } from "@/shared/model";
 import styles from './NavBar.module.scss';
 import { leadersModel } from "@/entities/leaders/model";
@@ -9,7 +9,14 @@ import { homeOutline, trophyOutline, peopleOutline, cashOutline, giftOutline } f
 export const NavBar = () => {
     const { step, stepChanged } = useNavigatorModel();
 
+    // Log the initial step value and when the component is rendered
+    useEffect(() => {
+        console.log('NavBar component rendered');
+        console.log('Current step:', step);
+    }, [step]);
+
     const handleItemClick = (page: Steps) => {
+        console.log('Clicked item:', page);
         stepChanged(page);
     };
 
