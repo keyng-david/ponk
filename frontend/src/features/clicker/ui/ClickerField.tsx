@@ -120,14 +120,14 @@ export const ClickerField = () => {
   <img src={coinImage} alt="coin" /> {toFormattedNumber(valueString)}
 </p>
       <div className={styles.skinContainer}>
-        <img
-          id={'skinImage'}
-          className={styles.skinImage}
-          src={skinImage}
-          alt={'skin image'}
-          onClick={handleSkinClick}
-        />
-      </div>
+  <img
+    id={'skinImage'}
+    className={`${styles.skinImage} float-animation-delayed`}
+    src={skinImage}
+    alt={'skin image'}
+    onClick={handleSkinClick}
+  />
+</div>
       
       
       <div className="flex space-x-4 fixed bottom-28 inset-x-4">
