@@ -117,8 +117,8 @@ export const ClickerField = () => {
     >
       <ProgressBar value={available} />
     <p className={styles.value}>
-      <img src={coinImage} alt="coin" /> {valueString}
-    </p>
+  <img src={coinImage} alt="coin" /> {toFormattedNumber(valueString)}
+</p>
       <div className={styles.skinContainer}>
         <img
           id={'skinImage'}
