@@ -44,46 +44,45 @@ export const NavBar = () => {
     };
 
     return (
-        <div className="navigation">
-            <ul>
-                <li className={`list_item ${step === Steps.HOME ? 'active' : ''}`} onClick={() => handleItemClick(Steps.HOME)}>
-                    <a href="#">
-                        <span className="icon"><IonIcon icon={homeOutline} /></span>
-                        <span className="text">Home</span>
-                    </a>
-                </li>
-                <li className={`list_item ${step === Steps.BOARD ? 'active' : ''}`} onClick={() => {
-                    leadersModel.leadersRequested();
-                    stepChanged(Steps.BOARD);
-                }}>
-                    <a href="#">
-                        <span className="icon"><IonIcon icon={trophyOutline} /></span>
-                        <span className="text">Leaders</span>
-                    </a>
-                </li>
-                <li className={`list_item ${step === Steps.FRENS ? 'active' : ''}`} onClick={() => handleItemClick(Steps.FRENS)}>
-                    <a href="#">
-                        <span className="icon"><IonIcon icon={peopleOutline} /></span>
-                        <span className="text">Frens</span>
-                    </a>
-                </li>
-                <li className={`list_item ${step === Steps.EARN ? 'active' : ''}`} onClick={() => {
-                    earnModel.tasksRequested();
-                    stepChanged(Steps.EARN);
-                }}>
-                    <a href="#">
-                        <span className="icon"><IonIcon icon={cashOutline} /></span>
-                        <span className="text">Earn</span>
-                    </a>
-                </li>
-                <li className="list_item" onClick={handleDropClick}>
-                    <a href="#">
-                        <span className="icon"><IonIcon icon={giftOutline} /></span>
-                        <span className="text">Airdrop</span>
-                    </a>
-                </li>
-                <div className="indicator"></div>
-            </ul>
-        </div>
-    );
-};
+    <div className={styles.navigation}>
+        <ul>
+            <li className={`${styles.list_item} ${activeIndex === 0 ? styles.active : ''}`} onClick={() => handleItemClick(0, Steps.HOME)}>
+                <a href="#">
+                    <span className={styles.icon}><IonIcon icon={homeOutline} /></span>
+                    <span className={styles.text}>Home</span>
+                </a>
+            </li>
+            <li className={`${styles.list_item} ${activeIndex === 1 ? styles.active : ''}`} onClick={() => {
+                leadersModel.leadersRequested(); 
+                handleItemClick(1, Steps.BOARD);
+            }}>
+                <a href="#">
+                    <span className={styles.icon}><IonIcon icon={trophyOutline} /></span>
+                    <span className={styles.text}>Leaders</span>
+                </a>
+            </li>
+            <li className={`${styles.list_item} ${activeIndex === 2 ? styles.active : ''}`} onClick={() => handleItemClick(2, Steps.FRENS)}>
+                <a href="#">
+                    <span className={styles.icon}><IonIcon icon={peopleOutline} /></span>
+                    <span className={styles.text}>Frens</span>
+                </a>
+            </li>
+            <li className={`${styles.list_item} ${activeIndex === 3 ? styles.active : ''}`} onClick={() => {
+                earnModel.tasksRequested();
+                handleItemClick(3, Steps.EARN);
+            }}>
+                <a href="#">
+                    <span className={styles.icon}><IonIcon icon={cashOutline} /></span>
+                    <span className={styles.text}>Earn</span>
+                </a>
+            </li>
+            <li className={`${styles.list_item}`} onClick={handleDropClick}>
+                <a href="#">
+                    <span className={styles.icon}><IonIcon icon={giftOutline} /></span>
+                    <span className={styles.text}>Airdrop</span>
+                </a>
+            </li>
+            <div className={styles.indicator} style={{ transform: `translateX(calc(70px * ${activeIndex} + ${activeIndex * 7}px))` }}></div>
+        </ul>
+    </div>
+);
