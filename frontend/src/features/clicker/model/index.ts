@@ -1,9 +1,11 @@
 import { createEvent, createStore, sample } from "effector";
 import { useUnit } from "effector-react";
 import { usePoints } from "@/app/socketProvider";
+import { useAuth } from "@/features/auth/useAuth";
 
-export const MAX_AVAILABLE = 500;
-export const CLICK_STEP = 1;
+
+const { clickStep } = useAuth();
+
 
 // Define events for initializing and updating values
 const valueInited = createEvent<number>();
@@ -22,6 +24,19 @@ const $value = createStore(0).on(valueInited, (_, payload) => payload);
 const $available = createStore(MAX_AVAILABLE).on(availableInited, (_, payload) => payload);
 
 const $earnedPoint = createStore(0); // New store for accumulated points
+
+
+export let MAX_AVAILABLE = $available.getState();
+export let CLICK_STEP = clickStep.getState();
+
+// Update MAX_AVAILABLE and CLICK_STEP dynamically
+$available.watch((newAvailable) => {
+    MAX_AVAILABLE = newAvailable;
+});
+
+clickStep.watch((newClickStep) => {
+    CLICK_STEP = newClickStep;
+});
 
 const $canBeClicked = $available.map(state => state >= CLICK_STEP);
 
