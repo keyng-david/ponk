@@ -3,11 +3,8 @@ import { useUnit } from "effector-react";
 import { usePoints } from "@/app/socketProvider";
 import { useAuth } from "@/features/auth/useAuth";
 
-
 const { clickStep } = useAuth();
 
-
-// Define events for initializing and updating values
 const valueInited = createEvent<number>();
 const availableInited = createEvent<number>();
 const availableUpdated = createEvent<number>();
