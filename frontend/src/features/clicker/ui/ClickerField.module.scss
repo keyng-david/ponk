@@ -51,22 +51,24 @@
 
 
 .value {
-  position: absolute;
-  top: calc(50% + 50px);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 36px;
-  line-height: 150%;
-  text-align: center;
-  background: -webkit-linear-gradient(white, #38495a);
+    position: absolute;
+    top: 70%; 
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 36px; 
+    line-height: 150%;
+    text-align: center;
+    background: -webkit-linear-gradient(white, #38495a);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: transparent;
+    display: flex; 
+    align-items: center; 
 }
 
 .value img {
-  margin-right: 8px; 
-  width: 24px; 
-  height: 24px;
+    margin-right: 8px;
+    width: 24px; 
+    height: 24px;
 }
 
 .progress-bar {
