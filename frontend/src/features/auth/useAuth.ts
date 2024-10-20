@@ -8,9 +8,6 @@ import { randModel } from "@/shared/model/rang";
 import { useErrorHandler } from "@/shared/lib/hooks/useErrorHandler";
 import { clickerModel } from "@/features/clicker/model";
 
-// Events and stores for global state
-const setTelegramId = createEvent<string>();
-const $telegramId = createStore<string | null>(null).on(setTelegramId, (_, id) => id);
 
 const setSessionId = createEvent<string>();
 const $sessionId = createStore<string | null>(null).on(setSessionId, (_, id) => id);
@@ -37,7 +34,6 @@ export const useAuth = () => {
   const wallet = walletModel.useWalletModel();
   const rangModel = randModel.useRang();
   const { setError } = useErrorHandler();
-  const telegramId = useUnit($telegramId);
   const sessionId = useUnit($sessionId);
   const userName = useUnit($userName);
   const clickStep = useUnit($clickStep);
@@ -110,12 +106,6 @@ export const useAuth = () => {
       } else {
         console.warn("Level data is undefined or not a number");
       }
-
-      if (data.payload.telegram_id) {
-        setTelegramId(data.payload.telegram_id);
-      } else {
-        console.warn("Telegram ID is undefined");
-      }
    
       if (typeof data.payload.clickStep === 'number') {
         setClickStep(data.payload.clickStep);
@@ -124,7 +114,7 @@ export const useAuth = () => {
       }
 
       if (data.payload.skin) {
-        setSkin(data.payload.skin); // skin URL from backend
+        setSkin(data.payload.skin);
       } else {
         console.warn("Skin data is undefined");
       }
@@ -142,7 +132,6 @@ export const useAuth = () => {
 
   return {
     initialize,
-    telegramId,
     sessionId,
     isAuth,
     valueInited,
