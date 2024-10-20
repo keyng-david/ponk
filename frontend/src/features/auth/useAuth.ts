@@ -24,6 +24,12 @@ const $userName = createStore<string | null>(null).on(setUserName, (_, name) => 
 // New global stores for game data
 const { valueInited, availableInited } = clickerModel;
 
+const setClickStep = createEvent<number>();
+const $clickStep = createStore<number | null>(null).on(setClickStep, (_, step) => step);
+
+const setSkin = createEvent<string>();
+const $skin = createStore<string | null>(null).on(setSkin, (_, skin) => skin);
+
 export const useAuth = () => {
   const navigate = useNavigate();
   const isAuth = useUnit($isAuth);
@@ -34,6 +40,8 @@ export const useAuth = () => {
   const telegramId = useUnit($telegramId);
   const sessionId = useUnit($sessionId);
   const userName = useUnit($userName);
+  const clickStep = useUnit($clickStep);
+  const skin = useUnit($skin);
 
   const initialize = useCallback(async () => {
     if (isAuth) return; // Skip initialization if already authenticated
@@ -108,6 +116,18 @@ export const useAuth = () => {
       } else {
         console.warn("Telegram ID is undefined");
       }
+   
+      if (typeof data.payload.clickStep === 'number') {
+        setClickStep(data.payload.clickStep);
+      } else {
+        console.warn("clickStep data is undefined or not a number");
+      }
+
+      if (data.payload.skin) {
+        setSkin(data.payload.skin); // skin URL from backend
+      } else {
+        console.warn("Skin data is undefined");
+      }
 
       setIsAuth(true);
 
@@ -128,5 +148,7 @@ export const useAuth = () => {
     valueInited,
     userName,
     availableInited,
+    clickStep,
+    skin,
   };
 };
