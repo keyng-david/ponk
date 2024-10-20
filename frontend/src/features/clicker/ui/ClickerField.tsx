@@ -33,15 +33,23 @@ export const ClickerField = () => {
   const [isClickEnabled, setIsClickEnabled] = useState(true);
 
   const { rang } = randModel.useRang();
+  const { skin } = useAuth();
+
+  // New logic to dynamically load skin image based on skin state or rang
   const skinImage = useMemo(() => {
-    switch (rang) {
-      case 0: return skin1;
-      case 1: return skin2;
-      case 2: return skin3;
-      case 3: return skin4;
-      default: return skin1;
+    if (skin) {
+      return skin; // This should be a URL link fetched from the API
+    } else {
+      // Fallback to default skin based on rang or skin1 if undefined
+      switch (rang) {
+        case 0: return skin1;
+        case 1: return skin2;
+        case 2: return skin3;
+        case 3: return skin4;
+        default: return skin1;
+      }
     }
-  }, [rang]);
+  }, [skin, rang]);
 
       const valueString = toFormattedNumber(value);
 
