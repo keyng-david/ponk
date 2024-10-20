@@ -47,7 +47,7 @@ export const Main = () => {
               {userName || "Player"}
             </span>
             <div className="text-sm flex items-center space-x-2">
-              <h3 className="text-lg font-bold">{rangLabel}</h3>
+              <h3 className="font-bold" style={{ background: "linear-gradient(white, #38495a)", WebkitBackgroundClip: "text", color: "transparent" }}>{rangLabel}</h3>
             </div>
           </div>
         </div>
