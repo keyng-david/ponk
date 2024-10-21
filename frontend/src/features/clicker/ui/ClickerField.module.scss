@@ -144,6 +144,12 @@
     z-index: 1;
 }
 
+.range__label {
+  transform: skew(-30deg) translateY(-100%);
+  line-height: 1.5;
+}
+
+
 @keyframes load {
     to {
         width: var(--width);
