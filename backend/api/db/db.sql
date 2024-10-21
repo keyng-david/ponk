@@ -8,6 +8,8 @@ CREATE TABLE users (
   wallet VARCHAR(255) DEFAULT 'none',
   available_clicks INT DEFAULT 500,
   referred_by INT NULL,
+  skin VARCHAR(255), 
+  click_step INT DEFAULT 1, 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
