@@ -19,7 +19,6 @@ export const Board = () => {
         >
             <Title />
             <MainReflect />
-            <Decorations />
         </div>
     )
 }
