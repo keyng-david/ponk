@@ -148,7 +148,7 @@ export const ClickerField = () => {
   boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
 }}>
           <div className="text-xs text-gray-400 font-semibold">Energy</div>
-          <div className="text-white text-lg font-bold">{formatNumberForGrid(MAX_AVAILABLE)}</div>
+          <div className="text-white text-lg font-bold">{formatNumberForGrid(available)}</div>
         </div>
       
         
@@ -166,7 +166,7 @@ export const ClickerField = () => {
   boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
 }}>
           <div className="text-xs text-gray-400 font-semibold">Damage</div>
-          <div className="text-white text-lg font-bold">{formatNumberForGrid(CLICK_STEP)}</div>
+          <div className="text-white text-lg font-bold">{formatNumberForGrid(clickStep)}</div>
         </div>
       </div>
     </div>
