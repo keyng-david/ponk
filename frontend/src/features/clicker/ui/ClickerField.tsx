@@ -179,7 +179,7 @@ const ProgressBar = React.memo<{ value: number }>(({ value }) => {
 
   return (
     <div className={styles.range} style={{ '--p': percentage } as React.CSSProperties}>
-      <div className={styles.rangeLabel}>
+      <div className={styles.range__label}>
         <span>{value} / {maxAvailable}</span>
         <span>{Math.round(percentage)}%</span>
       </div>
