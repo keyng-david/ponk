@@ -107,10 +107,10 @@ export const useAuth = () => {
         console.warn("Level data is undefined or not a number");
       }
    
-      if (typeof data.payload.clickStep === 'number') {
+      if (typeof data.payload.click_sttep === 'number') {
         setClickStep(data.payload.clickStep);
       } else {
-        console.warn("clickStep data is undefined or not a number");
+        console.warn("click_step data is undefined or not a number");
       }
 
       if (data.payload.skin) {
