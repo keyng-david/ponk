@@ -48,33 +48,61 @@ const MainReflect = reflect({
 })
 
 const Decorations = () => (
-    <img src={background} className="absolute inset-0 w-full h-full object-cover" alt="background" />
+    <div
+        style={{
+            background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)",
+        }}
+        className={styles.background}
+        aria-label="background"
+    />
 )
 
 const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
-    <div className="flex justify-between items-center bg-yellow-600 px-6 py-3 rounded-lg mx-4 mb-4">
-        <div className="flex items-center space-x-4">
-            <img src={firstMedal} alt="1st position" className="w-8 h-8" />
-            <span>{name}</span>
-        </div>
-        <div className="flex items-center space-x-2">
-            <span>{toFormattedNumber(score)}</span>
-            <img src={coinImage} alt="coin" className="w-6 h-6" />
+    <div className={styles['first-position']}>
+        <div className="min-h-screen bg-black text-white">
+            {/* Header: Player count and total points earned */}
+            <div className="flex justify-between items-center py-4 px-6 text-gray-400 text-sm">
+                <span>Top Players</span>
+                <span>Total points earned</span>
+            </div>
+
+            {/* User score section */}
+            <div className="flex justify-between items-center bg-yellow-600 px-6 py-3 rounded-lg mx-4 mb-4">
+                <div className="text-sm font-bold text-black">100+ Me</div>
+                <div className="flex items-center space-x-2">
+                    <span className="text-lg font-bold text-white">4,600</span>
+                    <img src={coinImage} alt="coin" className="w-6 h-6" />
+                </div>
+            </div>
+
+            {/* Leaderboard - First player with medal */}
+            <div className="space-y-4 px-4">
+                <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
+                    <div className="flex items-center space-x-4">
+                        <img src={firstMedal} alt="gold-medal" className="w-6 h-6" />
+                        <span>{name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <span>{toFormattedNumber(score)}</span>
+                        <img src={coinImage} alt="coin" className="w-6 h-6" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-))
+));
+
 
 const LeadersList = React.memo<{
     list: LeaderData[]
 }>(({ list }) => (
-    <div className="space-y-4 px-4">
-        {list.map((item, index) => (
-            <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
+    <div className={styles.list}>
+        {list.map(item => (
+            <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg mb-4">
                 <div className="flex items-center space-x-4">
-                    {index === 0 && <img src={firstMedal} alt="first" className="w-6 h-6" />}
-                    {index === 1 && <img src={secondMedal} alt="second" className="w-6 h-6" />}
-                    {index === 2 && <img src={thirdMedal} alt="third" className="w-6 h-6" />}
-                    <span>{toFormattedIndex(item.position)}</span>
+                    {item.position === 2 && <img src={secondMedal} alt="silver-medal" className="w-6 h-6" />}
+                    {item.position === 3 && <img src={thirdMedal} alt="bronze-medal" className="w-6 h-6" />}
+                    {item.position > 3 ? <span>{toFormattedIndex(item.position)}</span> : null}
                     <span>{item.name}</span>
                 </div>
                 <div className="flex items-center space-x-2">
@@ -84,4 +112,4 @@ const LeadersList = React.memo<{
             </div>
         ))}
     </div>
-))
+));
