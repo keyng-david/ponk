@@ -1,7 +1,7 @@
 import firstImage from '@/shared/assets/images/leaders/1st.svg'
 import secondImage from '@/shared/assets/images/leaders/2nd.svg'
 import thirdImage from '@/shared/assets/images/leaders/3rd.svg'
-import coinImage from '@/shared/assets/images/coin.svg'
+import coinImage from '@/shared/assets/images/main/coin.svg';
 
 import styles from './Board.module.scss'
 import React from 'react'
