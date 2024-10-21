@@ -174,7 +174,7 @@ export const ClickerField = () => {
 };
 
 const ProgressBar = React.memo<{ value: number }>(({ value }) => {
-  const maxAvailable = useUnit(clickerModel.$available);
+  const maxAvailable = clickerModel.$available.getState();
   const percentage = (value / maxAvailable) * 100;
 
   return (
