@@ -52,7 +52,7 @@
 
 .value {
     position: absolute;
-    top: 70%; 
+    bottom: hp(715);
     left: 50%;
     transform: translateX(-50%);
     font-size: 36px; 
@@ -97,24 +97,6 @@
     }
 }
 
-.available {
-    position: absolute;
-    z-index: 2;
-    top: 50%;
-    left: wp(7);
-    transform: translateY(-50%);
-    display: block;
-    font-size: 12px;
-    color: #fff;
-}
-
-.row {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-}
 
 .item {
     width: 9.39%;
@@ -189,6 +171,7 @@
 
 .available {
     position: absolute;
+    bottom: hp(735);
     z-index: 2;
     top: 50%;
     left: 10px;
