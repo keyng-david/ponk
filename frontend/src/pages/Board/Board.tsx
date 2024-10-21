@@ -1,10 +1,10 @@
-import firstImage from '@/shared/assets/images/leaders/1st.svg'
-import secondImage from '@/shared/assets/images/leaders/2nd.svg'
-import thirdImage from '@/shared/assets/images/leaders/3rd.svg'
-import coinImage from '@/shared/assets/images/main/coin.svg';
-
-import styles from './Board.module.scss'
 import React from 'react'
+import firstMedal from '@/shared/assets/images/leaders/1st.svg'
+import secondMedal from '@/shared/assets/images/leaders/2nd.svg'
+import thirdMedal from '@/shared/assets/images/leaders/3rd.svg'
+import coinImage from '@/shared/assets/images/coin.svg'
+import background from '@/shared/assets/images/frens/background.png'
+import styles from './Board.module.scss'
 import { LoaderTemplate } from '@/shared/ui/LoaderTemplate'
 import { leadersModel } from '@/entities/leaders/model'
 import { LeaderData } from '@/entities/leaders/model/types'
@@ -13,21 +13,18 @@ import { toFormattedNumber, toFormattedIndex } from '@/shared/lib/number'
 
 export const Board = () => {
     return (
-        <div
-            className="min-h-screen text-white"
-            style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}
-        >
+        <div className={`${styles.root} min-h-screen bg-black text-white`}>
             <Title />
             <MainReflect />
+            <Decorations />
         </div>
     )
 }
 
 const Title = () => (
-    <>
-        <h2 className={styles.title}>LEADERS</h2>
-        <h2 className={styles.title}>LEADERS</h2>
-    </>
+    <div className="text-center py-6">
+        <h2 className={`${styles.title} text-4xl font-bold`}>LEADERS</h2>
+    </div>
 )
 
 const Main = React.memo<{
@@ -35,7 +32,7 @@ const Main = React.memo<{
     list: LeaderData[]
     firstPosition: LeaderData
 }>(({ isLoading, list, firstPosition }) => (
-    <LoaderTemplate className={styles.main} isLoading={isLoading}>
+    <LoaderTemplate className="px-4" isLoading={isLoading}>
         <FirstPosition {...firstPosition} />
         <LeadersList list={list} />
     </LoaderTemplate>
@@ -50,30 +47,22 @@ const MainReflect = reflect({
     }
 })
 
+const Decorations = () => (
+    <img src={background} className="absolute inset-0 w-full h-full object-cover" alt="background" />
+)
 
-const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => {
-    let positionImage;
-    if (position === 1) {
-        positionImage = firstImage;
-    } else if (position === 2) {
-        positionImage = secondImage;
-    } else if (position === 3) {
-        positionImage = thirdImage;
-    }
-
-    return (
-        <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
-            <div className="flex items-center space-x-4">
-                <img src={positionImage} alt={`${position}-medal`} className="w-6 h-6" />
-                <span>{name}</span>
-            </div>
-            <div className="flex items-center space-x-2">
-                <span>{toFormattedNumber(score)}</span>
-                <img src={coinImage} alt="coin" className="w-6 h-6" />
-            </div>
+const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
+    <div className="flex justify-between items-center bg-yellow-600 px-6 py-3 rounded-lg mx-4 mb-4">
+        <div className="flex items-center space-x-4">
+            <img src={firstMedal} alt="1st position" className="w-8 h-8" />
+            <span>{name}</span>
         </div>
-    )
-})
+        <div className="flex items-center space-x-2">
+            <span>{toFormattedNumber(score)}</span>
+            <img src={coinImage} alt="coin" className="w-6 h-6" />
+        </div>
+    </div>
+))
 
 const LeadersList = React.memo<{
     list: LeaderData[]
@@ -82,6 +71,9 @@ const LeadersList = React.memo<{
         {list.map((item, index) => (
             <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
                 <div className="flex items-center space-x-4">
+                    {index === 0 && <img src={firstMedal} alt="first" className="w-6 h-6" />}
+                    {index === 1 && <img src={secondMedal} alt="second" className="w-6 h-6" />}
+                    {index === 2 && <img src={thirdMedal} alt="third" className="w-6 h-6" />}
                     <span>{toFormattedIndex(item.position)}</span>
                     <span>{item.name}</span>
                 </div>
