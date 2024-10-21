@@ -1,7 +1,7 @@
 import background from '@/shared/assets/images/frens/background.png'
 import 1st from '@/shared/assets/images/leaders/1st.svg'
-import 2nd from '@/shared/assets/images/leaders/1st.svg'
-import 3rd from '@/shared/assets/images/leaders/1st.svg'
+import 2nd from '@/shared/assets/images/leaders/2nd.svg'
+import 3rd from '@/shared/assets/images/leaders/3rd.svg'
 
 import styles from './Board.module.scss'
 import React from 'react'
