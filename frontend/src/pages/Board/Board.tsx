@@ -51,11 +51,6 @@ const MainReflect = reflect({
     }
 })
 
-const Decorations = () => (
-    <>
-        <img src={background} className={styles.background} alt={'background'} />
-    </>
-)
 
 const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => {
     let positionImage;
