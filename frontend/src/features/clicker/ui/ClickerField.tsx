@@ -29,7 +29,7 @@ let timeout1: NodeJS.Timeout;
 
 export const ClickerField = () => {
   const { value, available, canBeClicked, onClick } = clickerModel.useClicker();
-  const clickStep = useUnit(clickerModel.$clickStep);
+  const clickStep = clickerModel.$clickStep.getState();
   const { haptic } = useTelegram();
 
   const [isClickEnabled, setIsClickEnabled] = useState(true);
