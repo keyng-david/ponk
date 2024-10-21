@@ -177,7 +177,7 @@ const ProgressBar = React.memo<{ value: number }>(({ value }) => {
 
   return (
     <div className={styles.range} style={{ '--p': percentage } as React.CSSProperties}>
-      <div className={styles.available}>{value}</div>
+      <div className="range__label">{value}</div>
     </div>
   );
 });
