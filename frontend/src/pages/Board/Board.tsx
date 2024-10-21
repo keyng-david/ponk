@@ -1,7 +1,7 @@
-import background from '@/shared/assets/images/frens/background.png'
-import 1st from '@/shared/assets/images/leaders/1st.svg'
-import 2nd from '@/shared/assets/images/leaders/2nd.svg'
-import 3rd from '@/shared/assets/images/leaders/3rd.svg'
+import firstImage from '@/shared/assets/images/leaders/1st.svg'
+import secondImage from '@/shared/assets/images/leaders/2nd.svg'
+import thirdImage from '@/shared/assets/images/leaders/3rd.svg'
+import coinImage from '@/shared/assets/images/coin.svg'
 
 import styles from './Board.module.scss'
 import React from 'react'
@@ -13,7 +13,10 @@ import { toFormattedNumber, toFormattedIndex } from '@/shared/lib/number'
 
 export const Board = () => {
     return (
-        <div className={styles.root}>
+        <div
+            className="min-h-screen text-white"
+            style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}
+        >
             <Title />
             <MainReflect />
             <Decorations />
@@ -50,28 +53,48 @@ const MainReflect = reflect({
 
 const Decorations = () => (
     <>
-        <img src={background} className={styles.background} alt={'background'}/>
+        <img src={background} className={styles.background} alt={'background'} />
     </>
 )
 
-const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
-    <div className={styles['first-position']}>
-        <img className={styles['first-position-bg']} src={firstBg} alt={'firstBg'} />
-        <span className={styles['first-label']}>{toFormattedIndex(position)}</span>
-        <p className={styles['first-title']}>{name}</p>
-        <p className={styles['first-amount']}>{toFormattedNumber(score)}</p>
-    </div>
-))
+const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => {
+    let positionImage;
+    if (position === 1) {
+        positionImage = firstImage;
+    } else if (position === 2) {
+        positionImage = secondImage;
+    } else if (position === 3) {
+        positionImage = thirdImage;
+    }
+
+    return (
+        <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
+            <div className="flex items-center space-x-4">
+                <img src={positionImage} alt={`${position}-medal`} className="w-6 h-6" />
+                <span>{name}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+                <span>{toFormattedNumber(score)}</span>
+                <img src={coinImage} alt="coin" className="w-6 h-6" />
+            </div>
+        </div>
+    )
+})
 
 const LeadersList = React.memo<{
     list: LeaderData[]
 }>(({ list }) => (
-    <div className={styles.list}>
-        {list.map(item => (
-            <div key={item.position} className={styles['list-item']}>
-                <span>{toFormattedIndex(item.position)}</span>
-                <p className={styles['list-item-name']}>{item.name}</p>
-                <p className={styles['list-item-score']}>{toFormattedNumber(item.score)}</p>
+    <div className="space-y-4 px-4">
+        {list.map((item, index) => (
+            <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
+                <div className="flex items-center space-x-4">
+                    <span>{toFormattedIndex(item.position)}</span>
+                    <span>{item.name}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <span>{toFormattedNumber(item.score)}</span>
+                    <img src={coinImage} alt="coin" className="w-6 h-6" />
+                </div>
             </div>
         ))}
     </div>
