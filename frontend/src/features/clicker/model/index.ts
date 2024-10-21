@@ -118,4 +118,5 @@ export const clickerModel = {
   $value,
   $available,
   $earnedPoint,
+  $clickStep,
 };
