@@ -9,7 +9,7 @@ import skin4 from '@/shared/assets/images/skins/Skin4.webp';
 import { randModel } from "@/shared/model/rang";
 import { useAuth } from "@/features/auth/useAuth";
 
-import { MAX_AVAILABLE, CLICK_STEP, clickerModel } from "../model";
+import { clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
 import {getRandomArbitrary, getRandomInt, toFormattedNumber} from "@/shared/lib/number";
 import { useTelegram } from "@/shared/lib/hooks/useTelegram";
@@ -29,6 +29,7 @@ let timeout1: NodeJS.Timeout;
 
 export const ClickerField = () => {
   const { value, available, canBeClicked, onClick } = clickerModel.useClicker();
+  const clickStep = useUnit(clickerModel.$clickStep);
   const { haptic } = useTelegram();
 
   const [isClickEnabled, setIsClickEnabled] = useState(true);
@@ -173,12 +174,13 @@ export const ClickerField = () => {
 };
 
 const ProgressBar = React.memo<{ value: number }>(({ value }) => {
-  const percentage = (value / MAX_AVAILABLE) * 100;
+  const maxAvailable = useUnit(clickerModel.$available);
+  const percentage = (value / maxAvailable) * 100;
 
   return (
     <div className={styles.range} style={{ '--p': percentage } as React.CSSProperties}>
       <div className={styles.rangeLabel}>
-        <span>{value} / {MAX_AVAILABLE}</span>
+        <span>{value} / {maxAvailable}</span>
         <span>{Math.round(percentage)}%</span>
       </div>
     </div>
