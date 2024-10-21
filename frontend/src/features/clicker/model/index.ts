@@ -3,7 +3,6 @@ import { useUnit } from "effector-react";
 import { usePoints } from "@/app/socketProvider";
 import { useAuth } from "@/features/auth/useAuth";
 
-
 const { clickStep } = useAuth();
 
 export const MAX_AVAILABLE = useUnit($available);
