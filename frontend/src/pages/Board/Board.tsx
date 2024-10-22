@@ -68,13 +68,16 @@ const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
       </div>
 
       {/* User score */}
-      <div className="flex justify-between items-center bg-yellow-600 px-0 py-3 rounded-lg mb-4 mx-auto max-w-screen-xl"> {/* Set max width */}
-        <div className="text-sm font-bold text-black">100+ Me</div>
-        <div className="flex items-center space-x-2">
-          <span className="text-lg font-bold text-white">4,600</span>
-          <img src={coinImage} alt="coin" className="w-6 h-6" />
-        </div>
-      </div>
+      <div className="flex justify-between items-center bg-yellow-500 px-6 py-3 rounded-lg">
+  <div className="text-sm font-bold text-black">
+    100+ Me
+  </div>
+
+  <div className="flex items-center space-x-2">
+    <span className="text-lg font-bold text-white">4,600</span>
+    <img src={coinImage} alt="coin" className="w-6 h-6" />
+  </div>
+</div>
 
       {/* Leaderboard First Player */}
       <div className="space-y-4 px-0 mx-auto max-w-screen-xl"> {/* Set max width */}
