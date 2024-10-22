@@ -113,21 +113,20 @@
 }
 
 .list {
-    position: absolute;
-    bottom: 8%;
-    width: wp(383);
-    height: hp(600);
-    max-height: hp(588);
-    left: 50%;
-    transform: translateX(-50%);
-    padding-top: hp(92.5);
-    padding-bottom: 100px;
-    box-sizing: border-box;
-    overflow-y: auto;
+  position: absolute;
+  bottom: 8%;
+  width: 100vw;
+  height: hp(600);
+  max-height: hp(588);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 16px;
+  box-sizing: border-box;
+  overflow-y: auto;
 
-    &::-webkit-scrollbar {
-        display: none;
-    }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .list-item {
