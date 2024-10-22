@@ -50,7 +50,7 @@ const MainReflect = reflect({
 const Decorations = () => (
     <div
         style={{
-            background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)",
+            background: "black",
         }}
         className={styles.background}
         aria-label="background"
