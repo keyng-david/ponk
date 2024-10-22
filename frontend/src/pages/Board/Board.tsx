@@ -59,58 +59,58 @@ const Decorations = () => (
 )
 
 const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
-    <div className={styles['first-position']}>
-        <div className="min-h-screen bg-black text-white">
-            {/* Header: Player count and total points earned */}
-            <div className="flex justify-between items-center py-4 px-6 text-gray-400 text-sm">
-                <span>Top Players</span>
-                <span>Total points earned</span>
-            </div>
+  <div className={styles['first-position']}>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header */}
+      <div className="flex justify-between items-center py-4 px-0 text-gray-400 text-sm"> {/* Removed padding */}
+        <span>Top Players</span>
+        <span>Total points earned</span>
+      </div>
 
-            {/* User score section */}
-            <div className="flex justify-between items-center bg-yellow-600 px-6 py-3 rounded-lg mx-4 mb-4">
-                <div className="text-sm font-bold text-black">100+ Me</div>
-                <div className="flex items-center space-x-2">
-                    <span className="text-lg font-bold text-white">4,600</span>
-                    <img src={coinImage} alt="coin" className="w-6 h-6" />
-                </div>
-            </div>
-
-            {/* Leaderboard - First player with medal */}
-            <div className="space-y-4 px-4">
-                <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
-                    <div className="flex items-center space-x-4">
-                        <img src={firstMedal} alt="gold-medal" className="w-6 h-6" />
-                        <span>{name}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <span>{toFormattedNumber(score)}</span>
-                        <img src={coinImage} alt="coin" className="w-6 h-6" />
-                    </div>
-                </div>
-            </div>
+      {/* User score */}
+      <div className="flex justify-between items-center bg-yellow-600 px-0 py-3 rounded-lg mb-4 mx-auto max-w-screen-xl"> {/* Set max width */}
+        <div className="text-sm font-bold text-black">100+ Me</div>
+        <div className="flex items-center space-x-2">
+          <span className="text-lg font-bold text-white">4,600</span>
+          <img src={coinImage} alt="coin" className="w-6 h-6" />
         </div>
+      </div>
+
+      {/* Leaderboard First Player */}
+      <div className="space-y-4 px-0 mx-auto max-w-screen-xl"> {/* Set max width */}
+        <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <img src={firstMedal} alt="gold-medal" className="w-6 h-6" />
+            <span>{name}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span>{toFormattedNumber(score)}</span>
+            <img src={coinImage} alt="coin" className="w-6 h-6" />
+          </div>
+        </div>
+      </div>
     </div>
-));
+  </div>
+))
 
 
 const LeadersList = React.memo<{
-    list: LeaderData[]
+  list: LeaderData[]
 }>(({ list }) => (
-    <div className={styles.list}>
-        {list.map(item => (
-            <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg mb-4">
-                <div className="flex items-center space-x-4">
-                    {item.position === 2 && <img src={secondMedal} alt="silver-medal" className="w-6 h-6" />}
-                    {item.position === 3 && <img src={thirdMedal} alt="bronze-medal" className="w-6 h-6" />}
-                    {item.position > 3 ? <span>{toFormattedIndex(item.position)}</span> : null}
-                    <span>{item.name}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <span>{toFormattedNumber(item.score)}</span>
-                    <img src={coinImage} alt="coin" className="w-6 h-6" />
-                </div>
-            </div>
-        ))}
-    </div>
+  <div className={`${styles.list} px-0 mx-auto max-w-screen-xl`}> {/* Set max width */}
+    {list.map(item => (
+      <div key={item.position} className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg mb-4">
+        <div className="flex items-center space-x-4">
+          {item.position === 2 && <img src={secondMedal} alt="silver-medal" className="w-6 h-6" />}
+          {item.position === 3 && <img src={thirdMedal} alt="bronze-medal" className="w-6 h-6" />}
+          {item.position > 3 ? <span>{toFormattedIndex(item.position)}</span> : null}
+          <span>{item.name}</span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <span>{toFormattedNumber(item.score)}</span>
+          <img src={coinImage} alt="coin" className="w-6 h-6" />
+        </div>
+      </div>
+    ))}
+  </div>
 ));
