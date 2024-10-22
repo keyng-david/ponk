@@ -23,7 +23,16 @@ export const Board = () => {
 
 const Title = () => (
     <div className="text-center py-6">
-        <h2 className={`${styles.title} text-4xl font-bold`}>LEADERS</h2>
+        <h2
+    className={`${styles.title} text-4xl font-bold`}
+    style={{
+        background: "linear-gradient(115deg, #62cff4, #2c67f2)",
+        WebkitBackgroundClip: "text",
+        color: "transparent"
+    }}
+>
+    LEADERS
+</h2>
     </div>
 )
 
