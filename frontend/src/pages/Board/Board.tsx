@@ -26,7 +26,7 @@ const Title = () => (
         <h2 className={styles.title}>LEADERS</h2>
         <h2 className={styles.title}>LEADERS</h2>
     </>
-
+)
 
 const Main = React.memo<{
     isLoading: boolean
