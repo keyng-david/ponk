@@ -120,29 +120,28 @@ export const ClickerField = () => {
 
   return (
     <div
-      id={'clicker'}
-      className={styles.root}
-      onTouchStart={onTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-                <p className={styles.value}>
-  <img src={coinImage} alt="coin" /> {valueString}
-</p>
-      <div className={styles.skinContainer}>
-  <img
-    id={'skinImage'}
-    className={`${styles.skinImage} float-animation-delayed`}
-    src={skinImage}
-    alt={'skin image'}
-    onClick={handleSkinClick}
-  />
-</div>
-      
-      
-      <div className="flex space-x-4 fixed bottom-28 inset-x-4">
-      
-        
+  id={'clicker'}
+  className={styles.root}
+  onTouchStart={onTouchStart}
+  onTouchMove={handleTouchMove}
+  onTouchEnd={handleTouchEnd}
+>
+  <p className={styles.value}>
+    <img src={coinImage} alt="coin" /> {valueString}
+  </p>
+  <div className={styles.content}>
+    <div className={styles.skinContainer}>
+      <img
+        id={'skinImage'}
+        className={styles.skinImage}
+        src={skinImage}
+        alt={'skin image'}
+        onClick={handleSkinClick}
+      />
+    </div>
+    <div className={styles.statsContainer}>
+      <div className="flex space-x-4">
+            
         <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style={{ 
   background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)', 
   boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)' 
@@ -170,5 +169,6 @@ export const ClickerField = () => {
         </div>
       </div>
     </div>
+   </div>
   );
 };
