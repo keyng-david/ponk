@@ -90,9 +90,11 @@ export const Main = () => {
         </div>
       </div>
       <div className={styles.content}>
-        <Background />
-        <ClickerField />
-      </div>
+  <Background />
+  <div style={{ flex: 1, position: 'relative' }}>
+    <ClickerField />
+  </div>
+</div>
     </div>
   );
 };
