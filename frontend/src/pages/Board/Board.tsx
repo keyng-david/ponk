@@ -19,7 +19,8 @@ export const Board = () => {
     <div
       className="min-h-screen text-white"
       style={{
-        background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
+        background:
+          'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
       }}
     >
       <Title />
@@ -89,7 +90,9 @@ function UserScore({ position, name, score }: LeaderData) {
         {position}+ {name}
       </div>
       <div className="flex items-center space-x-2">
-        <span className="text-lg font-bold text-white">{toFormattedNumber(score)}</span>
+        <span className="text-lg font-bold text-white">
+          {toFormattedNumber(score)}
+        </span>
         <img src={coinImage} alt="coin" className="w-6 h-6" />
       </div>
     </div>
@@ -97,17 +100,17 @@ function UserScore({ position, name, score }: LeaderData) {
 }
 
 function TopPlayer({ position, name, score }: LeaderData) {
-  const medalImages: { [key: number]: string } = {
-    1: firstMedal,
-    2: secondMedal,
-    3: thirdMedal,
+  const medalImages: { [key: string]: string } = {
+    '1': firstMedal,
+    '2': secondMedal,
+    '3': thirdMedal,
   };
 
   return (
     <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
       <div className="flex items-center space-x-4">
         <img
-          src={medalImages[position]}
+          src={medalImages[position.toString()]}
           alt={`position-${position}-medal`}
           className="w-6 h-6"
         />
