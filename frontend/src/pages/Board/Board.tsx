@@ -58,12 +58,8 @@ function Main({
   list: LeaderData[];
   userData: LeaderData;
 }) {
-  if (isLoading) {
-    return <LoaderTemplate />;
-  }
-
   return (
-    <>
+    <LoaderTemplate isLoading={isLoading} className="">
       <Header />
       {userData.position !== -1 && <UserScore {...userData} />}
       <div className="space-y-4 px-4">
@@ -75,7 +71,7 @@ function Main({
           }
         })}
       </div>
-    </>
+    </LoaderTemplate>
   );
 }
 
