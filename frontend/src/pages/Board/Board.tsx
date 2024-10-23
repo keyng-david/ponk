@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LoaderTemplate } from '@/shared/ui/LoaderTemplate';
 import { leadersModel } from '@/entities/leaders/model';
 import { LeaderData } from '@/entities/leaders/model/types';
 import { reflect } from '@effector/reflect';
-import { toFormattedNumber, toFormattedIndex } from '@/shared/lib/number';
+import { toFormattedNumber } from '@/shared/lib/number';
 
 import coinImage from '@/shared/assets/images/main/coin.svg';
 import firstMedal from '@/shared/assets/images/leaders/1st.svg';
@@ -11,6 +11,10 @@ import secondMedal from '@/shared/assets/images/leaders/2nd.svg';
 import thirdMedal from '@/shared/assets/images/leaders/3rd.svg';
 
 export const Board = () => {
+  useEffect(() => {
+    leadersModel.leadersRequested();
+  }, []);
+
   return (
     <div
       className="min-h-screen text-white"
@@ -27,7 +31,10 @@ export const Board = () => {
 const Title = () => (
   <>
     <h2 className="text-4xl text-center mt-4">LEADERS</h2>
-    <h2 className="text-4xl text-center text-transparent bg-clip-text bg-cover bg-center" style={{ background: 'linear-gradient(115deg, #62cff4, #2c67f2)',}}>
+    <h2
+      className="text-4xl text-center text-transparent bg-clip-text bg-cover bg-center"
+      style={{ background: 'linear-gradient(115deg, #62cff4, #2c67f2)' }}
+    >
       LEADERS
     </h2>
   </>
@@ -42,7 +49,15 @@ const MainReflect = reflect({
   },
 });
 
-function Main({ isLoading, list, userData }: { isLoading: boolean; list: LeaderData[]; userData: LeaderData }) {
+function Main({
+  isLoading,
+  list,
+  userData,
+}: {
+  isLoading: boolean;
+  list: LeaderData[];
+  userData: LeaderData;
+}) {
   if (isLoading) {
     return <LoaderTemplate />;
   }
@@ -50,7 +65,7 @@ function Main({ isLoading, list, userData }: { isLoading: boolean; list: LeaderD
   return (
     <>
       <Header />
-      <UserScore {...userData} />
+      {userData.position !== -1 && <UserScore {...userData} />}
       <div className="space-y-4 px-4">
         {list.map((leader) => {
           if (leader.position <= 3) {
@@ -86,7 +101,7 @@ function UserScore({ position, name, score }: LeaderData) {
 }
 
 function TopPlayer({ position, name, score }: LeaderData) {
-  const medalImages = {
+  const medalImages: { [key: number]: string } = {
     1: firstMedal,
     2: secondMedal,
     3: thirdMedal,
@@ -95,7 +110,11 @@ function TopPlayer({ position, name, score }: LeaderData) {
   return (
     <div className="flex justify-between items-center bg-gray-900 px-6 py-3 rounded-lg">
       <div className="flex items-center space-x-4">
-        <img src={medalImages[position]} alt={`position-${position}-medal`} className="w-6 h-6" />
+        <img
+          src={medalImages[position]}
+          alt={`position-${position}-medal`}
+          className="w-6 h-6"
+        />
         <span>{name}</span>
       </div>
       <div className="flex items-center space-x-2">
