@@ -5,7 +5,7 @@ import { LeaderData } from '@/entities/leaders/model/types';
 import { reflect } from '@effector/reflect';
 import { toFormattedNumber, toFormattedIndex } from '@/shared/lib/number';
 
-import coinImage from '@/shared/assets/images/leaders/coin.svg';
+import coinImage from '@/shared/assets/images/main/coin.svg';
 import firstMedal from '@/shared/assets/images/leaders/1st.svg';
 import secondMedal from '@/shared/assets/images/leaders/2nd.svg';
 import thirdMedal from '@/shared/assets/images/leaders/3rd.svg';
