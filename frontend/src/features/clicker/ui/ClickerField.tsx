@@ -114,26 +114,25 @@ export const ClickerField = () => {
   }
 
   return (
-    <div
-      id={'clicker'}
-      className={styles.root}
-      onTouchStart={onTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
-      <p className={styles.value}>
-        <img src={coinImage} alt="coin" /> {valueString}
-      </p>
-      <div className={styles.content}>
-        <div className={styles.skinContainer}>
-          <img
-            id={'skinImage'}
-            className={styles.skinImage}
-            src={skinImage}
-            alt={'skin image'}
-            onClick={handleSkinClick}
-          />
-        </div>
+  <div
+    id={'clicker'}
+    className={styles.root}
+    onTouchStart={onTouchStart}
+    onTouchMove={handleTouchMove}
+    onTouchEnd={handleTouchEnd}
+  >
+    <p className={styles.value}>
+      <img src={coinImage} alt="coin" /> {valueString}
+    </p>
+    <div className={styles.skinContainer}>
+      <img
+        id={'skinImage'}
+        className={`${styles.skinImage} float-animation-delayed`}
+        src={skinImage}
+        alt={'skin image'}
+        onClick={handleSkinClick}
+      />
+    </div>
         <div className={styles.statsContainer}>
           <div className="flex space-x-4">
             {/* First stat box */}
