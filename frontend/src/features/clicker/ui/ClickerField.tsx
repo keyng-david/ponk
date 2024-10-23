@@ -1,13 +1,11 @@
 import React, { TouchEvent, useCallback, useMemo, useState } from "react";
 import coinImage from '@/shared/assets/images/main/coin.svg';
-
 import skin1 from '@/shared/assets/images/skins/Skin1.webp';
 import skin2 from '@/shared/assets/images/skins/Skin2.webp';
 import skin3 from '@/shared/assets/images/skins/Skin3.webp';
 import skin4 from '@/shared/assets/images/skins/Skin4.webp';
 import { randModel } from "@/shared/model/rang";
 import { useAuth } from "@/features/auth/useAuth";
-
 import { clickerModel } from "../model";
 import styles from './ClickerField.module.scss';
 import { getRandomArbitrary, getRandomInt, toFormattedNumber } from "@/shared/lib/number";
@@ -30,7 +28,6 @@ export const ClickerField = () => {
   const { haptic } = useTelegram();
 
   const [isClickEnabled, setIsClickEnabled] = useState(true);
-
   const { rang } = randModel.useRang();
   const { skin } = useAuth();
 
@@ -74,7 +71,6 @@ export const ClickerField = () => {
             pointParent.className = styles.point;
 
             document.querySelector('#clicker')!.appendChild(pointParent);
-
             haptic();
 
             setTimeout(() => {
@@ -114,65 +110,64 @@ export const ClickerField = () => {
   }
 
   return (
-  <div
-    id={'clicker'}
-    className={styles.root}
-    onTouchStart={onTouchStart}
-    onTouchMove={handleTouchMove}
-    onTouchEnd={handleTouchEnd}
-  >
-    <p className={styles.value}>
-      <img src={coinImage} alt="coin" /> {valueString}
-    </p>
-    <div className={styles.skinContainer}>
-      <img
-        id={'skinImage'}
-        className={`${styles.skinImage} float-animation-delayed`}
-        src={skinImage}
-        alt={'skin image'}
-        onClick={handleSkinClick}
-      />
-    </div>
-        <div className={styles.statsContainer}>
-          <div className="flex space-x-4">
-            {/* First stat box */}
-            <div
-              className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
-              style={{
-                background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
-                boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
-              }}
-            >
-              <div className="text-xs text-gray-400 font-semibold">Energy</div>
-              <div className="text-white text-lg font-bold">
-                {formatNumberForGrid(available)}
-              </div>
+    <div
+      id={'clicker'}
+      className={styles.root}
+      onTouchStart={onTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
+      <p className={styles.value}>
+        <img src={coinImage} alt="coin" /> {valueString}
+      </p>
+      <div className={styles.skinContainer}>
+        <img
+          id={'skinImage'}
+          className={`${styles.skinImage} float-animation-delayed`}
+          src={skinImage}
+          alt={'skin image'}
+          onClick={handleSkinClick}
+        />
+      </div>
+      <div className={styles.statsContainer}>
+        <div className="flex space-x-4">
+          {/* First stat box */}
+          <div
+            className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
+            style={{
+              background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
+              boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
+            }}
+          >
+            <div className="text-xs text-gray-400 font-semibold">Energy</div>
+            <div className="text-white text-lg font-bold">
+              {formatNumberForGrid(available)}
             </div>
+          </div>
 
-            {/* Second stat box */}
-            <div
-              className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
-              style={{
-                background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
-                boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
-              }}
-            >
-              <div className="text-xs text-gray-400 font-semibold">Boost</div>
-              <div className="text-white text-lg font-bold">🚀</div>
-            </div>
+          {/* Second stat box */}
+          <div
+            className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
+            style={{
+              background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
+              boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
+            }}
+          >
+            <div className="text-xs text-gray-400 font-semibold">Boost</div>
+            <div className="text-white text-lg font-bold">🚀</div>
+          </div>
 
-            {/* Third stat box */}
-            <div
-              className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
-              style={{
-                background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
-                boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
-              }}
-            >
-              <div className="text-xs text-gray-400 font-semibold">Damage</div>
-              <div className="text-white text-lg font-bold">
-                {formatNumberForGrid(clickStep)}
-              </div>
+          {/* Third stat box */}
+          <div
+            className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation"
+            style={{
+              background: 'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0E 100%)',
+              boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.6)',
+            }}
+          >
+            <div className="text-xs text-gray-400 font-semibold">Damage</div>
+            <div className="text-white text-lg font-bold">
+              {formatNumberForGrid(clickStep)}
             </div>
           </div>
         </div>
