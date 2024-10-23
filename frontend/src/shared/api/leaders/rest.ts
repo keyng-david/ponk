@@ -1,8 +1,8 @@
-import { LeadersApi } from './types';
-import { $sessionId } from "@/shared/model/session";
+import { LeadersApi, GetLeaderListResponse } from './types';
+import { $sessionId } from '@/shared/model/session';
 
 export const leadersApi: LeadersApi = {
-  getList: async () => {
+  async getList() {
     const sessionId = $sessionId.getState();
     const response = await fetch(`/api/leaders`, {
       method: 'GET',
@@ -11,6 +11,18 @@ export const leadersApi: LeadersApi = {
         'Authorization': `Bearer ${sessionId}`,
       },
     });
-    return response.json();
+
+    const data = await response.json();
+
+    // Ensure the data conforms to GetLeaderListResponse
+    const result: GetLeaderListResponse = {
+      error: data.error,
+      payload: {
+        leaders: data.payload.leaders,
+        userLeaderData: data.payload.userLeaderData || null, // Ensure userLeaderData is included
+      },
+    };
+
+    return result;
   },
 };
