@@ -52,7 +52,7 @@
 
 .value {
     position: absolute;
-    bottom: hp(710);
+    bottom: hp(700);
     left: 50%;
     transform: translateX(-50%);
     font-size: 38px; 
@@ -110,59 +110,8 @@
 }
 
 
-.range {
-  position: absolute;
-  bottom: hp(720);
-  left: 50%;
-  transform: translateX(-50%) skew(30deg);
-  background-color: #333;
-  width: 300px;
-  height: 30px;
-  font-family: 'Orbitron', monospace;
-  overflow: hidden;
-}
-
-.range__fill {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background: linear-gradient(115deg, #62cff4, #2c67f2);
-  z-index: 0;
-  width: 0;
-  animation: glitch 2s infinite linear;
-}
-
-.range__label {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 10px;
-  transform: skew(-30deg);
-  line-height: 30px;
-}
-
 @keyframes load {
     to {
         width: var(--width);
-    }
-}
-
-@keyframes glitch {
-    0%, 5% {
-        transform: translate(0, 0);
-    }
-    1% {
-        transform: translate(-5%, -10%);
-    }
-    2% {
-        transform: translate(10%, 30%);
-    }
-    3% {
-        transform: translate(-43%, 10%);
-    }
-    4% {
-        transform: translate(2%, -23%);
     }
 }
