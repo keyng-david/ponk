@@ -49,23 +49,28 @@ const MainReflect = reflect({
 })
 
 const Decorations = () => (
-    <div
-        style={{
-            background: "black",
-        }}
-        className={styles.background}
-        aria-label="background"
-    />
-)
+  <div
+    style={{
+      background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)",
+    }}
+    className={styles.background}
+    aria-label="background"
+  />
+);
 
 const FirstPosition = React.memo<LeaderData>(({ position, name, score }) => (
   <div className={styles['first-position']}>
-    <div className="min-h-screen bg-black text-white">
-      {/* Header */}
-      <div className="flex justify-between items-center py-4 px-0 text-gray-400 text-sm"> {/* Removed padding */}
-        <span>Top Players</span>
-        <span>Total points earned</span>
-      </div>
+    <div
+  className="min-h-screen text-white"
+  style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}
+>
+  {/* Header */}
+  <div className="flex justify-between items-center py-4 px-0 text-gray-400 text-sm">
+    {/* Removed padding */}
+    <span>Top Players</span>
+    <span>Total points earned</span>
+  </div>
+</div>
 
       {/* User score */}
       <div className="flex justify-between items-center bg-yellow-500 px-6 py-3 rounded-lg">
