@@ -111,44 +111,37 @@
 
 
 .range {
-    position: relative;
-    bottom: hp(720);
-    background-color: #333;
-    width: 300px;
-    height: 30px;
-    transform: skew(30deg);
-    font-family: "Orbitron", monospace;
+  position: absolute;
+  bottom: hp(720);
+  left: 50%;
+  transform: translateX(-50%) skew(30deg);
+  background-color: #333;
+  width: 300px;
+  height: 30px;
+  font-family: 'Orbitron', monospace;
+  overflow: hidden;
 }
 
-.range:before {
-    --width: calc(var(--p) * 1%);
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-    height: 100%;
-    background: linear-gradient(115deg, #62cff4, #2c67f2);
-    z-index: 0;
-    animation: load 0.5s forwards linear, glitch 2s infinite linear;
-}
-
-.range:after {
-    counter-reset: progress var(--p);
-    content: counter(progress) "%";
-    color: #000;
-    position: absolute;
-    left: 5%;
-    top: 50%;
-    transform: translateY(-50%) skewX(-30deg);
-    z-index: 1;
+.range__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(115deg, #62cff4, #2c67f2);
+  z-index: 0;
+  width: 0;
+  animation: glitch 2s infinite linear;
 }
 
 .range__label {
-  transform: skew(-30deg) translateY(-100%);
-  line-height: 1.5;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  transform: skew(-30deg);
+  line-height: 30px;
 }
-
 
 @keyframes load {
     to {
