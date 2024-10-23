@@ -30,15 +30,12 @@ export const Board = () => {
 };
 
 const Title = () => (
-  <>
-    <h2 className="text-4xl text-center mt-4">LEADERS</h2>
-    <h2
-      className="text-4xl text-center text-transparent bg-clip-text bg-cover bg-center"
-      style={{ background: 'linear-gradient(115deg, #62cff4, #2c67f2)' }}
-    >
-      LEADERS
-    </h2>
-  </>
+  <h2
+    className="text-4xl text-center mt-4 text-transparent bg-clip-text"
+    style={{ background: 'linear-gradient(115deg, #62cff4, #2c67f2)' }}
+  >
+    LEADERS
+  </h2>
 );
 
 const MainReflect = reflect({
