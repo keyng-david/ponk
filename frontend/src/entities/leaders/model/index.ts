@@ -7,7 +7,11 @@ const fetchFx = createEffect(leadersApi.getList);
 
 const leadersRequested = createEvent();
 const $data = createStore<LeaderData[]>([]);
-const $userLeaderData = createStore<LeaderData | null>(null);
+const $userLeaderData = createStore<LeaderData>({
+  position: -1, // Use -1 or any default value indicating no data yet
+  name: '',
+  score: 0,
+});
 const $isLoading = fetchFx.pending;
 
 sample({
@@ -17,7 +21,7 @@ sample({
 
 sample({
   clock: fetchFx.doneData,
-  fn: data => {
+  fn: (data) => {
     if (data.payload) {
       const leaders = data.payload.leaders.map((item, index) => ({
         position: index + 1,
@@ -33,7 +37,7 @@ sample({
 
 sample({
   clock: fetchFx.doneData,
-  fn: data => {
+  fn: (data) => {
     if (data.payload && data.payload.userLeaderData) {
       return {
         position: data.payload.userLeaderData.position,
@@ -41,7 +45,12 @@ sample({
         score: data.payload.userLeaderData.score,
       };
     }
-    return null;
+    // Return default LeaderData if user data is not available
+    return {
+      position: -1, // Indicates that the user's data isn't available
+      name: '',
+      score: 0,
+    };
   },
   target: $userLeaderData,
 });
