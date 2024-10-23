@@ -125,7 +125,6 @@ export const ClickerField = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      <ProgressBar value={available} />
                 <p className={styles.value}>
   <img src={coinImage} alt="coin" /> {valueString}
 </p>
@@ -172,23 +171,3 @@ export const ClickerField = () => {
     </div>
   );
 };
-
-const ProgressBar = React.memo<{ value: number }>(({ value }) => {
-  const maxAvailable = clickerModel.$available.getState();
-  const percentage = (value / maxAvailable) * 100;
-
-  return (
-    <div className={styles.range}>
-      <div
-        className={styles.range__fill}
-        style={{ width: `${percentage}%` }}
-      ></div>
-      <div className={styles.range__label}>
-        <span>
-          {value} / {maxAvailable}
-        </span>
-        <span>{Math.round(percentage)}%</span>
-      </div>
-    </div>
-  );
-});
