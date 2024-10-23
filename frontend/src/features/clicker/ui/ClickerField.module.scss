@@ -72,16 +72,23 @@
 }
 
 .point {
-    position: absolute;
-    width: wp(85);
-    animation: point-animation 0.5s forwards linear;
-    transform: translateY(0) translateX(0);
-    z-index: 5;
-
-    img {
-        width: 100%;
-    }
+  position: absolute;
+  animation: point-animation 0.5s forwards linear;
+  transform: translateY(0) translateX(0);
+  z-index: 5;
 }
+
+.pointText {
+  font-size: 24px;
+  line-height: 1;
+  text-align: center;
+  background: -webkit-linear-gradient(white, #38495a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  font-weight: bold; 
+}
+
 
 .skinContainer {
     position: absolute;
