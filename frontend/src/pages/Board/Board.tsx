@@ -31,8 +31,13 @@ export const Board = () => {
 
 const Title = () => (
   <h2
-    className="text-4xl text-center mt-4 text-transparent bg-clip-text"
-    style={{ background: 'linear-gradient(115deg, #62cff4, #2c67f2)' }}
+    className="text-4xl text-center mt-4"
+    style={{
+      background: 'linear-gradient(115deg, #62cff4, #2c67f2)',
+      backgroundClip: 'text',
+      WebkitBackgroundClip: 'text',
+      color: 'transparent',
+    }}
   >
     LEADERS
   </h2>
