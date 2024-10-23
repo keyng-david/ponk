@@ -37,7 +37,8 @@ export const Main = () => {
 
   return (
     <div className={styles.root}>
-      {/* Replacing logo, wallet, and rank button with the new Header component */}
+    <div className={styles.header}>
+ 
       <div className="w-[90%] max-w-lg mx-auto rounded-lg p-4 px-4 flex items-center justify-between text-white mt-6 shadow-lg" 
         style={{ background: "radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)" }}>
         <div className="flex items-center space-x-3">
