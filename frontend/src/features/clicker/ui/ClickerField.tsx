@@ -120,6 +120,7 @@ export const ClickerField = () => {
       <p className={styles.value}>
         <img src={coinImage} alt="coin" /> {valueString}
       </p>
+       <div className={styles.content}>
       <div className={styles.skinContainer}>
         <img
           id={'skinImage'}
@@ -173,5 +174,6 @@ export const ClickerField = () => {
         </div>
       </div>
     </div>
+   </div>
   );
 };
