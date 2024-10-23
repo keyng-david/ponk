@@ -5,9 +5,14 @@ export type GetLeaderListResponse = {
       username: string;
       score: number;
     }[];
+    userLeaderData: {
+      position: number;
+      username: string;
+      score: number;
+    } | null;
   } | null;
 };
 
 export type LeadersApi = {
-  getList: () => Promise<GetLeaderListResponse>; // Adjusted to match native fetch response
+  getList: () => Promise<GetLeaderListResponse>;
 };
