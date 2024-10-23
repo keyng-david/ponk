@@ -31,15 +31,6 @@
   }
 }
 
-.float-animation {
-  animation: float 5s ease-in-out infinite;
-}
-
-.float-animation-delayed {
-  animation: float 5s ease-in-out infinite;
-  animation-delay: 2s;
-}
-
 .root {
     position: absolute;
     width: 100%;
@@ -103,10 +94,12 @@
 }
 
 .skinImage {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transform: scale(1.2);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.2);
+  animation: float 5s ease-in-out infinite;
+  animation-delay: 2s;
 }
 
 
