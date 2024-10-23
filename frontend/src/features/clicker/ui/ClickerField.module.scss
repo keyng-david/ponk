@@ -32,29 +32,48 @@
 }
 
 .root {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    z-index: 5;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-
 
 .value {
-    position: absolute;
-    bottom: hp(700);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 40px; 
-    line-height: 150%;
-    text-align: center;
-    background: -webkit-linear-gradient(white, #38495a);
+  margin-top: 10px;
+  font-size: 40px;
+  line-height: 150%;
+  text-align: center;
+  background: -webkit-linear-gradient(white, #38495a);
   -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex; 
-    align-items: center; 
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
 }
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.skinContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 5s ease-in-out infinite;
+}
+
+.statsContainer {
+  margin-bottom: 80px; 
+}
+
 
 .value img {
     margin-right: 8px;
@@ -87,18 +106,6 @@
   -webkit-text-fill-color: transparent;
   display: inline-block;
   font-weight: bold; 
-}
-
-
-.skinContainer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: wp(260); 
-    height: wp(260);
-    z-index: 5;
-    animation: float 5s ease-in-out infinite;
 }
 
 .skinImage {
