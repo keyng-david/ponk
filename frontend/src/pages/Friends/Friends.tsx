@@ -72,8 +72,7 @@ const Main = React.memo<{
 
   return (
     <div className={`${styles.main} flex flex-col items-center px-6`}>
-      {/* Tailwind Title */}
-      <h2 className="text-2xl font-bold mb-6 text-center"> {/* Reduced from 3xl to 2xl */}
+      <h2 className="text-2xl font-bold mb-6 text-center text-white"> 
         Invite frens. Earn points
       </h2>
 
@@ -102,7 +101,7 @@ const Main = React.memo<{
 
       {/* How it works section */}
       <div className="w-full">
-        <h3 className="text-base font-semibold mb-6"> {/* Reduced from lg to base */}
+        <h3 className="text-base font-semibold mb-6 text-white"> {/* Reduced from lg to base */}
           How it works
         </h3>
 
