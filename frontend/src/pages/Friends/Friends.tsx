@@ -7,6 +7,9 @@ import { copyOutline } from 'ionicons/icons';
 import { useTelegram } from "@/shared/lib/hooks/useTelegram";
 import styles from './Friends.module.scss';
 
+// Import the background image
+import backgroundImage from '@/shared/assets/images/frens/background.png';
+
 export const Friends = () => {
   const { isLoading } = friendsModel.useFetchGate();
   const data = useStore(friendsModel.$data);
@@ -25,6 +28,8 @@ export const Friends = () => {
         premium={premium}
         link={link}
       />
+      {/* Decorations */}
+      <Decorations />
     </div>
   );
 };
@@ -61,7 +66,7 @@ const Main = React.memo<{
   };
 
   return (
-    <div className={`${styles.main} flex flex-col items-center px-6 mt-12`}>
+    <div className={`${styles.main}`}>
       {/* Tailwind Title */}
       <h2 className="text-3xl font-bold mb-6 text-center">
         Invite frens. Earn points
@@ -74,7 +79,7 @@ const Main = React.memo<{
           <p className={`${styles.gradientText} text-lg font-semibold`}>
             Frens
           </p>
-          <p className="text-base text-white">{count}</p> {/* Updated to `{count}` */}
+          <p className="text-base text-white">{count}</p>
         </div>
 
         {/* Earned Box */}
@@ -87,7 +92,7 @@ const Main = React.memo<{
       </div>
 
       {/* How it works section */}
-      <div className="w-full">
+      <div className="w-full px-6">
         <h3 className="text-lg font-semibold mb-6">How it works</h3>
 
         {/* Steps */}
@@ -142,7 +147,7 @@ const Main = React.memo<{
         </button>
         <button
           className="bg-white text-black p-3 rounded-full font-bold flex items-center justify-center"
-          onClick={copyToClipboard} // or use `sendInviteLink(link)` if desired
+          onClick={copyToClipboard}
         >
           <IonIcon icon={copyOutline} />
         </button>
@@ -157,3 +162,10 @@ const Main = React.memo<{
     </div>
   );
 });
+
+// Decorations component with background image
+const Decorations = () => (
+  <>
+    <img src={backgroundImage} className={styles.background} alt="background" />
+  </>
+);
