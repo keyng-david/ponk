@@ -140,7 +140,7 @@ export const ClickerField = () => {
 </div>
 
 
-      <div className="flex space-x-4 fixed bottom-28 inset-x-4">
+      <div className="flex space-x-4 fixed bottom-30 inset-x-4">
 
 
         <div className="bg-opacity-100 shadow-lg rounded-md p-4 w-36 h-16 flex flex-col justify-center items-center border border-gray-700 float-animation" style={{ 
