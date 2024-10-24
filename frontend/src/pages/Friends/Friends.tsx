@@ -4,7 +4,7 @@ import { friendsModel } from '@/entities/friends/model';
 import { toFormattedNumber } from '@/shared/lib/number';
 import { IonIcon } from '@ionic/react';
 import { copyOutline } from 'ionicons/icons';
-import { useTelegram } from '@/shared/lib/hooks/useTelegram';
+import { useTelegram } from "@/shared/lib/hooks/useTelegram";
 import styles from './Friends.module.scss';
 
 export const Friends = () => {
@@ -73,68 +73,75 @@ const Main = React.memo<{
   return (
     <div className={`${styles.main} flex flex-col items-center px-6`}>
       {/* Tailwind Title */}
-      <h2 className="text-3xl font-bold mb-6 text-center">
+      <h2 className="text-2xl font-bold mb-6 text-center"> {/* Reduced from 3xl to 2xl */}
         Invite frens. Earn points
       </h2>
 
       {/* Grid Boxes */}
       <div className="grid grid-cols-2 gap-4 mb-6 w-full">
         {/* Frens Box */}
-        <div className={`${styles.boxGradient} p-3 rounded-lg text-center`}>
-          <p className={`${styles.gradientText} text-lg font-semibold`}>
+        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}> {/* Reduced padding */}
+          <p className={`${styles.gradientText} text-base font-semibold`}> {/* Reduced from lg to base */}
             Frens
           </p>
-          <p className="text-base text-white">{count}</p>
+          <p className="text-sm text-white"> {/* Reduced from base to sm */}
+            {count}
+          </p>
         </div>
 
         {/* Earned Box */}
-        <div className={`${styles.boxGradient} p-3 rounded-lg text-center`}>
-          <p className={`${styles.gradientText} text-lg font-semibold`}>
+        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}> {/* Reduced padding */}
+          <p className={`${styles.gradientText} text-base font-semibold`}> {/* Reduced from lg to base */}
             Earned
           </p>
-          <p className="text-base text-white">+{points}</p>
+          <p className="text-sm text-white"> {/* Reduced from base to sm */}
+            +{points}
+          </p>
         </div>
       </div>
 
       {/* How it works section */}
       <div className="w-full">
-        <h3 className="text-lg font-semibold mb-6">How it works</h3>
+        <h3 className="text-base font-semibold mb-6"> {/* Reduced from lg to base */}
+          How it works
+        </h3>
 
         {/* Steps */}
-        <div className="space-y-8">
+        <div className="space-y-6"> {/* Reduced space between items */}
           {/* Step 1 */}
-          <div className="flex items-start space-x-4">
-            <div className="bg-white w-3 h-3 rounded-full mt-1"></div>
+          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
+            <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div> {/* Slightly smaller icon */}
             <div>
-              <p className="text-base font-semibold">
+              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
                 Share your invitation link
               </p>
-              <p className={`${styles.gradientText} text-sm`}>
+              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
                 Click the invite frens button to invite friends
               </p>
             </div>
           </div>
 
           {/* Step 2 */}
-          <div className="flex items-start space-x-4">
-            <div className="bg-white w-3 h-3 rounded-full mt-1"></div>
+          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
+            <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div>
             <div>
-              <p className="text-base font-semibold">Your friends join</p>
-              <p className={`${styles.gradientText} text-sm`}>
+              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
+                Your friends join
+              </p>
+              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
                 Earn extra +{toFormattedNumber(tg)} coins for each friend
               </p>
             </div>
           </div>
 
           {/* Step 3 */}
-          <div className="flex items-start space-x-4">
-            <div className="bg-white w-3 h-3 rounded-full mt-1"></div>
+          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
+            <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div>
             <div>
-              <p className="text-base font-semibold">
-                Earn {toFormattedNumber(premium)}% Referral Bonus from Friends
-                Invites
+              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
+                Earn {toFormattedNumber(premium)}% Referral Bonus from Friends Invites
               </p>
-              <p className={`${styles.gradientText} text-sm`}>
+              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
                 Earn extra points from your friends' referrals
               </p>
             </div>
@@ -143,15 +150,15 @@ const Main = React.memo<{
       </div>
 
       {/* Invite Button with Copy functionality */}
-      <div className="flex items-center justify-center space-x-2 px-4 mb-8">
+      <div className="flex items-center justify-between space-x-2 w-full px-4 mb-8"> {/* Adjusted width and spacing */}
         <button
-          className="flex-grow bg-white text-black py-3 rounded-full font-bold text-lg"
+          className="flex-grow bg-white text-black py-3 rounded-full font-bold text-sm" {/* Adjusted padding */}
           onClick={() => sendInviteLink(link)}
         >
           Invite a fren
         </button>
         <button
-          className="bg-white text-black p-3 rounded-full font-bold flex items-center justify-center"
+          className="w-10 h-10 bg-white text-black rounded-full font-bold flex items-center justify-center" {/* Fixed width and height for the copy button */}
           onClick={copyToClipboard}
         >
           <IonIcon icon={copyOutline} />
