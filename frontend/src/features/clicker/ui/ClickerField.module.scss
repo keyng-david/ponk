@@ -42,18 +42,20 @@
 
 
 .value {
-    position: absolute;
-    bottom: hp(700);
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 40px; 
-    line-height: 150%;
-    text-align: center;
-    background: -webkit-linear-gradient(white, #38495a);
+  position: absolute;
+  bottom: hp(700);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 40px; 
+  line-height: 150%;
+  text-align: center;
+  background: -webkit-linear-gradient(white, #38495a);
   -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex; 
-    align-items: center; 
+  -webkit-text-fill-color: transparent;
+  display: flex; 
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: bold;
 }
 
 .value img {
