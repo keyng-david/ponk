@@ -24,7 +24,7 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
   100% {
     transform: translateY(0);
@@ -81,7 +81,7 @@
 }
 
 .pointText {
-  font-size: 24px;
+  font-size: 36px;
   line-height: 1;
   text-align: center;
   background: -webkit-linear-gradient(white, #38495a);
@@ -106,7 +106,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transform: scale(1.2);
+  transform: scale(1);
   animation: float 5s ease-in-out infinite;
 }
 
