@@ -4,11 +4,8 @@ import { friendsModel } from '@/entities/friends/model';
 import { toFormattedNumber } from '@/shared/lib/number';
 import { IonIcon } from '@ionic/react';
 import { copyOutline } from 'ionicons/icons';
-import { useTelegram } from "@/shared/lib/hooks/useTelegram";
+import { useTelegram } from '@/shared/lib/hooks/useTelegram';
 import styles from './Friends.module.scss';
-
-// Import the background image
-import backgroundImage from '@/shared/assets/images/frens/background.png';
 
 export const Friends = () => {
   const { isLoading } = friendsModel.useFetchGate();
@@ -16,10 +13,14 @@ export const Friends = () => {
   const { friends: count, points, tg, premium, link } = data;
 
   return (
-    <div className={styles.root}>
-      {/* Original Title */}
+    <div
+      className={styles.root}
+      style={{
+        background:
+          'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
+      }}
+    >
       <Title />
-      {/* Main Content */}
       <Main
         isLoading={isLoading}
         count={count}
@@ -28,8 +29,6 @@ export const Friends = () => {
         premium={premium}
         link={link}
       />
-      {/* Decorations */}
-      <Decorations />
     </div>
   );
 };
@@ -37,7 +36,6 @@ export const Friends = () => {
 // Adjusted Title component
 const Title = React.memo(() => (
   <>
-    <h2 className={styles.title}>FRIENDS</h2>
     <h2 className={styles.title}>FRIENDS</h2>
   </>
 ));
@@ -66,7 +64,7 @@ const Main = React.memo<{
   };
 
   return (
-    <div className={`${styles.main}`}>
+    <div className={`${styles.main} flex flex-col items-center px-6`}>
       {/* Tailwind Title */}
       <h2 className="text-3xl font-bold mb-6 text-center">
         Invite frens. Earn points
@@ -92,7 +90,7 @@ const Main = React.memo<{
       </div>
 
       {/* How it works section */}
-      <div className="w-full px-6">
+      <div className="w-full">
         <h3 className="text-lg font-semibold mb-6">How it works</h3>
 
         {/* Steps */}
@@ -162,10 +160,3 @@ const Main = React.memo<{
     </div>
   );
 });
-
-// Decorations component with background image
-const Decorations = () => (
-  <>
-    <img src={backgroundImage} className={styles.background} alt="background" />
-  </>
-);
