@@ -100,7 +100,6 @@
     width: wp(260); 
     height: wp(260);
     z-index: 5;
-    animation: float 5s ease-in-out infinite;
 }
 
 .skinImage {
@@ -108,6 +107,7 @@
   height: 100%;
   object-fit: contain;
   transform: scale(1.2);
+  animation: float 5s ease-in-out infinite;
 }
 
 
