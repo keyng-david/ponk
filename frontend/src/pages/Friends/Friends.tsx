@@ -33,12 +33,19 @@ export const Friends = () => {
   );
 };
 
-// Adjusted Title component
-const Title = React.memo(() => (
-  <>
-    <h2 className={styles.title}>FRIENDS</h2>
-  </>
-));
+const Title = () => (
+  <h2
+    className="text-4xl text-center mt-4"
+    style={{
+      background: 'linear-gradient(115deg, #62cff4, #2c67f2)',
+      backgroundClip: 'text',
+      WebkitBackgroundClip: 'text',
+      color: 'transparent',
+    }}
+  >
+    FRIENDS
+  </h2>
+);
 
 const Main = React.memo<{
   isLoading: boolean;
