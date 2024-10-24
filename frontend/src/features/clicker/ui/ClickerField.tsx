@@ -132,7 +132,7 @@ export const ClickerField = () => {
       <div className={styles.skinContainer}>
   <img
     id={'skinImage'}
-    className={`${styles.skinImage} float-animation-delayed`}
+    className={styles.skinImage}
     src={skinImage}
     alt={'skin image'}
     onClick={handleSkinClick}
