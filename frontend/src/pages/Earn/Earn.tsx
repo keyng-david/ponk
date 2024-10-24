@@ -13,8 +13,14 @@ import { EarnItem } from '@/entities/earn/model/types'
 
 export const Earn = () => {
     return (
-        <div className={styles.root}>
-            <TitleReflect />
+            <div
+      className={styles.root}
+      style={{
+        background:
+          'radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%)',
+      }}
+    >
+      <Title />
             <MainReflect />
             <Decorations />
         </div>
@@ -37,14 +43,19 @@ const MainReflect = reflect({
     }
 })
 
-const Title = React.memo<{
-    count: number
-}>(({ count }) => (
-    <>
-        <h2 className={styles.title}>{count} COLLABS</h2>
-        <h2 className={styles.title}>{count} COLLABS</h2>
-    </>
-))
+const Title = () => (
+  <h2
+    className="text-4xl text-center mt-4"
+    style={{
+      background: 'linear-gradient(115deg, #62cff4, #2c67f2)',
+      backgroundClip: 'text',
+      WebkitBackgroundClip: 'text',
+      color: 'transparent',
+    }}
+  >
+    EARN
+  </h2>
+);
 
 const TitleReflect = reflect({
     view: Title,
