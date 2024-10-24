@@ -144,7 +144,8 @@ const Main = React.memo<{
       </div>
 
       {/* Invite Button with Copy functionality */}
-      <div className="flex items-center justify-between space-x-2 w-full px-4 mb-8">
+
+      <div className="flex items-center justify-between space-x-2 w-full px-4 mb-8 fixed bottom-30">
         <button
           className="flex-grow bg-white text-black py-3 rounded-full font-bold text-sm"
           onClick={() => sendInviteLink(link)}
