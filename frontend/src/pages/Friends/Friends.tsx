@@ -79,68 +79,63 @@ const Main = React.memo<{
       {/* Grid Boxes */}
       <div className="grid grid-cols-2 gap-4 mb-6 w-full">
         {/* Frens Box */}
-        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}> {/* Reduced padding */}
-          <p className={`${styles.gradientText} text-base font-semibold`}> {/* Reduced from lg to base */}
+        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}>
+          <p className={`${styles.gradientText} text-base font-semibold`}>
             Frens
           </p>
-          <p className="text-sm text-white"> {/* Reduced from base to sm */}
-            {count}
-          </p>
+          <p className="text-sm text-white">{count}</p>
         </div>
 
         {/* Earned Box */}
-        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}> {/* Reduced padding */}
-          <p className={`${styles.gradientText} text-base font-semibold`}> {/* Reduced from lg to base */}
+        <div className={`${styles.boxGradient} p-2 rounded-lg text-center`}>
+          <p className={`${styles.gradientText} text-base font-semibold`}>
             Earned
           </p>
-          <p className="text-sm text-white"> {/* Reduced from base to sm */}
-            +{points}
-          </p>
+          <p className="text-sm text-white">+{points}</p>
         </div>
       </div>
 
       {/* How it works section */}
       <div className="w-full">
-        <h3 className="text-base font-semibold mb-6 text-white"> {/* Reduced from lg to base */}
+        <h3 className="text-base font-semibold mb-6 text-white">
           How it works
         </h3>
 
         {/* Steps */}
-        <div className="space-y-6"> {/* Reduced space between items */}
+        <div className="space-y-6">
           {/* Step 1 */}
-          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
-            <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div> {/* Slightly smaller icon */}
+          <div className="flex items-start space-x-3">
+            <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div>
             <div>
-              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
+              <p className="text-sm font-semibold">
                 Share your invitation link
               </p>
-              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
+              <p className={`${styles.gradientText} text-xs`}>
                 Click the invite frens button to invite friends
               </p>
             </div>
           </div>
 
           {/* Step 2 */}
-          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
+          <div className="flex items-start space-x-3">
             <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div>
             <div>
-              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
-                Your friends join
-              </p>
-              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
+              <p className="text-sm font-semibold">Your friends join</p>
+              <p className={`${styles.gradientText} text-xs`}>
                 Earn extra +{toFormattedNumber(tg)} coins for each friend
               </p>
             </div>
           </div>
 
           {/* Step 3 */}
-          <div className="flex items-start space-x-3"> {/* Reduced space between icon and text */}
+          <div className="flex items-start space-x-3">
             <div className="bg-white w-2.5 h-2.5 rounded-full mt-1"></div>
             <div>
-              <p className="text-sm font-semibold"> {/* Reduced from base to sm */}
-                Earn {toFormattedNumber(premium)}% Referral Bonus from Friends Invites
+              <p className="text-sm font-semibold">
+                Earn {toFormattedNumber(premium)}% Referral Bonus from Friends
+                Invites
               </p>
-              <p className={`${styles.gradientText} text-xs`}> {/* Reduced from sm to xs */}
+              <p className={`${styles.gradientText} text-xs`}>
                 Earn extra points from your friends' referrals
               </p>
             </div>
@@ -149,15 +144,15 @@ const Main = React.memo<{
       </div>
 
       {/* Invite Button with Copy functionality */}
-      <div className="flex items-center justify-between space-x-2 w-full px-4 mb-8"> {/* Adjusted width and spacing */}
+      <div className="flex items-center justify-between space-x-2 w-full px-4 mb-8">
         <button
-          className="flex-grow bg-white text-black py-3 rounded-full font-bold text-sm" {/* Adjusted padding */}
+          className="flex-grow bg-white text-black py-3 rounded-full font-bold text-sm"
           onClick={() => sendInviteLink(link)}
         >
           Invite a fren
         </button>
         <button
-          className="w-10 h-10 bg-white text-black rounded-full font-bold flex items-center justify-center" {/* Fixed width and height for the copy button */}
+          className="w-10 h-10 bg-white text-black rounded-full font-bold flex items-center justify-center"
           onClick={copyToClipboard}
         >
           <IonIcon icon={copyOutline} />
